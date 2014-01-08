@@ -32,24 +32,61 @@ namespace Minecraft
 
     public static class Authentication
     {
-        public static MCAuthenticate_Response MCTokens = new MCAuthenticate_Response();
+        public static string sAccessToken = null;
+        public static string sClientToken = null;
+        public static string sProfileId = null;
+        public static string sProfileName = null;
         public static string sAuthServer = "https://authserver.mojang.com";
 
-        public static void Authenticate(string user, string password)
+        public static void Authenticate(string sUser, string sPassword)
         {
+            // create and fill JSON object
             MCAuthenticate_Request jsonObject = new MCAuthenticate_Request();
-            jsonObject.username = user;
-            jsonObject.password = password;
+            jsonObject.username = sUser;
+            jsonObject.password = sPassword;
+            jsonObject.agent = new cls_agent();
+            jsonObject.agent.name = "Minecraft";
+            jsonObject.agent.version = "1";
             
-            string jsonString = Internet.Http.POST(sAuthServer + "/authenticate", UglyLauncher.JsonHelper.JsonSerializer<MCAuthenticate_Request>(jsonObject), "application/json");
-            MCTokens = UglyLauncher.JsonHelper.JsonDeserializer<MCAuthenticate_Response>(jsonString);
+            // Serialize JSON
+            string sJsonRequest = UglyLauncher.JsonHelper.JsonSerializer<MCAuthenticate_Request>(jsonObject);
+
+            // send HTTP POST request
+            string sJsonResponse = Internet.Http.POST(sAuthServer + "/authenticate", sJsonRequest, "application/json");
+
+            // Deserialize JSON into object
+            MCAuthenticate_Response MCResponse = UglyLauncher.JsonHelper.JsonDeserializer<MCAuthenticate_Response>(sJsonResponse);
+
+            //Copy
+            sAccessToken = MCResponse.accessToken;
+            sClientToken = MCResponse.clientToken;
+            sProfileId = MCResponse.selectedProfile.id;
+            sProfileName = MCResponse.selectedProfile.name;
         }
 
         public static void Refresh()
         {
             string url = sAuthServer + "/refresh";
 
+            // create and fill JSON object
+            MCRefresh_Request jsonObject = new MCRefresh_Request();
+            jsonObject.accessToken = sAccessToken;
+            jsonObject.clientToken = sClientToken;
+            //jsonObject.selectedProfile = new cls_selectedprofile();
+            //jsonObject.selectedProfile.id = sProfileId;
+            //jsonObject.selectedProfile.name = sProfileName;
 
+            // Serialize JSON
+            string sJsonRequest = UglyLauncher.JsonHelper.JsonSerializer<MCRefresh_Request>(jsonObject);
+
+            // send HTTP POST request
+            string sJsonResponse = Internet.Http.POST(sAuthServer + "/refresh", sJsonRequest, "application/json");
+
+            // Deserialize JSON into object
+            MCRefresh_Response MCResponse = UglyLauncher.JsonHelper.JsonDeserializer<MCRefresh_Response>(sJsonResponse);
+
+            //Copy
+            sAccessToken = MCResponse.accessToken;
         }
 
         public static void Validate()
@@ -67,11 +104,7 @@ namespace Minecraft
     /// </summary>
     public class MCAuthenticate_Request
     {
-        public struct agent
-        {
-            public string name { get; set; }
-            public string version { get; set; }
-        }
+        public cls_agent agent { get; set; }
         public string username { get; set; }
         public string password { get; set; }
         public string clientToken { get; set; }
@@ -84,18 +117,48 @@ namespace Minecraft
     {
         public string accessToken { get; set; }
         public string clientToken { get; set; }
-        public profilesavailable[] availableProfiles { get; set; }
-        public struct selectedProfile
-        {
-            public string id { get; set; }
-            public string name { get; set; }
-        }
-        public struct profilesavailable
-        {
-            public string id { get; set; }
-            public string name { get; set; }
-        }
+        public List<cls_profilesavailable> availableProfiles { get; set; }
+        public cls_selectedprofile selectedProfile { get; set; }
+    }
+    
+    /// <summary>
+    /// The JSON refresh request construct.
+    /// </summary>
+    public class MCRefresh_Request
+    {
+        public string accessToken { get; set; }
+        public string clientToken { get; set; }
+        //public cls_selectedprofile selectedProfile { get; set; }
     }
 
+    /// <summary>
+    /// The JSON refresh response construct.
+    /// </summary>
+    public class MCRefresh_Response
+    {
+        public string accessToken { get; set; }
+        public string clientToken { get; set; }
+        public cls_selectedprofile selectedProfile { get; set; }
+    }
 
+    /// <summary>
+    /// some struct parts.
+    /// </summary>
+    public class cls_profilesavailable
+    {
+        public string id { get; set; }
+        public string name { get; set; }
+    }
+
+    public class cls_agent
+    {
+        public string name { get; set; }
+        public string version { get; set; }
+    }
+
+    public class cls_selectedprofile
+    {
+        public string id { get; set; }
+        public string name { get; set; }
+    }
 }

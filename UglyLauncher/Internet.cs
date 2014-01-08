@@ -12,7 +12,10 @@ namespace Internet
             WebRequest request = WebRequest.Create(url);
             WebResponse response = request.GetResponse();
             StreamReader stringResponse = new StreamReader(response.GetResponseStream());
-            return stringResponse.ReadToEnd().Trim();
+            string retstring = stringResponse.ReadToEnd().Trim();
+            stringResponse.Close();
+            response.Close();
+            return retstring;
         }
 
         public static string POST(string url, string postdata, string contenttype)
@@ -28,7 +31,11 @@ namespace Internet
             // ToDo: WebExeptions
             WebResponse response = request.GetResponse();
             StreamReader stringResponse = new StreamReader(response.GetResponseStream());
-            return stringResponse.ReadToEnd().Trim();
+            string retstring = stringResponse.ReadToEnd().Trim();
+            stringResponse.Close();
+            dataStream.Close();
+            response.Close();
+            return retstring;
         }
     }
 }
