@@ -25,6 +25,7 @@ namespace Internet
             Stream dataStream = request.GetRequestStream();
             dataStream.Write(byteArray, 0, byteArray.Length);
             dataStream.Close();
+            // ToDo: WebExeptions
             WebResponse response = request.GetResponse();
             StreamReader stringResponse = new StreamReader(response.GetResponseStream());
             return stringResponse.ReadToEnd().Trim();
