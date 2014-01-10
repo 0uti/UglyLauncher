@@ -18,6 +18,7 @@ namespace Minecraft
         public static string sClientToken = null;
         public static string sProfileId = null;
         public static string sProfileName = null;
+        public static bool bProfileLegacy = false;
     }
 
     public class Launcher
@@ -66,6 +67,7 @@ namespace Minecraft
             UserInformation.sClientToken = MCResponse.clientToken;
             UserInformation.sProfileId = MCResponse.selectedProfile.id;
             UserInformation.sProfileName = MCResponse.selectedProfile.name;
+            UserInformation.bProfileLegacy = MCResponse.selectedProfile.legacy;
         }
 
         public void Refresh()
@@ -149,6 +151,8 @@ namespace Minecraft
             public string id { get; set; }
             [DataMember]
             public string name { get; set; }
+            [DataMember]
+            public bool legacy { get; set; }
         }
 
         [DataContractAttribute]
@@ -158,6 +162,8 @@ namespace Minecraft
             public string id { get; set; }
             [DataMember]
             public string name { get; set; }
+            [DataMember]
+            public bool legacy { get; set; }
         }
     }
     
@@ -194,6 +200,8 @@ namespace Minecraft
             public string id { get; set; }
             [DataMember]
             public string name { get; set; }
+            [DataMember]
+            public bool legacy { get; set; }
         }
     }
 }
