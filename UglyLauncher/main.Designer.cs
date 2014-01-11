@@ -30,18 +30,19 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(main));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.accountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.launcherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.beendenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.accountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.verwaltenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listView1 = new System.Windows.Forms.ListView();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
@@ -59,6 +60,20 @@
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
+            // launcherToolStripMenuItem
+            // 
+            this.launcherToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.beendenToolStripMenuItem});
+            this.launcherToolStripMenuItem.Name = "launcherToolStripMenuItem";
+            this.launcherToolStripMenuItem.Size = new System.Drawing.Size(68, 23);
+            this.launcherToolStripMenuItem.Text = "Launcher";
+            // 
+            // beendenToolStripMenuItem
+            // 
+            this.beendenToolStripMenuItem.Name = "beendenToolStripMenuItem";
+            this.beendenToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.beendenToolStripMenuItem.Text = "Beenden";
+            // 
             // accountsToolStripMenuItem
             // 
             this.accountsToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -71,20 +86,6 @@
             this.accountsToolStripMenuItem.Name = "accountsToolStripMenuItem";
             this.accountsToolStripMenuItem.Size = new System.Drawing.Size(69, 23);
             this.accountsToolStripMenuItem.Text = "Accounts";
-            // 
-            // launcherToolStripMenuItem
-            // 
-            this.launcherToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.beendenToolStripMenuItem});
-            this.launcherToolStripMenuItem.Name = "launcherToolStripMenuItem";
-            this.launcherToolStripMenuItem.Size = new System.Drawing.Size(68, 23);
-            this.launcherToolStripMenuItem.Text = "Launcher";
-            // 
-            // beendenToolStripMenuItem
-            // 
-            this.beendenToolStripMenuItem.Name = "beendenToolStripMenuItem";
-            this.beendenToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.beendenToolStripMenuItem.Text = "Beenden";
             // 
             // verwaltenToolStripMenuItem
             // 
@@ -116,6 +117,14 @@
             this.toolStripTextBox1.Size = new System.Drawing.Size(100, 16);
             this.toolStripTextBox1.Text = "Default:";
             // 
+            // toolStripComboBox1
+            // 
+            this.toolStripComboBox1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolStripComboBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.toolStripComboBox1.Name = "toolStripComboBox1";
+            this.toolStripComboBox1.Size = new System.Drawing.Size(121, 23);
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -128,14 +137,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(869, 456);
             this.splitContainer1.SplitterDistance = 318;
             this.splitContainer1.TabIndex = 1;
-            // 
-            // toolStripComboBox1
-            // 
-            this.toolStripComboBox1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.toolStripComboBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.toolStripComboBox1.Name = "toolStripComboBox1";
-            this.toolStripComboBox1.Size = new System.Drawing.Size(121, 23);
             // 
             // listView1
             // 
@@ -163,6 +164,7 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
