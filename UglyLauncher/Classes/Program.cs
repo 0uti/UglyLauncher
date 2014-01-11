@@ -17,9 +17,7 @@ namespace UglyLauncher
         {
             // Init Structuer
             AppPathes.CheckDirectories();
-            UserManager U = new UserManager();
-            U.LoadUserList();
-
+            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new main());

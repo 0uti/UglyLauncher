@@ -11,20 +11,20 @@ namespace UglyLauncher
     {
         public string xmlfile = @"\users.xml";
 
-        public void LoadUserList()
+        public users LoadUserList()
         {
             XMLStotage XML = new XMLStotage();
+            users UserObj = new users();
 
-            if (File.Exists(AppPathes.sDataDir + xmlfile))
-            {
-                // load that shit
-            }
-            else this.createEmptyFile();
+            if (!File.Exists(AppPathes.sDataDir + xmlfile)) this.createEmptyFile();
+            UserObj = XML.DeSerializeObject<users>(AppPathes.sDataDir + xmlfile);
+            return UserObj;
         }
 
-        public void SaveUserList()
+        public void SaveUserList(users UserObj)
         {
             XMLStotage XML = new XMLStotage();
+            XML.SerializeObject(UserObj, AppPathes.sDataDir + xmlfile);
         }
 
         private void createEmptyFile()
@@ -34,6 +34,21 @@ namespace UglyLauncher
             UsersFile.activeAccount = "none";
 
             XML.SerializeObject(UsersFile, AppPathes.sDataDir + xmlfile);
+        }
+
+        public void SetDefault(string accountname)
+        {
+            users Users = new users();
+            Users = LoadUserList();
+            Users.activeAccount = accountname;
+            SaveUserList(Users);
+        }
+
+        public string GetDefault()
+        {
+            users Users = new users();
+            Users = LoadUserList();
+            return Users.activeAccount;
         }
     }
 

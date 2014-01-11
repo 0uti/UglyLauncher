@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Net;
 using System.Runtime.Serialization;
 
 using Internet;
@@ -11,16 +12,7 @@ using Internet;
 
 namespace Minecraft
 {
-    public static class UserInformation
-    {
-        public static bool bAuthenticated = false;
-        public static string sAccessToken = null;
-        public static string sClientToken = null;
-        public static string sProfileId = null;
-        public static string sProfileName = null;
-        public static bool bProfileLegacy = false;
-    }
-
+    
     public class Launcher
     {
         
@@ -30,40 +22,54 @@ namespace Minecraft
     {
         public static string sAuthServer = "https://authserver.mojang.com";
 
-        public void Authenticate(string sUser, string sPassword)
+        public MCAuthenticate_Response Authenticate(string sUser, string sPassword)
         {
+            
             // create and fill JSON object
             MCAuthenticate_Request jsonObject = new MCAuthenticate_Request();
             jsonObject.username = sUser;
             jsonObject.password = sPassword;
             jsonObject.agent.name = "Minecraft";
             jsonObject.agent.version = "1";
-            
+
             // Serialize JSON
             string sJsonRequest = UglyLauncher.JsonHelper.JsonSerializer<MCAuthenticate_Request>(jsonObject);
+            string sJsonResponse = null;
 
-            // send HTTP POST request
-            string sJsonResponse = Internet.Http.POST(sAuthServer + "/authenticate", sJsonRequest, "application/json");
-
+            try
+            {
+                // send HTTP POST request
+                sJsonResponse = Internet.Http.POST(sAuthServer + "/authenticate", sJsonRequest, "application/json");
+            }
+            catch (WebException ex)
+            {
+                if (ex.Status == WebExceptionStatus.ProtocolError)
+                {
+                    // get JSON Error Message
+                    sJsonResponse = Internet.Http.HttpErrorMessage;
+                    MCError ErrorMessage = UglyLauncher.JsonHelper.JsonDeserializer<MCError>(sJsonResponse);
+                    throw new Exception(ErrorMessage.errorMessage);
+                }
+                else
+                {
+                    throw new Exception(ex.Message);
+                }
+            }
             // Deserialize JSON into object
             MCAuthenticate_Response MCResponse = UglyLauncher.JsonHelper.JsonDeserializer<MCAuthenticate_Response>(sJsonResponse);
 
-            //Copy
-            UserInformation.sAccessToken = MCResponse.accessToken;
-            UserInformation.sClientToken = MCResponse.clientToken;
-            UserInformation.sProfileId = MCResponse.selectedProfile.id;
-            UserInformation.sProfileName = MCResponse.selectedProfile.name;
-            UserInformation.bProfileLegacy = MCResponse.selectedProfile.legacy;
+            //return
+            return MCResponse;
         }
 
-        public void Refresh()
+        public string Refresh(string sAccessToken, string sClientToken)
         {
             string url = sAuthServer + "/refresh";
             
             // create and fill JSON object
             MCRefresh_Request jsonObject = new MCRefresh_Request();
-            jsonObject.accessToken = UserInformation.sAccessToken;
-            jsonObject.clientToken = UserInformation.sClientToken;
+            jsonObject.accessToken = sAccessToken;
+            jsonObject.clientToken = sClientToken;
             //jsonObject.selectedProfile.id = sProfileId;
             //jsonObject.selectedProfile.name = sProfileName;
 
@@ -76,8 +82,8 @@ namespace Minecraft
             // Deserialize JSON into object
             MCRefresh_Response MCResponse = UglyLauncher.JsonHelper.JsonDeserializer<MCRefresh_Response>(sJsonResponse);
 
-            //Copy
-            UserInformation.sAccessToken = MCResponse.accessToken;
+            //return
+            return MCResponse.accessToken;
         }
 
         public void Validate()
@@ -94,7 +100,7 @@ namespace Minecraft
     /// The JSON authenticate request construct.
     /// </summary>
     [DataContract]
-    internal class MCAuthenticate_Request
+    public class MCAuthenticate_Request
     {
         [DataMember]
         public Agent agent;
@@ -189,5 +195,19 @@ namespace Minecraft
             [DataMember]
             public bool legacy { get; set; }
         }
+    }
+
+    /// <summary>
+    /// The JSON Error response construct.
+    /// </summary>
+    [DataContract]
+    public class MCError
+    {
+        [DataMember]
+        public string error { get; set; }
+        [DataMember]
+        public string errorMessage { get; set; }
+        [DataMember]
+        public string cause { get; set; }
     }
 }
