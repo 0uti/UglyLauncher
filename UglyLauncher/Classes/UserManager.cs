@@ -50,6 +50,22 @@ namespace UglyLauncher
             Users = LoadUserList();
             return Users.activeAccount;
         }
+
+        public int GetProfileXmlId(string sAccount)
+        {
+            users UserObj = new users();
+            UserObj = LoadUserList();
+
+            for (int i = 0; i < UserObj.accounts.Count; i++)
+            {
+                if (UserObj.accounts[i].username == sAccount)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
     }
 
     [DataContract]

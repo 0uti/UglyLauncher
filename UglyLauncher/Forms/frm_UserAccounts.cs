@@ -78,19 +78,17 @@ namespace UglyLauncher
             {
                 UserManager U = new UserManager();
                 users UserObj = U.LoadUserList();
-                if (this.lst_accounts.SelectedItems[0].Text == UserObj.activeAccount) UserObj.activeAccount = "none";
-                for (int i = 0; i < UserObj.accounts.Count; i++)
+                
+                int XmlId = U.GetProfileXmlId(this.lst_accounts.SelectedItems[0].Text);
+                if (XmlId != -1)
                 {
-                    if (UserObj.accounts[i].username == this.lst_accounts.SelectedItems[0].Text)
-                    {
-                        UserObj.accounts.RemoveAt(i);
-                    }
+                    if (this.lst_accounts.SelectedItems[0].Text == UserObj.activeAccount) UserObj.activeAccount = "none";
+                    UserObj.accounts.RemoveAt(XmlId);
+                    U.SaveUserList(UserObj);
+                    LoadUsersIntoList();
                 }
-                U.SaveUserList(UserObj);
-                LoadUsersIntoList();
+               
             }
         }
-
-
     }
 }

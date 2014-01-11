@@ -77,8 +77,25 @@ namespace Minecraft
             string sJsonRequest = UglyLauncher.JsonHelper.JsonSerializer<MCRefresh_Request>(jsonObject);
 
             // send HTTP POST request
-            string sJsonResponse = Internet.Http.POST(sAuthServer + "/refresh", sJsonRequest, "application/json");
-
+            string sJsonResponse = null;
+            try
+            {
+                sJsonResponse = Internet.Http.POST(sAuthServer + "/refresh", sJsonRequest, "application/json");
+            }
+            catch (WebException ex)
+            {
+                if (ex.Status == WebExceptionStatus.ProtocolError)
+                {
+                    // get JSON Error Message
+                    sJsonResponse = Internet.Http.HttpErrorMessage;
+                    MCError ErrorMessage = UglyLauncher.JsonHelper.JsonDeserializer<MCError>(sJsonResponse);
+                    throw new Exception(ErrorMessage.errorMessage);
+                }
+                else
+                {
+                    throw new Exception(ex.Message);
+                }
+            }
             // Deserialize JSON into object
             MCRefresh_Response MCResponse = UglyLauncher.JsonHelper.JsonDeserializer<MCRefresh_Response>(sJsonResponse);
 
@@ -210,4 +227,25 @@ namespace Minecraft
         [DataMember]
         public string cause { get; set; }
     }
+
+
+
+    public class MCPacks
+    {
+        public List<pack> packs = new List<pack>();
+
+        public struct pack
+        {
+            public string name { get; set; }
+            public string recommend_version { get; set; }
+            public bool autoupdate { get; set; }
+
+
+
+
+        }
+    }
+
+
+
 }

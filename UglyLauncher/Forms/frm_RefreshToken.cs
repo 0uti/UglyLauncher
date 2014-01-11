@@ -10,11 +10,13 @@ using System.Net;
 
 namespace UglyLauncher
 {
-    public partial class frm_AddUser : Form
+    public partial class frm_RefreshToken : Form
     {
-        public frm_AddUser()
+        public frm_RefreshToken(string sUsername)
         {
             InitializeComponent();
+            txt_user.Text = sUsername;
+            txt_user.Enabled = false;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -46,34 +48,24 @@ namespace UglyLauncher
                     return;
                 }
 
-                users.account newacc = new users.account();
-                newacc.profiles = new List<users.profile>();
-
-                newacc.accessToken = AuthData.accessToken;
-                newacc.clientToken = AuthData.clientToken;
-                newacc.username = txt_user.Text.ToString().Trim();
-                newacc.activeProfile = AuthData.selectedProfile.id;
-
-                for (int i = 0; i < AuthData.availableProfiles.Count; i++)
-                {
-                    users.profile newprofile = new users.profile();
-                    newprofile.id = AuthData.availableProfiles[i].id;
-                    newprofile.name = AuthData.availableProfiles[i].name;
-                    newprofile.legacy = AuthData.availableProfiles[i].legacy;
-                    newacc.profiles.Add(newprofile);
-                }
-                
                 // Load users.xml
                 UserManager U = new UserManager();
-                users storedAccounts = U.LoadUserList();
-                
+                users storedAccounts = new users();
+                storedAccounts = U.LoadUserList();
+
+                int XmlId = U.GetProfileXmlId(txt_user.Text.ToString().Trim());
                 // save users.xml with new account
-                storedAccounts.accounts.Add(newacc);
+                users.account myAccount = storedAccounts.accounts[XmlId];
+                myAccount.accessToken = AuthData.accessToken;
+                myAccount.clientToken = AuthData.clientToken;
+                storedAccounts.accounts[XmlId] = myAccount;
                 U.SaveUserList(storedAccounts);
 
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
         }
+
+        
     }
 }
