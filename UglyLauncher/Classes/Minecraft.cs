@@ -23,21 +23,7 @@ namespace Minecraft
 
     public class Launcher
     {
-        public static string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        public static string sDataDir = appData + @"\.UglyLauncher";
-        public static string sLibraryDir = appData + @"\.UglyLauncher\libraries";
-        public static string sAssetsDir = appData + @"\.UglyLauncher\assets";
-        public static string sVersionDir = appData + @"\.UglyLauncher\versions";
-        public static string sPacksDir = appData + @"\.UglyLauncher\packs";
-
-        public void CheckDirectories()
-        {
-            if (!Directory.Exists(sDataDir)) Directory.CreateDirectory(sDataDir);
-            if (!Directory.Exists(sLibraryDir)) Directory.CreateDirectory(sLibraryDir);
-            if (!Directory.Exists(sAssetsDir)) Directory.CreateDirectory(sAssetsDir);
-            if (!Directory.Exists(sVersionDir)) Directory.CreateDirectory(sVersionDir);
-            if (!Directory.Exists(sPacksDir)) Directory.CreateDirectory(sPacksDir);
-        }
+        
     }
 
     public class Authentication
@@ -140,7 +126,7 @@ namespace Minecraft
         [DataMember]
         public string clientToken { get; set; }
         [DataMember]
-        public List<profilesavailable> availableProfiles;
+        public List<profilesavailable> availableProfiles = new List<profilesavailable>();
         [DataMember]
         public profileselected selectedProfile;
 
