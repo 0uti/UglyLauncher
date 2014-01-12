@@ -15,7 +15,7 @@ namespace UglyLauncher
         [STAThread]
         static void Main()
         {
-            // Init Structuer
+            // Init Structure
             AppPathes.CheckDirectories();
             
             Application.EnableVisualStyles();

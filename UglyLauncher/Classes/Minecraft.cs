@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
+using System.Windows.Forms;
 
 using Internet;
 
@@ -12,15 +13,72 @@ using Internet;
 
 namespace Minecraft
 {
-    
+    // Static Class. More functions will use this data.
+    public static class staticVars
+    {
+        public static MCPacks Packs = new MCPacks();
+        public static MCPacksInstalled PacksInstalled = new MCPacksInstalled();
+    }
+
     public class Launcher
     {
-        
+        public string sPackServer = "http://outi-networks.de/UglyLauncher";
+
+        // Get Package liste from Server
+        public MCPacks GetClientPackList(string MCPlayerName)
+        {
+            MCPacks Packs = new MCPacks();
+            string jsonString = Internet.Http.GET(sPackServer + @"/packs.php?player=" + MCPlayerName);
+
+            Packs = UglyLauncher.JsonHelper.JsonDeserializer<MCPacks>(jsonString);
+            return Packs;
+        }
+
+        // Get installes packages
+        public MCPacksInstalled GetInstalledPacks()
+        {
+            MCPacksInstalled Packs = new MCPacksInstalled();
+            List<string> dirs = new List<string>(Directory.EnumerateDirectories(UglyLauncher.AppPathes.sPacksDir));
+
+            foreach (var dir in dirs)
+            {
+                if (File.Exists(dir + @"\version") && File.Exists(dir + @"\pack.json"))
+                {
+                    MCPacksInstalled.pack pack = new MCPacksInstalled.pack();
+                    pack.name = dir.Substring(dir.LastIndexOf("\\") + 1);
+                    // Get versions files
+                    pack.current_version = File.ReadAllText(dir + @"\version").Trim();
+                    if (File.Exists(dir + @"\selected")) pack.selected_version = File.ReadAllText(dir + @"\selected").Trim();
+                    Packs.packs.Add(pack);
+                }
+            }
+            return Packs;
+        }
+
+        public bool IsPackInstalled(string sPackName, string sPackVersion)
+        {
+            // find Pack in List
+            int iPackId = -1;
+            for (int i = 0; i < staticVars.PacksInstalled.packs.Count; i++)
+                if (staticVars.PacksInstalled.packs[i].name == sPackName) iPackId = i;
+            
+            // return false if pack not found
+            if (iPackId == -1) return false;
+
+            MCPacksInstalled.pack oInstalledPack = new MCPacksInstalled.pack();
+            oInstalledPack = staticVars.PacksInstalled.packs[iPackId];
+
+            // check if version is installed
+            if (oInstalledPack.current_version != sPackVersion) return false;
+
+            // Pack is fine :)
+            return true;
+        }
     }
 
     public class Authentication
     {
-        public static string sAuthServer = "https://authserver.mojang.com";
+        public string sAuthServer = "https://authserver.mojang.com";
 
         public MCAuthenticate_Response Authenticate(string sUser, string sPassword)
         {
@@ -102,16 +160,7 @@ namespace Minecraft
             //return
             return MCResponse.accessToken;
         }
-
-        public void Validate()
-        {
-            string url = sAuthServer + "/validate";
-
-
-        }
     }
-
-
 
     /// <summary>
     /// The JSON authenticate request construct.
@@ -228,24 +277,120 @@ namespace Minecraft
         public string cause { get; set; }
     }
 
-
-
+    /// <summary>
+    /// The JSON Client Pack construct.
+    /// </summary>
+    [DataContract]
     public class MCPacks
     {
+        [DataMember]
         public List<pack> packs = new List<pack>();
 
+        [DataContractAttribute]
         public struct pack
         {
+            [DataMember]
             public string name { get; set; }
-            public string recommend_version { get; set; }
+            [DataMember]
+            public string recommended_version { get; set; }
+            [DataMember]
             public bool autoupdate { get; set; }
-
-
-
-
+            [DataMember]
+            public List<String> versions { get; set; }
         }
     }
 
+    /// <summary>
+    /// The JSON Client installed Pack construct.
+    /// </summary>
+    [DataContract]
+    public class MCPacksInstalled
+    {
+        [DataMember]
+        public List<pack> packs = new List<pack>();
 
+        [DataContractAttribute]
+        public struct pack
+        {
+            [DataMember]
+            public string name { get; set; }
+            [DataMember]
+            public string current_version { get; set; } // Version of the package
+            [DataMember]
+            public string selected_version { get; set; } // selected version in Launcher window (recommended check)
+        }
+    }
+
+    /// <summary>
+    /// The JSON Minecraft Game Structure.
+    /// </summary>
+    [DataContract]
+    public class MCGameStructure
+    {
+        [DataMember]
+        public string id { get; set; }
+        [DataMember]
+        public string time { get; set; }
+        [DataMember]
+        public string releaseTime { get; set; }
+        [DataMember]
+        public string type { get; set; }
+        [DataMember]
+        public string minecraftArguments { get; set; }
+        [DataMember]
+        public string minimumLauncherVersion { get; set; }
+        [DataMember]
+        public string assets { get; set; }
+        [DataMember]
+        public string mainClass { get; set; }
+        [DataMember]
+        public List<lib> libraries = new List<lib>();
+
+        [DataContractAttribute]
+        public struct lib
+        {
+            public string name { get; set; }
+            [DataMember]
+            public List<rule> rules;
+            [DataMember]
+            public native natives;
+            [DataMember]
+            public Extract extract;
+        }
+
+        [DataContractAttribute]
+        public struct Extract
+        {
+            [DataMember]
+            public List<string> exclude { get; set; }
+        }
+
+        [DataContractAttribute]
+        public struct native
+        {
+            [DataMember]
+            public string linux { get; set; }
+            [DataMember]
+            public string windows { get; set; }
+            [DataMember]
+            public string osx { get; set; }
+        }
+
+        [DataContractAttribute]
+        public struct rule
+        {
+            [DataMember]
+            public string action { get; set; }
+            [DataMember]
+            public OS os;
+        }
+
+        [DataContractAttribute]
+        public struct OS
+        {
+            [DataMember]
+            public string name { get; set; }
+        }
+    }
 
 }

@@ -57,5 +57,22 @@ namespace Internet
                 throw ex;
             }
         }
+
+        public static MemoryStream Download(string url)
+        {
+            WebClient wc = new WebClient();
+            byte[] bytes = wc.DownloadData(url);
+            MemoryStream ms = new MemoryStream(bytes);
+            return ms;
+
+            /* Download Image in Imagelist
+                
+                MemoryStream ms = new MemoryStream(bytes);
+                System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
+              
+             */
+
+
+        }
     }
 }

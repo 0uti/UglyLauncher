@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,41 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="lvImages.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>248, 17</value>
-  </metadata>
-  <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>132, 17</value>
-  </metadata>
-  <metadata name="startup_worker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>348, 17</value>
-  </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AADJrv8Aya7/AMmu/wDJrv8Aya7/AA0NDf8GBgb/AgIC/wAAAP8BAQH/BQUF/wwMDP/Jrv8Aya7/AMmu
-        /wDJrv8Aya7/AMmu/wDJrv8AAAAA/wAAAP8AAAD/29vb/+vr6//c3Nz/AAAA/6/YTv+34lH/AAAA/8mu
-        /wDJrv8Aya7/AMmu/wDJrv8AAAAA/6vTTf+u1k7/AAAA/+zs7P/9/f3/7Ozs/wAAAP8BAQD/vupT/7fi
-        Uf8AAAD/ya7/AMmu/wDJrv8AAAAA/6PISv8AAAD/AAAA/wAAAP/s7Oz//f39/+zs7P8AAAD/0NDQ/wEB
-        AP+w2U//AAAA/8mu/wDJrv8Aya7/AAAAAP8AAAD/29vb/97e3v8AAAD/7Ozs//39/f/s7Oz/AAAA/+3t
-        7f/f39//AAAA/6/XTv8AAAD/ya7/AAwMDP+s1E3/AAAA/+vr6//u7u7/AAAA/+zs7P/9/f3/7Ozs/wAA
-        AP/f39//3d3d/wAAAP+751P/t+JQ/wwMDP8FBQX/teBQ/wAAAP/c3Nz/39/f/wAAAP/d3d3/7e3t/97e
-        3v8AAAD/AAAA/wAAAP8AAAD/AQEA/67XTv8FBQX/AQEB/6zUTf8AAAD/AAAA/wAAAP8AAAD/AAAA/wAA
-        AP8AAAD/3t7e/+3t7f/t7e3/7e3t/9/f3/8AAAD/AQEB/wAAAP8AAAD/AAAA/wAAAP8AAAD/3d3d/+3t
-        7f/e3t7/AAAA/+3t7f/9/f3/8fHx//Hx8f/9/f3/3t7e/wAAAP8BAQH/AAAA/wAAAP8AAAD/AAAA/+zs
-        7P/9/f3/7e3t/wAAAP/t7e3/8PDw/wAAAP8AAAD/8/Pz/+rq6v8BAQH/BQUF/9LS0v8AAAD/AAAA/wAA
-        AP/y8vL//f39//Ly8v8AAAD/4ODg//Dw8P8AAAD/AAAA//Pz8//d3d3/BQUF/wwMDP/d3d3/9PT0/+/v
-        7//09PT//f39//39/f/9/f3/1NTU/wAAAP/g4OD/4eHh/+Hh4f/d3d3/AAAA/wwMDP/Jrv8AAAAA/+Dg
-        4P/9/f3//f39//39/f/9/f3/8fHx/wAAAP+w2U//AQEA/wAAAP8AAAD/AAAA/wAAAP/Jrv8Aya7/AMmu
-        /wAAAAD/3d3d/+/v7//9/f3//f39/9/f3/8BAQD/xfRW/8b1Vv/D8VX/rtZO/wAAAP/Jrv8Aya7/AMmu
-        /wDJrv8Aya7/AAAAAP8AAAD/3d3d/97e3v8AAAD/rtdO/77sU/++7FP/tuFQ/wAAAP/Jrv8Aya7/AMmu
-        /wDJrv8Aya7/AMmu/wDJrv8Aya7/AAwMDP8FBQX/AQEB/wAAAP8BAQH/BQUF/wwMDP/Jrv8Aya7/AMmu
-        /wDJrv8A+A8AAOAHAADAAwAAgAMAAIABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAEAAMAD
-        AADgBwAA+A8AAA==
-</value>
-  </data>
 </root>
