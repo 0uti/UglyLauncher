@@ -166,7 +166,7 @@ namespace Minecraft
         public struct Extract
         {
             [DataMember]
-            public List<string> exclude { get; set; }
+            public List<string> exclude;
         }
 
         [DataContractAttribute]

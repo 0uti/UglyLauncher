@@ -220,21 +220,17 @@ namespace UglyLauncher
                 MessageBox.Show(this, "Kein Pack gewählt.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            Minecraft.Launcher MCLauncher = new Minecraft.Launcher();
-
+            
             // gather vars from Gui
             string sSelectedPack = listView1.SelectedItems[0].Text;
             string sSelectedVersion = null;
             if (cmb_packversions.SelectedIndex == 0) sSelectedVersion = "recommended";
             else sSelectedVersion = cmb_packversions.Text;
 
-            //Check if the pack is with the given version install
-            if (MCLauncher.IsPackInstalled(sSelectedPack, sSelectedVersion) == false)
-            {
-                // install the Pack
-                MessageBox.Show("ToDo: install Pack");
+            Minecraft.Launcher MCLauncher = new Minecraft.Launcher();
 
-            }
+            //  Check if the pack is with the given version install
+            if (MCLauncher.IsPackInstalled(sSelectedPack, sSelectedVersion) == false) MCLauncher.InstallPack(sSelectedPack, sSelectedVersion);
 
             // prepare the Pack
             MCLauncher.PreparePack(sSelectedPack);
