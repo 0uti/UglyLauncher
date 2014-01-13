@@ -91,7 +91,6 @@
     <Reference Include="System.Web.Extensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -103,10 +102,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
     <Reference Include="XamlBuildTask" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Updater.cs" />
     <Compile Include="Classes\XMLStotage.cs" />
     <Compile Include="Forms\frm_progressbar.cs">
       <SubType>Form</SubType>
@@ -133,17 +132,61 @@
     <Compile Include="Forms\frm_main.Designer.cs">
       <DependentUpon>frm_main.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\Internet.cs" />
-    <Compile Include="Classes\Minecraft.cs" />
-    <Compile Include="Classes\Program.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Forms\frm_RefreshToken.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frm_RefreshToken.Designer.cs">
       <DependentUpon>frm_RefreshToken.cs</DependentUpon>
     </Compile>
+    <Compile Include="Internet\HTTP.cs" />
+    <Compile Include="Minecraft\Authentication.cs" />
+    <Compile Include="Minecraft\Launcher.cs" />
+    <Compile Include="Minecraft\MCStructures.cs" />
+    <Compile Include="Minecraft\Statics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Classes\UserManager.cs" />
+    <Compile Include="SharpZipLib\Checksums\Adler32.cs" />
+    <Compile Include="SharpZipLib\Checksums\CRC32.cs" />
+    <Compile Include="SharpZipLib\Checksums\IChecksum.cs" />
+    <Compile Include="SharpZipLib\Checksums\StrangeCRC.cs" />
+    <Compile Include="SharpZipLib\Core\FileSystemScanner.cs" />
+    <Compile Include="SharpZipLib\Core\INameTransform.cs" />
+    <Compile Include="SharpZipLib\Core\IScanFilter.cs" />
+    <Compile Include="SharpZipLib\Core\NameFilter.cs" />
+    <Compile Include="SharpZipLib\Core\PathFilter.cs" />
+    <Compile Include="SharpZipLib\Core\StreamUtils.cs" />
+    <Compile Include="SharpZipLib\Core\WindowsPathUtils.cs" />
+    <Compile Include="SharpZipLib\Encryption\PkzipClassic.cs" />
+    <Compile Include="SharpZipLib\Encryption\ZipAESStream.cs" />
+    <Compile Include="SharpZipLib\Encryption\ZipAESTransform.cs" />
+    <Compile Include="SharpZipLib\SharpZipBaseException.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\Deflater.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\DeflaterConstants.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\DeflaterEngine.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\DeflaterHuffman.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\DeflaterPending.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\Inflater.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\InflaterDynHeader.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\InflaterHuffmanTree.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\PendingBuffer.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\Streams\DeflaterOutputStream.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\Streams\InflaterInputStream.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\Streams\OutputWindow.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\Streams\StreamManipulator.cs" />
+    <Compile Include="SharpZipLib\Zip\FastZip.cs" />
+    <Compile Include="SharpZipLib\Zip\IEntryFactory.cs" />
+    <Compile Include="SharpZipLib\Zip\WindowsNameTransform.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipConstants.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipEntry.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipEntryFactory.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipException.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipExtraData.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipFile.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipHelperStream.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipInputStream.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipNameTransform.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipOutputStream.cs" />
     <EmbeddedResource Include="Forms\frm_progressbar.resx">
       <DependentUpon>frm_progressbar.cs</DependentUpon>
     </EmbeddedResource>

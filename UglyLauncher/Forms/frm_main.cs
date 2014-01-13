@@ -118,13 +118,13 @@ namespace UglyLauncher
 
             // Get Packs
             Minecraft.Launcher L = new Minecraft.Launcher();
-            Minecraft.staticVars.Packs = L.GetClientPackList(MCPlayerName);
+            Minecraft.Statics.PacksAvailable = L.GetClientPackList(MCPlayerName);
 
-            for (int i = 0; i < Minecraft.staticVars.Packs.packs.Count; i++)
+            for (int i = 0; i < Minecraft.Statics.PacksAvailable.packs.Count; i++)
             {
-                Minecraft.MCPacks.pack Pack = new Minecraft.MCPacks.pack();
+                Minecraft.MCPacksAvailable.pack Pack = new Minecraft.MCPacksAvailable.pack();
                 ListViewItem LvItem = new ListViewItem();
-                Pack = Minecraft.staticVars.Packs.packs[i];
+                Pack = Minecraft.Statics.PacksAvailable.packs[i];
 
                 // Get Pack Icon
                 MemoryStream ms = new MemoryStream();
@@ -142,7 +142,7 @@ namespace UglyLauncher
             startup_worker.ReportProgress(75);
             System.Threading.Thread.Sleep(100);
 
-            Minecraft.staticVars.PacksInstalled = L.GetInstalledPacks();
+            Minecraft.Statics.PacksInstalled = L.GetInstalledPacks();
 
 
 
@@ -155,8 +155,8 @@ namespace UglyLauncher
             if (listView1.SelectedItems.Count == 1)
             {
                 // Load Versions in Dropdown
-                Minecraft.MCPacks.pack Pack = new Minecraft.MCPacks.pack();
-                Pack = Minecraft.staticVars.Packs.packs[listView1.SelectedItems[0].Index];
+                Minecraft.MCPacksAvailable.pack Pack = new Minecraft.MCPacksAvailable.pack();
+                Pack = Minecraft.Statics.PacksAvailable.packs[listView1.SelectedItems[0].Index];
 
                 cmb_packversions.Items.Clear();
                 cmb_packversions.Items.Add("Recommended (" + Pack.recommended_version + ")");
@@ -167,19 +167,19 @@ namespace UglyLauncher
 
                 bool installed = false;
                 // is pack installed ?
-                for (int i = 0; i < Minecraft.staticVars.PacksInstalled.packs.Count; i++)
+                for (int i = 0; i < Minecraft.Statics.PacksInstalled.packs.Count; i++)
                 {
-                    if (Minecraft.staticVars.PacksInstalled.packs[i].name == Pack.name)
+                    if (Minecraft.Statics.PacksInstalled.packs[i].name == Pack.name)
                     {
                         installed = true;
                         // Seleced Pack is installed.
-                        if (Minecraft.staticVars.PacksInstalled.packs[i].selected_version == "recommended")
+                        if (Minecraft.Statics.PacksInstalled.packs[i].selected_version == "recommended")
                         {
                             cmb_packversions.SelectedIndex = 0; // recommended Version is Selected
                         }
                         else
                         {
-                            cmb_packversions.SelectedIndex = cmb_packversions.FindStringExact(Minecraft.staticVars.PacksInstalled.packs[i].selected_version);
+                            cmb_packversions.SelectedIndex = cmb_packversions.FindStringExact(Minecraft.Statics.PacksInstalled.packs[i].selected_version);
                         }
                     }
                 }
@@ -237,7 +237,7 @@ namespace UglyLauncher
             }
 
             // prepare the Pack
-            MessageBox.Show("ToDo: starting Pack");
+            MCLauncher.PreparePack(sSelectedPack);
 
 
 

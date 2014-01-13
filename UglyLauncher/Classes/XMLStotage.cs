@@ -77,6 +77,7 @@ namespace UglyLauncher
             catch (Exception ex)
             {
                 //Log exception here
+                throw ex;
             }
 
             return objectOut;
