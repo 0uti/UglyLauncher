@@ -4,14 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using System.IO;
+using System.ComponentModel;
+using System.Threading;
 
 namespace Internet
 {
-    public static class Http
+    public class Http
     {
-        public static string HttpErrorMessage = null;
 
-        public static string GET(string url)
+        public string HttpErrorMessage = null;
+
+        public string GET(string url)
         {
             // declare needed objects
             WebRequest request = null;
@@ -36,7 +39,7 @@ namespace Internet
             }
         }
 
-        public static string POST(string url, string postdata, string contenttype)
+        public string POST(string url, string postdata, string contenttype)
         {
             // declare needed objects
             WebRequest request = null;
@@ -80,7 +83,7 @@ namespace Internet
             }
         }
 
-        public static MemoryStream Download(string url)
+        public MemoryStream DownloadToStream(string url)
         {
             // create needed objects
             WebClient wc;
@@ -99,4 +102,8 @@ namespace Internet
             }
         }
     }
+
+    
+
+
 }

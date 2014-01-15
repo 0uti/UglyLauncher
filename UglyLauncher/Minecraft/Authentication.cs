@@ -21,6 +21,7 @@ namespace Minecraft
             jsonObject.password = sPassword;
             jsonObject.agent.name = "Minecraft";
             jsonObject.agent.version = "1";
+            Http H = new Http();
 
             // Serialize JSON
             string sJsonRequest = UglyLauncher.JsonHelper.JsonSerializer<MCAuthenticate_Request>(jsonObject);
@@ -29,14 +30,14 @@ namespace Minecraft
             try
             {
                 // send HTTP POST request
-                sJsonResponse = Internet.Http.POST(sAuthServer + "/authenticate", sJsonRequest, "application/json");
+                sJsonResponse = H.POST(sAuthServer + "/authenticate", sJsonRequest, "application/json");
             }
             catch (WebException ex)
             {
                 if (ex.Status == WebExceptionStatus.ProtocolError)
                 {
                     // get JSON Error Message
-                    sJsonResponse = Internet.Http.HttpErrorMessage;
+                    sJsonResponse = H.HttpErrorMessage;
                     MCError ErrorMessage = UglyLauncher.JsonHelper.JsonDeserializer<MCError>(sJsonResponse);
                     throw new Exception(ErrorMessage.errorMessage);
                 }
@@ -62,6 +63,7 @@ namespace Minecraft
             jsonObject.clientToken = sClientToken;
             //jsonObject.selectedProfile.id = sProfileId;
             //jsonObject.selectedProfile.name = sProfileName;
+            Http H = new Http();
 
             // Serialize JSON
             string sJsonRequest = UglyLauncher.JsonHelper.JsonSerializer<MCRefresh_Request>(jsonObject);
@@ -70,14 +72,14 @@ namespace Minecraft
             string sJsonResponse = null;
             try
             {
-                sJsonResponse = Internet.Http.POST(sAuthServer + "/refresh", sJsonRequest, "application/json");
+                sJsonResponse = H.POST(sAuthServer + "/refresh", sJsonRequest, "application/json");
             }
             catch (WebException ex)
             {
                 if (ex.Status == WebExceptionStatus.ProtocolError)
                 {
                     // get JSON Error Message
-                    sJsonResponse = Internet.Http.HttpErrorMessage;
+                    sJsonResponse = H.HttpErrorMessage;
                     MCError ErrorMessage = UglyLauncher.JsonHelper.JsonDeserializer<MCError>(sJsonResponse);
                     throw new Exception(ErrorMessage.errorMessage);
                 }

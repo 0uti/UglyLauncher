@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 
+using Internet;
 
 namespace UglyLauncher
 {
@@ -127,8 +128,9 @@ namespace UglyLauncher
                 Pack = Minecraft.Statics.PacksAvailable.packs[i];
 
                 // Get Pack Icon
+                Http H = new Http();
                 MemoryStream ms = new MemoryStream();
-                ms = Internet.Http.Download(L.sPackServer + @"/packs/" + Pack.name + @"/" + Pack.name + @".png");
+                ms = H.DownloadToStream(L.sPackServer + @"/packs/" + Pack.name + @"/" + Pack.name + @".png");
 
                 LvItem.Text = Pack.name;
                 LvItem.Font = new Font("Thaoma", 20, FontStyle.Bold);
@@ -235,11 +237,9 @@ namespace UglyLauncher
             // prepare the Pack
             MCLauncher.PreparePack(sSelectedPack);
 
+            // Start th pack
+            MCLauncher.StartPack(sSelectedPack);
 
-
-
-            // Start the Pack
-            MessageBox.Show("ToDo: starting Pack");
             this.WindowState = FormWindowState.Minimized;
             
 

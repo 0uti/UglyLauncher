@@ -33,14 +33,16 @@ namespace UglyLauncher
         public static string sAssetsDir = appData + @"\.UglyLauncher\assets";
         public static string sVersionDir = appData + @"\.UglyLauncher\versions";
         public static string sPacksDir = appData + @"\.UglyLauncher\packs";
+        public static string sNativesDir = appData + @"\.UglyLauncher\natives";
 
         public static void CheckDirectories()
         {
             if (!Directory.Exists(sDataDir)) Directory.CreateDirectory(sDataDir);
-            if (!Directory.Exists(sLibraryDir)) Directory.CreateDirectory(UglyLauncher.AppPathes.sLibraryDir);
-            if (!Directory.Exists(sAssetsDir)) Directory.CreateDirectory(UglyLauncher.AppPathes.sAssetsDir);
-            if (!Directory.Exists(sVersionDir)) Directory.CreateDirectory(UglyLauncher.AppPathes.sVersionDir);
-            if (!Directory.Exists(sPacksDir)) Directory.CreateDirectory(UglyLauncher.AppPathes.sPacksDir);
+            if (!Directory.Exists(sLibraryDir)) Directory.CreateDirectory(sLibraryDir);
+            if (!Directory.Exists(sAssetsDir)) Directory.CreateDirectory(sAssetsDir);
+            if (!Directory.Exists(sVersionDir)) Directory.CreateDirectory(sVersionDir);
+            if (!Directory.Exists(sPacksDir)) Directory.CreateDirectory(sPacksDir);
+            if (!Directory.Exists(sNativesDir)) Directory.CreateDirectory(sNativesDir);
         }
     }
 

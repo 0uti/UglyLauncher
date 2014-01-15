@@ -18,7 +18,22 @@ namespace UglyLauncher
 
         public void update_bar(int percent)
         {
-            progressBar1.Value = percent;
+            progressBar1.BeginInvoke(
+                new Action(() =>
+                {
+                    progressBar1.Value = percent;
+                }
+            ));
+        }
+
+        public void setLabel(string text)
+        {
+            label1.BeginInvoke(
+                new Action(() =>
+                {
+                    label1.Text = text;
+                }
+            ));
         }
     }
 }

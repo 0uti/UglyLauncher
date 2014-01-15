@@ -123,79 +123,7 @@ namespace Minecraft
     }
 
 
-    /// <summary>
-    /// The JSON Minecraft Game Structure.
-    /// </summary>
-    [DataContract]
-    public class MCGameStructure
-    {
-        [DataMember]
-        public string id { get; set; }
-        [DataMember]
-        public string time { get; set; }
-        [DataMember]
-        public string releaseTime { get; set; }
-        [DataMember]
-        public string type { get; set; }
-        [DataMember]
-        public string minecraftArguments { get; set; }
-        [DataMember]
-        public string minimumLauncherVersion { get; set; }
-        [DataMember]
-        public string assets { get; set; }
-        [DataMember]
-        public string mainClass { get; set; }
-        [DataMember]
-        public List<lib> libraries = new List<lib>();
-
-
-        [DataContractAttribute]
-        public struct lib
-        {
-            [DataMember]
-            public string name { get; set; }
-            [DataMember]
-            public List<rule> rules;
-            [DataMember]
-            public native natives;
-            [DataMember]
-            public Extract extract;
-        }
-
-        [DataContractAttribute]
-        public struct Extract
-        {
-            [DataMember]
-            public List<string> exclude;
-        }
-
-        [DataContractAttribute]
-        public struct native
-        {
-            [DataMember]
-            public string linux { get; set; }
-            [DataMember]
-            public string windows { get; set; }
-            [DataMember]
-            public string osx { get; set; }
-        }
-
-        [DataContractAttribute]
-        public struct rule
-        {
-            [DataMember]
-            public string action { get; set; }
-            [DataMember]
-            public OS os;
-        }
-
-        [DataContractAttribute]
-        public struct OS
-        {
-            [DataMember]
-            public string name { get; set; }
-        }
-    }
+    
 
 
     /// <summary>
@@ -241,5 +169,92 @@ namespace Minecraft
             public string selected_version { get; set; } // selected version in Launcher window (recommended check)
         }
     }
+
+    // Structures Neu!
+
+
+    /// <summary>
+    /// The JSON Minecraft Game Structure.
+    /// </summary>
+    [DataContract]
+    public class MCGameStructure
+    {
+        [DataMember]
+        public string id { get; set; }
+        [DataMember]
+        public string time { get; set; }
+        [DataMember]
+        public string releaseTime { get; set; }
+        [DataMember]
+        public string type { get; set; }
+        [DataMember]
+        public string minecraftArguments { get; set; }
+        [DataMember]
+        public string minimumLauncherVersion { get; set; }
+        [DataMember]
+        public string assets { get; set; }
+        [DataMember]
+        public string mainClass { get; set; }
+        [DataMember]
+        public List<MCGameStructureLib> libraries = new List<MCGameStructureLib>();
+    }
+
+    [DataContract]
+    public class MCGameStructureLibExtract
+    {
+        [DataMember]
+        public List<string> exclude;
+    }
+
+    [DataContract]
+    public class MCGameStructureLibRuleOS
+    {
+        [DataMember]
+        public string name { get; set; }
+    }
+
+    [DataContract]
+    public class MCGameStructureLibRule
+    {
+        [DataMember]
+        public string action { get; set; }
+        [DataMember]
+        public MCGameStructureLibRuleOS os;
+    }
+
+    [DataContract]
+    public class MCGameStructureLibNative
+    {
+        [DataMember]
+        public string linux { get; set; }
+        [DataMember]
+        public string windows { get; set; }
+        [DataMember]
+        public string osx { get; set; }
+    }
+
+    [DataContract]
+    public class MCGameStructureLib
+    {
+        [DataMember]
+        public string name { get; set; }
+        [DataMember]
+        public List<MCGameStructureLibRule> rules;
+        [DataMember]
+        public MCGameStructureLibNative natives;
+        [DataMember]
+        public MCGameStructureLibExtract extract;
+    }
+
+
+    [DataContract]
+    public class MCAssets
+    {
+        [DataMember]
+        public string @virtual { get; set;}
+
+
+    }
+
 
 }
