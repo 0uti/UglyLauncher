@@ -46,8 +46,8 @@ namespace UglyLauncher
                     return;
                 }
 
-                users.account newacc = new users.account();
-                newacc.profiles = new List<users.profile>();
+                MCUserAccount newacc = new MCUserAccount();
+                newacc.profiles = new List<MCUserAccountProfile>();
 
                 newacc.accessToken = AuthData.accessToken;
                 newacc.clientToken = AuthData.clientToken;
@@ -56,7 +56,7 @@ namespace UglyLauncher
 
                 for (int i = 0; i < AuthData.availableProfiles.Count; i++)
                 {
-                    users.profile newprofile = new users.profile();
+                    MCUserAccountProfile newprofile = new MCUserAccountProfile();
                     newprofile.id = AuthData.availableProfiles[i].id;
                     newprofile.name = AuthData.availableProfiles[i].name;
                     newprofile.legacy = AuthData.availableProfiles[i].legacy;
@@ -65,7 +65,7 @@ namespace UglyLauncher
                 
                 // Load users.xml
                 UserManager U = new UserManager();
-                users storedAccounts = U.LoadUserList();
+                MCUser storedAccounts = U.LoadUserListO();
                 
                 // save users.xml with new account
                 storedAccounts.accounts.Add(newacc);

@@ -44,7 +44,7 @@ namespace UglyLauncher
             else
             {
                 UserManager U = new UserManager();
-                U.SetDefault(this.lst_accounts.SelectedItems[0].Text);
+                U.SetDefault_O(this.lst_accounts.SelectedItems[0].Text);
                 LoadUsersIntoList();
             }
         }
@@ -52,7 +52,7 @@ namespace UglyLauncher
         private void LoadUsersIntoList()
         {
             UserManager U = new UserManager();
-            users UserObj = U.LoadUserList();
+            MCUser UserObj = U.LoadUserListO();
 
             this.lst_accounts.Items.Clear();
 
@@ -77,9 +77,9 @@ namespace UglyLauncher
             else
             {
                 UserManager U = new UserManager();
-                users UserObj = U.LoadUserList();
+                MCUser UserObj = U.LoadUserListO();
                 
-                int XmlId = U.GetProfileXmlId(this.lst_accounts.SelectedItems[0].Text);
+                int XmlId = U.GetProfileXmlId_O(this.lst_accounts.SelectedItems[0].Text);
                 if (XmlId != -1)
                 {
                     if (this.lst_accounts.SelectedItems[0].Text == UserObj.activeAccount) UserObj.activeAccount = "none";

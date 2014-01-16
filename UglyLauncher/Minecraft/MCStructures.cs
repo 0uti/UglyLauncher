@@ -252,8 +252,18 @@ namespace Minecraft
     {
         [DataMember]
         public string @virtual { get; set;}
+        [DataMember]
+        public Dictionary<string, MCAssetsObject> objects;
 
+    }
 
+    [DataContract]
+    public class MCAssetsObject
+    {
+        [DataMember]
+        public string hash { get; set; }
+        [DataMember]
+        public string size { get; set; }
     }
 
 

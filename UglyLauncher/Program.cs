@@ -40,6 +40,9 @@ namespace UglyLauncher
             if (!Directory.Exists(sDataDir)) Directory.CreateDirectory(sDataDir);
             if (!Directory.Exists(sLibraryDir)) Directory.CreateDirectory(sLibraryDir);
             if (!Directory.Exists(sAssetsDir)) Directory.CreateDirectory(sAssetsDir);
+            if (!Directory.Exists(sAssetsDir + @"\indexes")) Directory.CreateDirectory(sAssetsDir + @"\indexes");
+            if (!Directory.Exists(sAssetsDir + @"\objects")) Directory.CreateDirectory(sAssetsDir + @"\objects");
+            if (!Directory.Exists(sAssetsDir + @"\virtual")) Directory.CreateDirectory(sAssetsDir + @"\virtual");
             if (!Directory.Exists(sVersionDir)) Directory.CreateDirectory(sVersionDir);
             if (!Directory.Exists(sPacksDir)) Directory.CreateDirectory(sPacksDir);
             if (!Directory.Exists(sNativesDir)) Directory.CreateDirectory(sNativesDir);

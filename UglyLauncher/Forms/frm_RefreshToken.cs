@@ -50,12 +50,12 @@ namespace UglyLauncher
 
                 // Load users.xml
                 UserManager U = new UserManager();
-                users storedAccounts = new users();
-                storedAccounts = U.LoadUserList();
+                MCUser storedAccounts = new MCUser();
+                storedAccounts = U.LoadUserListO();
 
-                int XmlId = U.GetProfileXmlId(txt_user.Text.ToString().Trim());
+                int XmlId = U.GetProfileXmlId_O(txt_user.Text.ToString().Trim());
                 // save users.xml with new account
-                users.account myAccount = storedAccounts.accounts[XmlId];
+                MCUserAccount myAccount = storedAccounts.accounts[XmlId];
                 myAccount.accessToken = AuthData.accessToken;
                 myAccount.clientToken = AuthData.clientToken;
                 storedAccounts.accounts[XmlId] = myAccount;

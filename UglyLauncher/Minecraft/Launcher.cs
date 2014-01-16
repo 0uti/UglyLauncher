@@ -9,6 +9,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using ICSharpCode.SharpZipLib.Core;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Web.Script.Serialization;
 
 namespace Minecraft
 {
@@ -35,7 +36,6 @@ namespace Minecraft
             MCPacksAvailable Packs = new MCPacksAvailable();
             Http H = new Http();
             string jsonString = H.GET(sPackServer + @"/packs.php?player=" + MCPlayerName);
-
             Packs = UglyLauncher.JsonHelper.JsonDeserializer<MCPacksAvailable>(jsonString);
             return Packs;
         }
@@ -89,14 +89,17 @@ namespace Minecraft
         // prepare Pack
         public void PreparePack(string sPackName)
         {
-            Http H = new Http();
-            
             // Getting pack.json
             string sPackJson = File.ReadAllText(UglyLauncher.AppPathes.sPacksDir + @"\" + sPackName + @"\pack.json").Trim();
             MCGameStructure MCLocal = UglyLauncher.JsonHelper.JsonDeserializer<MCGameStructure>(sPackJson);
 
+            // Download Mojang json if needed
+            if (!Directory.Exists(UglyLauncher.AppPathes.sVersionDir + @"\" + MCLocal.id)) Directory.CreateDirectory(UglyLauncher.AppPathes.sVersionDir + @"\" + MCLocal.id);
+            if(!File.Exists(UglyLauncher.AppPathes.sVersionDir + @"\" + MCLocal.id + @"\" + MCLocal.id + ".json"))
+                DownloadFileTo(this.sVersionServer + "/" + MCLocal.id + "/" + MCLocal.id + ".json", UglyLauncher.AppPathes.sVersionDir + @"\" + MCLocal.id + @"\" + MCLocal.id + ".json");
+
             // Getting Mojang Version json
-            string sVersionJson = H.GET(sVersionServer + "/" + MCLocal.id + "/" + MCLocal.id + ".json");
+            string sVersionJson = File.ReadAllText(UglyLauncher.AppPathes.sVersionDir + @"\" + MCLocal.id + @"\" + MCLocal.id + ".json").Trim();
             MCGameStructure MCMojang = UglyLauncher.JsonHelper.JsonDeserializer<MCGameStructure>(sVersionJson);
 
             // fix assets
@@ -118,20 +121,46 @@ namespace Minecraft
 
         private void DownloadAssets(MCGameStructure MC)
         {
-            Http H = new Http();
-            // Getting assets json (version or legacy)
-            string sVersionJson = H.GET(sAssetsIndexServer + "/" + MC.assets + ".json");
+            string sAssetsJson = File.ReadAllText(UglyLauncher.AppPathes.sAssetsDir + @"\indexes\" + MC.assets + ".json").Trim();
+            MCAssets Assets = new JavaScriptSerializer().Deserialize<MCAssets>(sAssetsJson);
+
+            foreach (KeyValuePair<string, MCAssetsObject> Asset in Assets.objects)
+            {
+                string sRemotePath = this.sAssetsFileServer + "/";
+                string sLocalPath = UglyLauncher.AppPathes.sAssetsDir + @"\objects\";
+                string slegacyPath = UglyLauncher.AppPathes.sAssetsDir + @"\virtual\legacy\";
+
+                sRemotePath += Asset.Value.hash.Substring(0, 2);
+                sRemotePath += "/" + Asset.Value.hash;
+
+                sLocalPath += Asset.Value.hash.Substring(0, 2);
+                if (!Directory.Exists(sLocalPath)) Directory.CreateDirectory(sLocalPath);
+                sLocalPath += @"\" + Asset.Value.hash;
+                DownloadFileTo(sRemotePath, sLocalPath);
+
+                if (MC.assets == "legacy")
+                {
+                    slegacyPath += Asset.Key.Replace('/', '\\');
+                    if (!Directory.Exists(slegacyPath.Substring(0, slegacyPath.LastIndexOf('\\')))) Directory.CreateDirectory(slegacyPath.Substring(0, slegacyPath.LastIndexOf('\\')));
+                    File.Copy(sLocalPath, slegacyPath,true);
+                }
+            }
+            if (bar.Visible == true) bar.Hide();
+
         }
 
         public void StartPack(string sPackName)
         {
+            UglyLauncher.UserManager U = new UglyLauncher.UserManager();
+
+            UglyLauncher.MCUserAccount Acc = U.GetAccount(U.GetDefault());
+            UglyLauncher.MCUserAccountProfile Profile = U.GetActiveProfile(Acc);
+
             // Getting pack.json
-            string sPackJson = File.ReadAllText(UglyLauncher.AppPathes.sPacksDir + @"\" + sPackName + @"\pack.json").Trim();
-            MCGameStructure MCLocal = UglyLauncher.JsonHelper.JsonDeserializer<MCGameStructure>(sPackJson);
+            MCGameStructure MCLocal = UglyLauncher.JsonHelper.JsonDeserializer<MCGameStructure>(File.ReadAllText(UglyLauncher.AppPathes.sPacksDir + @"\" + sPackName + @"\pack.json").Trim());
 
             // Getting downloaded Mojang version json
-            string sVersionJson = File.ReadAllText(UglyLauncher.AppPathes.sVersionDir + @"\" + MCLocal.id + @"\" + MCLocal.id + ".json").Trim();
-            MCGameStructure MCMojang = UglyLauncher.JsonHelper.JsonDeserializer<MCGameStructure>(sVersionJson);
+            MCGameStructure MCMojang = UglyLauncher.JsonHelper.JsonDeserializer<MCGameStructure>(File.ReadAllText(UglyLauncher.AppPathes.sVersionDir + @"\" + MCLocal.id + @"\" + MCLocal.id + ".json").Trim());
 
             // fix assets
             if (MCMojang.assets == null) MCMojang.assets = "legacy";
@@ -147,9 +176,7 @@ namespace Minecraft
             args += " -Djava.library.path=" + UglyLauncher.AppPathes.sNativesDir + @"\" + MCMerge.id;
 
             // Libs
-            args += " -cp \"";
-            args += UglyLauncher.AppPathes.sVersionDir + @"\" + MCMerge.id + @"\" + MCMerge.id + ".jar";
-
+            args += " -cp ";
             foreach (MCGameStructureLib Lib in MCMerge.libraries)
             {
                 string LocalPath = UglyLauncher.AppPathes.sLibraryDir;
@@ -190,20 +217,49 @@ namespace Minecraft
                 else sFileName = LibName[1] + "-" + LibName[2] + ".jar";
 
                 LocalPath += @"\" + sFileName;
-                if (Lib.extract == null) args += ";" + LocalPath;
+                if (Lib.extract == null) args += LocalPath + ";";
             }
 
+            // version .jar
+            args += UglyLauncher.AppPathes.sVersionDir + @"\" + MCMerge.id + @"\" + MCMerge.id + ".jar ";
             // startup class
-            args += "\" " + MCMerge.mainClass;
+            args += MCMerge.mainClass;
 
+
+            // MCArgs (1.7.2)
+            // --username ${auth_player_name}
+            // --version ${version_name}
+            // --gameDir ${game_directory}
+            // --assetsDir ${game_assets}
+            // --uuid ${auth_uuid}
+            // --accessToken ${auth_access_token}
+
+            // MCArgs (1.7.4)
+            // --username ${auth_player_name}
+            // --version ${version_name}
+            // --gameDir ${game_directory}
+            // --assetsDir ${assets_root}
+            // --assetIndex ${assets_index_name}
+            // --uuid ${auth_uuid}
+            // --accessToken ${auth_access_token}
+            // --userProperties ${user_properties}
+            // --userType ${user_type}
+
+            string MCArgs = MCMerge.minecraftArguments;
+            MCArgs = MCArgs.Replace("${auth_player_name}", Profile.name);
+            MCArgs = MCArgs.Replace("${version_name}", MCMerge.id);
+            MCArgs = MCArgs.Replace("${game_directory}", UglyLauncher.AppPathes.sPacksDir + @"\" + sPackName + @"\minecraft");
+            MCArgs = MCArgs.Replace("${assets_root}", UglyLauncher.AppPathes.sAssetsDir);
+            MCArgs = MCArgs.Replace("${game_assets}", UglyLauncher.AppPathes.sAssetsDir+@"\virtual\legacy");
+            MCArgs = MCArgs.Replace("${assets_index_name}", MCMerge.assets);
+            MCArgs = MCArgs.Replace("${auth_uuid}", Profile.id);
+            MCArgs = MCArgs.Replace("${auth_access_token}", Acc.accessToken);
+            MCArgs = MCArgs.Replace("${user_properties}", "{}");
+            MCArgs = MCArgs.Replace("${user_type}", "Mojang");
+
+            args += " " + MCArgs;
             this.Start(args);
-
-
         }
-
-
-
-        
 
         private void DownloadGameJar(MCGameStructure MC)
         {
@@ -292,15 +348,7 @@ namespace Minecraft
                 LocalPath += @"\" + sFileName;
 
                 // download file if needed
-                if (!File.Exists(LocalPath))
-                {
-                    if (bar.Visible == false) bar.Show();
-                    bar.setLabel(sFileName);
-                    Downloader.DownloadFileAsync(new Uri(DownLoadURL), LocalPath);
-                    Application.DoEvents();
-                    while (Downloader.IsBusy)
-                        Application.DoEvents();
-                }
+                DownloadFileTo(DownLoadURL, LocalPath);
 
                 // extract pack if needed
                 if (Lib.extract != null)
@@ -310,6 +358,9 @@ namespace Minecraft
 
                 }
             }
+            if (!File.Exists(UglyLauncher.AppPathes.sAssetsDir + @"\indexes\" + MC.assets + ".json"))
+                DownloadFileTo(this.sAssetsIndexServer + "/" + MC.assets + ".json", UglyLauncher.AppPathes.sAssetsDir + @"\indexes\" + MC.assets + ".json");
+
             if (bar.Visible == true) bar.Hide();
         }
 
@@ -333,16 +384,10 @@ namespace Minecraft
             this.UnzipFromStream(data,UglyLauncher.AppPathes.sPacksDir);
         }
 
-
-
-
-
         private MCGameStructure MergeObjects(MCGameStructure oPack, MCGameStructure oMojang)
         {
-
             return oMojang; // for vanilla ok :)
         }
-
 
         private void PackDelete(string sPackname)
         {
@@ -350,13 +395,13 @@ namespace Minecraft
 
             if (!Directory.Exists(PackDir)) return; // Pack did not exist
             // Delete Directories
-            if (Directory.Exists(PackDir + @"\minecraft\logs")) Directory.Delete(PackDir + @"\minecraft\logs");
-            if (Directory.Exists(PackDir + @"\minecraft\mods")) Directory.Delete(PackDir + @"\minecraft\mods");
-            if (Directory.Exists(PackDir + @"\minecraft\config")) Directory.Delete(PackDir + @"\minecraft\config");
-            if (Directory.Exists(PackDir + @"\minecraft\stats")) Directory.Delete(PackDir + @"\minecraft\stats");
-            if (Directory.Exists(PackDir + @"\minecraft\crash-reports")) Directory.Delete(PackDir + @"\minecraft\crash-reports");
-            if (Directory.Exists(PackDir + @"\minecraft\resourcepacks")) Directory.Delete(PackDir + @"\minecraft\resourcepacks");
-            if (Directory.Exists(PackDir + @"\minecraft\CustomDISkins")) Directory.Delete(PackDir + @"\minecraft\CustomDISkins");
+            if (Directory.Exists(PackDir + @"\minecraft\logs")) Directory.Delete(PackDir + @"\minecraft\logs",true);
+            if (Directory.Exists(PackDir + @"\minecraft\mods")) Directory.Delete(PackDir + @"\minecraft\mods", true);
+            if (Directory.Exists(PackDir + @"\minecraft\config")) Directory.Delete(PackDir + @"\minecraft\config", true);
+            if (Directory.Exists(PackDir + @"\minecraft\stats")) Directory.Delete(PackDir + @"\minecraft\stats", true);
+            if (Directory.Exists(PackDir + @"\minecraft\crash-reports")) Directory.Delete(PackDir + @"\minecraft\crash-reports", true);
+            if (Directory.Exists(PackDir + @"\minecraft\resourcepacks")) Directory.Delete(PackDir + @"\minecraft\resourcepacks", true);
+            if (Directory.Exists(PackDir + @"\minecraft\CustomDISkins")) Directory.Delete(PackDir + @"\minecraft\CustomDISkins", true);
 
             // Deleting .log Files
             foreach (FileInfo f in new DirectoryInfo(PackDir + @"\minecraft").GetFiles("*.log"))
@@ -493,11 +538,6 @@ namespace Minecraft
             processInfo.WindowStyle = ProcessWindowStyle.Normal;
             processInfo.WorkingDirectory = UglyLauncher.AppPathes.sDataDir;
             Process.Start(processInfo);
-
-
         }
-
-
-
     }
 }

@@ -38,7 +38,7 @@ namespace UglyLauncher
             new frm_UserAccounts().ShowDialog();
             
             UserManager U = new UserManager();
-            txt_default_account.Text = U.GetDefault();
+            txt_default_account.Text = U.GetDefault_O();
         }
 
         private void main_Load(object sender, EventArgs e)
@@ -73,12 +73,12 @@ namespace UglyLauncher
             if (U.GetDefault() != "none")
             {
                 // get Profile XML ID
-                int XmlID = U.GetProfileXmlId(U.GetDefault());
+                int XmlID = U.GetProfileXmlId_O(U.GetDefault());
                 if (XmlID != -1)
                 {
-                    users UserObj = new users();
-                    UserObj = U.LoadUserList();
-                    users.account myAccount = UserObj.accounts[XmlID];
+                    MCUser UserObj = new MCUser();
+                    UserObj = U.LoadUserListO();
+                    MCUserAccount myAccount = UserObj.accounts[XmlID];
                     string AccessToken = myAccount.accessToken;
                     string ClientToken = myAccount.clientToken;
 
