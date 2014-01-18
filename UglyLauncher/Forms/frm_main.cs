@@ -9,12 +9,12 @@ using UglyLauncher.Minecraft;
 
 namespace UglyLauncher
 {
-    public partial class main : Form
+    public partial class frm_main : Form
     {
         public delegate void startup();
         public frm_progressbar bar = new frm_progressbar();
 
-        public main()
+        public frm_main()
         {
             InitializeComponent();
             ToolStripLabel lbl_version = new ToolStripLabel("Packversion:");
@@ -154,7 +154,7 @@ namespace UglyLauncher
                 if (L.IsPackInstalled(APack.name) == true)
                 {
                     MCPacksInstalledPack IPack = L.GetInstalledPack(APack.name);
-                    if (IPack.current_version == "recommended") cmb_packversions.SelectedIndex = 0;
+                    if(IPack.selected_version == "recommended") cmb_packversions.SelectedIndex = 0;
                     else cmb_packversions.SelectedIndex = cmb_packversions.FindStringExact(IPack.current_version);
                 }
                 else cmb_packversions.SelectedIndex = 0;
@@ -193,10 +193,21 @@ namespace UglyLauncher
             string sSelectedVersion = null;
             if (cmb_packversions.SelectedIndex == 0) sSelectedVersion = "recommended";
             else sSelectedVersion = cmb_packversions.Text;
-
             Launcher L = new Launcher();
+            // get event
+            L.restoreWindow += new EventHandler(L_restoreWindow);
+            // start minecraft
             L.StartPack(sSelectedPack, sSelectedVersion);
-            this.WindowState = FormWindowState.Minimized;
+        }
+
+        void L_restoreWindow(object sender, EventArgs e)
+        {
+            this.BeginInvoke(new Action(() =>
+                {
+                    this.WindowState = FormWindowState.Normal;
+                    this.Focus();
+                }
+            ));
         }
     }
 }

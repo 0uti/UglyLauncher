@@ -1,23 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Net;
-using System.Windows.Forms;
-using System.Drawing;
-
-using UglyLauncher.Internet;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
-using ICSharpCode.SharpZipLib.Zip;
-using ICSharpCode.SharpZipLib.Core;
 using System.Web.Script.Serialization;
-using System.Diagnostics;
+using System.Windows.Forms;
+using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.Zip;
+using UglyLauncher.Internet;
 
 namespace UglyLauncher.Minecraft
 {
     class Launcher
     {
+        // events
+        public event EventHandler restoreWindow;
         // objects
-        private UglyLauncher.frm_progressbar bar = new UglyLauncher.frm_progressbar();
+        private frm_progressbar bar = new frm_progressbar();
+        private frm_console con = new frm_console();
         private WebClient Downloader = new WebClient();
 
         // Statics
@@ -54,7 +56,7 @@ namespace UglyLauncher.Minecraft
         }
 
         // download file if needed
-        private void DownloadFileTo(string sRemotePath, string sLocalPath,bool bShowBar = false,string sBarDisplayText = null)
+        private void DownloadFileTo(string sRemotePath, string sLocalPath,bool bShowBar = true,string sBarDisplayText = null)
         {
             if (!File.Exists(sLocalPath))
             {
@@ -118,7 +120,7 @@ namespace UglyLauncher.Minecraft
         public void LoadInstalledPacks()
         {
             List<string> dirs = new List<string>(Directory.EnumerateDirectories(sPacksDir));
-
+            PacksInstalled = new MCPacksInstalled();
             foreach (var dir in dirs)
             {
                 if (File.Exists(dir + @"\version") && File.Exists(dir + @"\pack.json"))
@@ -140,6 +142,7 @@ namespace UglyLauncher.Minecraft
             return PacksInstalled;
         }
 
+        // get installed Pack
         public MCPacksInstalledPack GetInstalledPack(string sPackName)
         {
             foreach (MCPacksInstalledPack Pack in PacksInstalled.packs)
@@ -171,6 +174,13 @@ namespace UglyLauncher.Minecraft
             return Pack.recommended_version;
         }
 
+        public void SetSelectedVersion(string sPackName, string sVersion)
+        {
+            File.WriteAllText(sPacksDir + @"\" + sPackName + @"\selected", sVersion);
+            Application.DoEvents(); // wait a little bit :)
+            this.LoadInstalledPacks();
+        }
+
         public string GetInstalledPackVersion(string sPackName)
         {
             MCPacksInstalledPack Pack = this.GetInstalledPack(sPackName);
@@ -195,6 +205,8 @@ namespace UglyLauncher.Minecraft
             this.DownloadLibraries(MC);
             // download assets if needed
             this.DownloadAssets(MC);
+            // set selected version
+            this.SetSelectedVersion(sPackName, sPackVersion);
             // start the pack
             this.Start(this.buildArgs(MC,sPackName));
             // close bar if open
@@ -203,15 +215,59 @@ namespace UglyLauncher.Minecraft
 
         private void Start(string args)
         {
-            string tmpArgs = "\"" + args + "\"";
+            //string tmpArgs = "\"" + args + "\"";
 
-            ProcessStartInfo processInfo = new ProcessStartInfo("cmd", "/c " + tmpArgs + "> log.txt");
-            processInfo.CreateNoWindow = true;
-            processInfo.UseShellExecute = false;
-            processInfo.WindowStyle = ProcessWindowStyle.Normal;
-            processInfo.WorkingDirectory = sDataDir;
-            Process.Start(processInfo);
+            Process minecraft = new Process();
+            minecraft.StartInfo.FileName = "java";
+            minecraft.StartInfo.Arguments = args;
+            minecraft.StartInfo.RedirectStandardOutput = true;
+            minecraft.StartInfo.UseShellExecute = false;
+            minecraft.StartInfo.CreateNoWindow = true;
+            minecraft.OutputDataReceived +=new DataReceivedEventHandler(minecraft_OutputDataReceived);
+            minecraft.Exited += new EventHandler(minecraft_Exited);
+            minecraft.EnableRaisingEvents = true;
+            minecraft.Start();
+            minecraft.BeginOutputReadLine();
+
+
+            Form fmain = frm_main.ActiveForm;
+            fmain.WindowState = FormWindowState.Minimized;
+            con = new frm_console();
+            con.clearcon();
+            con.Show();
+            con.addline(args + Environment.NewLine);
+            
+            
+
+            //con.Hide();
+            //fmain.WindowState = FormWindowState.Normal;
+            //fmain.Focus();
         }
+
+        private void minecraft_Exited(object sender, System.EventArgs e)
+        {
+            con.BeginInvoke(new Action(() =>
+                {
+                    con.Dispose();
+                }
+            ));
+
+            // raise event
+            EventHandler handler = restoreWindow;
+            if (null != handler) handler(this, EventArgs.Empty);
+            
+        }
+
+        private void minecraft_OutputDataReceived(object sendingProcess, DataReceivedEventArgs outLine)
+        {
+            if (!String.IsNullOrEmpty(outLine.Data))
+            {
+                con.addline(outLine.Data);
+            }
+        }
+        
+
+
 
         private string buildArgs(MCGameStructure MC,string sPackName)
         {
@@ -221,7 +277,7 @@ namespace UglyLauncher.Minecraft
             UglyLauncher.MCUserAccount Acc = U.GetAccount(U.GetDefault());
             UglyLauncher.MCUserAccountProfile Profile = U.GetActiveProfile(Acc);
 
-            args += "java";
+            //args += "java";
             args += " -Xms1024m -Xmx2048m -XX:PermSize=128m";
             // Path to natives
             args += " -Djava.library.path=" + Launcher.sNativesDir + @"\" + MC.id;
@@ -428,8 +484,6 @@ namespace UglyLauncher.Minecraft
             if (File.Exists(PackDir + @"\pack.json")) File.Delete(PackDir + @"\pack.json");
             // Deleting version
             if (File.Exists(PackDir + @"\version")) File.Delete(PackDir + @"\version");
-            // Deleting selected
-            if (File.Exists(PackDir + @"\selected")) File.Delete(PackDir + @"\selected");
         }
 
         private void ExtractZipFile(string archiveFilenameIn, string outFolder, string exclude = null)
@@ -485,6 +539,8 @@ namespace UglyLauncher.Minecraft
 
 
 
+
+        
     }
 
 

@@ -106,6 +106,12 @@
     <Reference Include="XamlBuildTask" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\frm_console.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_console.Designer.cs">
+      <DependentUpon>frm_console.cs</DependentUpon>
+    </Compile>
     <Compile Include="Minecraft\Launcher.cs" />
     <Compile Include="Forms\frm_progressbar.cs">
       <SubType>Form</SubType>
@@ -200,6 +206,9 @@
     <EmbeddedResource Include="Forms\frm_RefreshToken.resx">
       <DependentUpon>frm_RefreshToken.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_console.resx">
+      <DependentUpon>frm_console.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -210,6 +219,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

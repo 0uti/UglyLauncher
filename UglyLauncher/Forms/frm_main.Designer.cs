@@ -1,6 +1,6 @@
 ﻿namespace UglyLauncher
 {
-    partial class main
+    partial class frm_main
     {
         /// <summary>
         /// Erforderliche Designervariable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(main));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_main));
             this.mnu_container = new System.Windows.Forms.MenuStrip();
             this.launcherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu_exit_program = new System.Windows.Forms.ToolStripMenuItem();
@@ -116,6 +116,7 @@
             this.lst_packs.UseCompatibleStateImageBehavior = false;
             this.lst_packs.View = System.Windows.Forms.View.Tile;
             this.lst_packs.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
+            this.lst_packs.DoubleClick += new System.EventHandler(this.playToolStripMenuItem_Click);
             // 
             // lst_packs_images
             // 
@@ -160,7 +161,7 @@
             this.web_packdetails.TabIndex = 3;
             this.web_packdetails.WebBrowserShortcutsEnabled = false;
             // 
-            // main
+            // frm_main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -173,7 +174,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mnu_container;
             this.MaximizeBox = false;
-            this.Name = "main";
+            this.Name = "frm_main";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "UglyLauncher";
             this.Load += new System.EventHandler(this.main_Load);
