@@ -28,25 +28,25 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.label1 = new System.Windows.Forms.Label();
+            this.pbar_progress = new System.Windows.Forms.ProgressBar();
+            this.lbl_FileName = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // progressBar1
+            // pbar_progress
             // 
-            this.progressBar1.Location = new System.Drawing.Point(12, 45);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(326, 23);
-            this.progressBar1.TabIndex = 0;
+            this.pbar_progress.Location = new System.Drawing.Point(12, 45);
+            this.pbar_progress.Name = "pbar_progress";
+            this.pbar_progress.Size = new System.Drawing.Size(326, 23);
+            this.pbar_progress.TabIndex = 0;
             // 
-            // label1
+            // lbl_FileName
             // 
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(318, 23);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Init";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbl_FileName.Location = new System.Drawing.Point(12, 9);
+            this.lbl_FileName.Name = "lbl_FileName";
+            this.lbl_FileName.Size = new System.Drawing.Size(318, 23);
+            this.lbl_FileName.TabIndex = 1;
+            this.lbl_FileName.Text = "Init";
+            this.lbl_FileName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // frm_progressbar
             // 
@@ -54,8 +54,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(354, 80);
             this.ControlBox = false;
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.lbl_FileName);
+            this.Controls.Add(this.pbar_progress);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -68,7 +68,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ProgressBar pbar_progress;
+        private System.Windows.Forms.Label lbl_FileName;
     }
 }

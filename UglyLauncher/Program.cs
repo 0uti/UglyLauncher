@@ -15,39 +15,9 @@ namespace UglyLauncher
         [STAThread]
         static void Main()
         {
-            // Init Structure
-            AppPathes.CheckDirectories();
-            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new main());
         }
     }
-
-
-    public static class AppPathes
-    {
-        public static string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        public static string sDataDir = appData + @"\.UglyLauncher";
-        public static string sLibraryDir = appData + @"\.UglyLauncher\libraries";
-        public static string sAssetsDir = appData + @"\.UglyLauncher\assets";
-        public static string sVersionDir = appData + @"\.UglyLauncher\versions";
-        public static string sPacksDir = appData + @"\.UglyLauncher\packs";
-        public static string sNativesDir = appData + @"\.UglyLauncher\natives";
-
-        public static void CheckDirectories()
-        {
-            if (!Directory.Exists(sDataDir)) Directory.CreateDirectory(sDataDir);
-            if (!Directory.Exists(sLibraryDir)) Directory.CreateDirectory(sLibraryDir);
-            if (!Directory.Exists(sAssetsDir)) Directory.CreateDirectory(sAssetsDir);
-            if (!Directory.Exists(sAssetsDir + @"\indexes")) Directory.CreateDirectory(sAssetsDir + @"\indexes");
-            if (!Directory.Exists(sAssetsDir + @"\objects")) Directory.CreateDirectory(sAssetsDir + @"\objects");
-            if (!Directory.Exists(sAssetsDir + @"\virtual")) Directory.CreateDirectory(sAssetsDir + @"\virtual");
-            if (!Directory.Exists(sVersionDir)) Directory.CreateDirectory(sVersionDir);
-            if (!Directory.Exists(sPacksDir)) Directory.CreateDirectory(sPacksDir);
-            if (!Directory.Exists(sNativesDir)) Directory.CreateDirectory(sNativesDir);
-        }
-    }
-
-    
 }

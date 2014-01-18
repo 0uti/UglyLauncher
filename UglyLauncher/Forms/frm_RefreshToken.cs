@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 
+using UglyLauncher.Minecraft;
+
 namespace UglyLauncher
 {
     public partial class frm_RefreshToken : Form
@@ -33,8 +35,8 @@ namespace UglyLauncher
             else
             {
                 // Check LoginData
-                Minecraft.Authentication Auth = new Minecraft.Authentication();
-                Minecraft.MCAuthenticate_Response AuthData = new Minecraft.MCAuthenticate_Response();
+                Authentication Auth = new Authentication();
+                MCAuthenticate_Response AuthData = new MCAuthenticate_Response();
                 try
                 {
                     AuthData = Auth.Authenticate(this.txt_user.Text.ToString().Trim(), this.txt_pass.Text.ToString().Trim());
@@ -44,28 +46,19 @@ namespace UglyLauncher
                     MessageBox.Show(this, ex.Message.ToString(),"Fehlermeldung von Minecraft.net",MessageBoxButtons.OK,MessageBoxIcon.Error);
                     this.txt_pass.Focus();
                     this.txt_pass.SelectAll();
-
                     return;
                 }
 
                 // Load users.xml
                 UserManager U = new UserManager();
-                MCUser storedAccounts = new MCUser();
-                storedAccounts = U.LoadUserListO();
-
-                int XmlId = U.GetProfileXmlId_O(txt_user.Text.ToString().Trim());
-                // save users.xml with new account
-                MCUserAccount myAccount = storedAccounts.accounts[XmlId];
-                myAccount.accessToken = AuthData.accessToken;
-                myAccount.clientToken = AuthData.clientToken;
-                storedAccounts.accounts[XmlId] = myAccount;
-                U.SaveUserList(storedAccounts);
-
+                MCUserAccount Account = U.GetAccount(txt_user.Text.ToString());
+                Account.accessToken = AuthData.accessToken;
+                Account.clientToken = AuthData.clientToken;
+                U.SaveAccount(Account);
+               
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
         }
-
-        
     }
 }

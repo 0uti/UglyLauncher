@@ -30,59 +30,58 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(main));
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.mnu_container = new System.Windows.Forms.MenuStrip();
             this.launcherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.beendenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.accountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnu_exit_program = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnu_accounts = new System.Windows.Forms.ToolStripMenuItem();
             this.cmb_packversions = new System.Windows.Forms.ToolStripComboBox();
-            this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.lvImages = new System.Windows.Forms.ImageList(this.components);
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.mnu_start_pack = new System.Windows.Forms.ToolStripMenuItem();
+            this.lst_packs = new System.Windows.Forms.ListView();
+            this.lst_packs_images = new System.Windows.Forms.ImageList(this.components);
+            this.oStatusBar = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.txt_default_account = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lbl_default_account = new System.Windows.Forms.ToolStripStatusLabel();
             this.web_packdetails = new System.Windows.Forms.WebBrowser();
-            this.startup_worker = new System.ComponentModel.BackgroundWorker();
-            this.menuStrip1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
+            this.mnu_container.SuspendLayout();
+            this.oStatusBar.SuspendLayout();
             this.SuspendLayout();
             // 
-            // menuStrip1
+            // mnu_container
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnu_container.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.launcherToolStripMenuItem,
-            this.accountsToolStripMenuItem,
+            this.mnu_accounts,
             this.cmb_packversions,
-            this.playToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.menuStrip1.Size = new System.Drawing.Size(683, 27);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
+            this.mnu_start_pack});
+            this.mnu_container.Location = new System.Drawing.Point(0, 0);
+            this.mnu_container.Name = "mnu_container";
+            this.mnu_container.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
+            this.mnu_container.Size = new System.Drawing.Size(683, 27);
+            this.mnu_container.TabIndex = 0;
+            this.mnu_container.Text = "menuStrip1";
             // 
             // launcherToolStripMenuItem
             // 
             this.launcherToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.beendenToolStripMenuItem});
+            this.mnu_exit_program});
             this.launcherToolStripMenuItem.Name = "launcherToolStripMenuItem";
             this.launcherToolStripMenuItem.Size = new System.Drawing.Size(68, 23);
             this.launcherToolStripMenuItem.Text = "Launcher";
             // 
-            // beendenToolStripMenuItem
+            // mnu_exit_program
             // 
-            this.beendenToolStripMenuItem.Name = "beendenToolStripMenuItem";
-            this.beendenToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
-            this.beendenToolStripMenuItem.Text = "Beenden";
-            this.beendenToolStripMenuItem.Click += new System.EventHandler(this.beendenToolStripMenuItem_Click);
+            this.mnu_exit_program.Name = "mnu_exit_program";
+            this.mnu_exit_program.Size = new System.Drawing.Size(120, 22);
+            this.mnu_exit_program.Text = "Beenden";
+            this.mnu_exit_program.Click += new System.EventHandler(this.beendenToolStripMenuItem_Click);
             // 
-            // accountsToolStripMenuItem
+            // mnu_accounts
             // 
-            this.accountsToolStripMenuItem.Name = "accountsToolStripMenuItem";
-            this.accountsToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.accountsToolStripMenuItem.Size = new System.Drawing.Size(69, 23);
-            this.accountsToolStripMenuItem.Text = "Accounts";
-            this.accountsToolStripMenuItem.Click += new System.EventHandler(this.accountsToolStripMenuItem_Click);
+            this.mnu_accounts.Name = "mnu_accounts";
+            this.mnu_accounts.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.mnu_accounts.Size = new System.Drawing.Size(69, 23);
+            this.mnu_accounts.Text = "Accounts";
+            this.mnu_accounts.Click += new System.EventHandler(this.accountsToolStripMenuItem_Click);
             // 
             // cmb_packversions
             // 
@@ -92,49 +91,49 @@
             this.cmb_packversions.Name = "cmb_packversions";
             this.cmb_packversions.Size = new System.Drawing.Size(150, 23);
             // 
-            // playToolStripMenuItem
+            // mnu_start_pack
             // 
-            this.playToolStripMenuItem.Name = "playToolStripMenuItem";
-            this.playToolStripMenuItem.Size = new System.Drawing.Size(41, 23);
-            this.playToolStripMenuItem.Text = "Play";
-            this.playToolStripMenuItem.Click += new System.EventHandler(this.playToolStripMenuItem_Click);
+            this.mnu_start_pack.Name = "mnu_start_pack";
+            this.mnu_start_pack.Size = new System.Drawing.Size(41, 23);
+            this.mnu_start_pack.Text = "Play";
+            this.mnu_start_pack.Click += new System.EventHandler(this.playToolStripMenuItem_Click);
             // 
-            // listView1
+            // lst_packs
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.lst_packs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.HideSelection = false;
-            this.listView1.LabelWrap = false;
-            this.listView1.LargeImageList = this.lvImages;
-            this.listView1.Location = new System.Drawing.Point(3, 30);
-            this.listView1.MultiSelect = false;
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(264, 357);
-            this.listView1.TabIndex = 0;
-            this.listView1.TabStop = false;
-            this.listView1.TileSize = new System.Drawing.Size(260, 50);
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Tile;
-            this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
+            this.lst_packs.HideSelection = false;
+            this.lst_packs.LabelWrap = false;
+            this.lst_packs.LargeImageList = this.lst_packs_images;
+            this.lst_packs.Location = new System.Drawing.Point(3, 30);
+            this.lst_packs.MultiSelect = false;
+            this.lst_packs.Name = "lst_packs";
+            this.lst_packs.Size = new System.Drawing.Size(264, 357);
+            this.lst_packs.TabIndex = 0;
+            this.lst_packs.TabStop = false;
+            this.lst_packs.TileSize = new System.Drawing.Size(260, 50);
+            this.lst_packs.UseCompatibleStateImageBehavior = false;
+            this.lst_packs.View = System.Windows.Forms.View.Tile;
+            this.lst_packs.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
             // 
-            // lvImages
+            // lst_packs_images
             // 
-            this.lvImages.ColorDepth = System.Windows.Forms.ColorDepth.Depth24Bit;
-            this.lvImages.ImageSize = new System.Drawing.Size(48, 48);
-            this.lvImages.TransparentColor = System.Drawing.Color.Transparent;
+            this.lst_packs_images.ColorDepth = System.Windows.Forms.ColorDepth.Depth24Bit;
+            this.lst_packs_images.ImageSize = new System.Drawing.Size(48, 48);
+            this.lst_packs_images.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // statusStrip1
+            // oStatusBar
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.oStatusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
-            this.txt_default_account});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 390);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(683, 22);
-            this.statusStrip1.SizingGrip = false;
-            this.statusStrip1.TabIndex = 2;
-            this.statusStrip1.Text = "statusStrip1";
+            this.lbl_default_account});
+            this.oStatusBar.Location = new System.Drawing.Point(0, 390);
+            this.oStatusBar.Name = "oStatusBar";
+            this.oStatusBar.Size = new System.Drawing.Size(683, 22);
+            this.oStatusBar.SizingGrip = false;
+            this.oStatusBar.TabIndex = 2;
+            this.oStatusBar.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
@@ -142,13 +141,13 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(55, 17);
             this.toolStripStatusLabel1.Text = "Account:";
             // 
-            // txt_default_account
+            // lbl_default_account
             // 
-            this.txt_default_account.AutoSize = false;
-            this.txt_default_account.Name = "txt_default_account";
-            this.txt_default_account.Size = new System.Drawing.Size(200, 17);
-            this.txt_default_account.Text = "none";
-            this.txt_default_account.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_default_account.AutoSize = false;
+            this.lbl_default_account.Name = "lbl_default_account";
+            this.lbl_default_account.Size = new System.Drawing.Size(200, 17);
+            this.lbl_default_account.Text = "none";
+            this.lbl_default_account.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // web_packdetails
             // 
@@ -161,34 +160,27 @@
             this.web_packdetails.TabIndex = 3;
             this.web_packdetails.WebBrowserShortcutsEnabled = false;
             // 
-            // startup_worker
-            // 
-            this.startup_worker.WorkerReportsProgress = true;
-            this.startup_worker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.startup_check);
-            this.startup_worker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.startup_worker_ProgressChanged);
-            this.startup_worker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.startup_worker_RunWorkerCompleted);
-            // 
             // main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(683, 412);
             this.Controls.Add(this.web_packdetails);
-            this.Controls.Add(this.listView1);
-            this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.lst_packs);
+            this.Controls.Add(this.oStatusBar);
+            this.Controls.Add(this.mnu_container);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MainMenuStrip = this.menuStrip1;
+            this.MainMenuStrip = this.mnu_container;
             this.MaximizeBox = false;
             this.Name = "main";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "UglyLauncher";
             this.Load += new System.EventHandler(this.main_Load);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            this.mnu_container.ResumeLayout(false);
+            this.mnu_container.PerformLayout();
+            this.oStatusBar.ResumeLayout(false);
+            this.oStatusBar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -196,19 +188,18 @@
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem accountsToolStripMenuItem;
+        private System.Windows.Forms.MenuStrip mnu_container;
+        private System.Windows.Forms.ToolStripMenuItem mnu_accounts;
         private System.Windows.Forms.ToolStripMenuItem launcherToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem beendenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mnu_exit_program;
         private System.Windows.Forms.ToolStripComboBox cmb_packversions;
-        private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ListView lst_packs;
+        private System.Windows.Forms.StatusStrip oStatusBar;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ToolStripStatusLabel txt_default_account;
-        private System.Windows.Forms.ImageList lvImages;
+        private System.Windows.Forms.ToolStripStatusLabel lbl_default_account;
+        private System.Windows.Forms.ImageList lst_packs_images;
         private System.Windows.Forms.WebBrowser web_packdetails;
-        private System.Windows.Forms.ToolStripMenuItem playToolStripMenuItem;
-        private System.ComponentModel.BackgroundWorker startup_worker;
+        private System.Windows.Forms.ToolStripMenuItem mnu_start_pack;
     }
 }
 

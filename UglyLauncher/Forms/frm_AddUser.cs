@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Net;
+using UglyLauncher.Minecraft;
 
 namespace UglyLauncher
 {
@@ -31,28 +32,44 @@ namespace UglyLauncher
             else
             {
                 // Check LoginData
-                Minecraft.Authentication Auth = new Minecraft.Authentication();
-                Minecraft.MCAuthenticate_Response AuthData = new Minecraft.MCAuthenticate_Response();
+                Authentication Auth = new Authentication();
+                MCAuthenticate_Response AuthData = new MCAuthenticate_Response();
                 try
                 {
                     AuthData = Auth.Authenticate(this.txt_user.Text.ToString().Trim(), this.txt_pass.Text.ToString().Trim());
                 }
+                catch (MCInvalidCredentialsException ex)
+                {
+                    MessageBox.Show(this, ex.Message.ToString(), "Fehlermeldung von Minecraft.net", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.txt_pass.Focus();
+                    this.txt_pass.SelectAll();
+
+                    return;
+                }
+                catch (MCUserMigratedException ex)
+                {
+                    MessageBox.Show(this, ex.Message.ToString(), "Fehlermeldung von Minecraft.net", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.txt_pass.Focus();
+                    this.txt_pass.SelectAll();
+
+                    return;
+                }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(this, ex.Message.ToString(),"Fehlermeldung von Minecraft.net",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    MessageBox.Show(this, ex.Message.ToString(), "Verbindungsfehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.txt_pass.Focus();
                     this.txt_pass.SelectAll();
 
                     return;
                 }
 
-                MCUserAccount newacc = new MCUserAccount();
-                newacc.profiles = new List<MCUserAccountProfile>();
+                MCUserAccount newAcc = new MCUserAccount();
+                newAcc.profiles = new List<MCUserAccountProfile>();
 
-                newacc.accessToken = AuthData.accessToken;
-                newacc.clientToken = AuthData.clientToken;
-                newacc.username = txt_user.Text.ToString().Trim();
-                newacc.activeProfile = AuthData.selectedProfile.id;
+                newAcc.accessToken = AuthData.accessToken;
+                newAcc.clientToken = AuthData.clientToken;
+                newAcc.username = txt_user.Text.ToString().Trim();
+                newAcc.activeProfile = AuthData.selectedProfile.id;
 
                 for (int i = 0; i < AuthData.availableProfiles.Count; i++)
                 {
@@ -60,16 +77,11 @@ namespace UglyLauncher
                     newprofile.id = AuthData.availableProfiles[i].id;
                     newprofile.name = AuthData.availableProfiles[i].name;
                     newprofile.legacy = AuthData.availableProfiles[i].legacy;
-                    newacc.profiles.Add(newprofile);
+                    newAcc.profiles.Add(newprofile);
                 }
-                
-                // Load users.xml
+
                 UserManager U = new UserManager();
-                MCUser storedAccounts = U.LoadUserListO();
-                
-                // save users.xml with new account
-                storedAccounts.accounts.Add(newacc);
-                U.SaveUserList(storedAccounts);
+                U.AddAccount(newAcc);
 
                 this.DialogResult = DialogResult.OK;
                 this.Close();

@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Net;
-using System.IO;
-using System.ComponentModel;
-using System.Threading;
+using System.Text;
 
-namespace Internet
+namespace UglyLauncher.Internet
 {
-    public class Http
+    public static class Http
     {
-
-        public string HttpErrorMessage = null;
-
-        public string GET(string url)
+        public static string GET(string url)
         {
             // declare needed objects
             WebRequest request = null;
@@ -39,7 +31,7 @@ namespace Internet
             }
         }
 
-        public string POST(string url, string postdata, string contenttype)
+        public static string POST(string url, string postdata, string contenttype)
         {
             // declare needed objects
             WebRequest request = null;
@@ -68,10 +60,6 @@ namespace Internet
             }
             catch (WebException ex)
             {
-                if (ex.Status == WebExceptionStatus.ProtocolError)
-                {
-                    HttpErrorMessage = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd().Trim();
-                }
                 throw ex;
             }
             finally
@@ -83,7 +71,7 @@ namespace Internet
             }
         }
 
-        public MemoryStream DownloadToStream(string url)
+        public static MemoryStream DownloadToStream(string url)
         {
             // create needed objects
             WebClient wc;

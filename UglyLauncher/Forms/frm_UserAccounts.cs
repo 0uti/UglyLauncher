@@ -11,14 +11,15 @@ namespace UglyLauncher
 {
     public partial class frm_UserAccounts : Form
     {
+        // contructor
         public frm_UserAccounts()
         {
             InitializeComponent();
-            LoadUsersIntoList();
+            // load user in listview
+            RefreshUsers();
         }
 
-   
-
+        // Close this form
         private void btn_close_Click(object sender, EventArgs e)
         {
             this.Close(); ;
@@ -26,69 +27,71 @@ namespace UglyLauncher
 
         private void btn_add_Click(object sender, EventArgs e)
         {
+            // Call the add user dialog
             DialogResult res = new frm_AddUser().ShowDialog();
-
+            // fetching result
             if (res != DialogResult.Cancel)
             {
-                this.lst_accounts.Items.Clear();
-                LoadUsersIntoList();
+                // refresh user listview
+                this.RefreshUsers();
             }
         }
 
+        // set default user
         private void btn_default_Click(object sender, EventArgs e)
         {
+            // Check if a user is selected
             if (this.lst_accounts.SelectedItems.Count == 0)
             {
+                // MessageBox with Error
                 MessageBox.Show(this, "Kein Account ausgewählt", "Account als Standard setzen", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            else
-            {
-                UserManager U = new UserManager();
-                U.SetDefault_O(this.lst_accounts.SelectedItems[0].Text);
-                LoadUsersIntoList();
-            }
-        }
-
-        private void LoadUsersIntoList()
-        {
+            // create object
             UserManager U = new UserManager();
-            MCUser UserObj = U.LoadUserListO();
+            U.SetDefault(this.lst_accounts.SelectedItems[0].Text);
+            // refresh user listview
+            RefreshUsers();
+        }
 
+        // refresh user listview
+        private void RefreshUsers()
+        {
+            // Init Object
+            UserManager U = new UserManager();
+            // Clear listview
             this.lst_accounts.Items.Clear();
-
-            for (int i = 0; i < UserObj.accounts.Count; i++)
+            // Get all users
+            MCUser users = U.GetAccounts();
+            // put all users into listview
+            foreach (MCUserAccount Account in users.accounts)
             {
-                ListViewItem account = new ListViewItem();
-                account.Text = UserObj.accounts[i].username;
-                if (UserObj.accounts[i].username == UserObj.activeAccount)
-                {
-                    account.Font = new Font(this.lst_accounts.Font, FontStyle.Bold);
-                }
-                this.lst_accounts.Items.Add(account);
+                // Create Object
+                ListViewItem AccItem = new ListViewItem();
+                // Set Account name (login)
+                AccItem.Text = Account.username;
+                // Set Font to bold if default user
+                if (Account.username == users.activeAccount) AccItem.Font = new Font(this.lst_accounts.Font,FontStyle.Bold);
+                // Add Item to ListView
+                this.lst_accounts.Items.Add(AccItem);
             }
         }
 
+        // delete user
         private void btn_delete_Click(object sender, EventArgs e)
         {
+            // chech if user selected
             if (this.lst_accounts.SelectedItems.Count == 0)
             {
                 MessageBox.Show(this, "Kein Account ausgewählt", "Account Löschen", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            else
-            {
-                UserManager U = new UserManager();
-                MCUser UserObj = U.LoadUserListO();
-                
-                int XmlId = U.GetProfileXmlId_O(this.lst_accounts.SelectedItems[0].Text);
-                if (XmlId != -1)
-                {
-                    if (this.lst_accounts.SelectedItems[0].Text == UserObj.activeAccount) UserObj.activeAccount = "none";
-                    UserObj.accounts.RemoveAt(XmlId);
-                    U.SaveUserList(UserObj);
-                    LoadUsersIntoList();
-                }
-               
-            }
+            // create object
+            UserManager U = new UserManager();
+            // delete user
+            U.DeleteAccount(this.lst_accounts.SelectedItems[0].Text);
+            // refresh user listview
+            this.RefreshUsers();
         }
     }
 }

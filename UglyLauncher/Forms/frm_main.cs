@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
+using System.Drawing;
 
-using Internet;
+using UglyLauncher.Internet;
+using UglyLauncher.Minecraft;
 
 namespace UglyLauncher
 {
@@ -22,173 +19,146 @@ namespace UglyLauncher
             InitializeComponent();
             ToolStripLabel lbl_version = new ToolStripLabel("Packversion:");
             lbl_version.Alignment = ToolStripItemAlignment.Right;
-            menuStrip1.Items.Add(lbl_version);
+            mnu_container.Items.Add(lbl_version);
             cmb_packversions.Items.Clear();
             cmb_packversions.Items.Add("Kein Pack gewählt");
             cmb_packversions.SelectedIndex = 0;
         }
 
+        // close the launcher
         private void beendenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
+        // show useraccounts
         private void accountsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new frm_UserAccounts().ShowDialog();
-            
-            UserManager U = new UserManager();
-            txt_default_account.Text = U.GetDefault_O();
+            lbl_default_account.Text = new UserManager().GetDefault();
         }
 
+        // form_load event
         private void main_Load(object sender, EventArgs e)
         {
             Shown += new EventHandler(main_Shown);
-            
-            startup_worker.WorkerReportsProgress = true;
-            startup_worker.WorkerSupportsCancellation = true;
         }
 
+        //form_shown event
         void main_Shown(object sender, EventArgs e)
         {
-            // display Progressbar Form
-            bar.Show();
-            startup_worker.RunWorkerAsync();
+            BackgroundWorker worker = new BackgroundWorker();
+
+            worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation = true;
+            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
+            worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
+            this.bar.Show();
+            worker.RunWorkerAsync();
+            while (worker.IsBusy)
+                Application.DoEvents();
+
+            this.bar.Hide();
         }
 
-        private void startup_check(object sender, DoWorkEventArgs e)
+        private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            string MCPlayerName = null;
+            BackgroundWorker worker = sender as BackgroundWorker;
+            // Check Environment
+            Launcher L = new Launcher();
+            L.CheckDirectories();
 
             // Test User
+            string MCPlayerName = null;
+            worker.ReportProgress(25);
+
             UserManager U = new UserManager();
-            this.Invoke(new Action(() =>
-            {
-                txt_default_account.Text = U.GetDefault();
-
-            }));
-            startup_worker.ReportProgress(25);
-            System.Threading.Thread.Sleep(100);
-
             if (U.GetDefault() != "none")
             {
-                // get Profile XML ID
-                int XmlID = U.GetProfileXmlId_O(U.GetDefault());
-                if (XmlID != -1)
+                // Get Account
+                MCUserAccount Account = U.GetAccount(U.GetDefault());
+
+                // Validate Account
+                Authentication A = new Authentication();
+                try
                 {
-                    MCUser UserObj = new MCUser();
-                    UserObj = U.LoadUserListO();
-                    MCUserAccount myAccount = UserObj.accounts[XmlID];
-                    string AccessToken = myAccount.accessToken;
-                    string ClientToken = myAccount.clientToken;
-
-                    // do MC refresh
-                    Minecraft.Authentication A = new Minecraft.Authentication();
-                    try
+                    Account.accessToken = A.Refresh(Account.accessToken, Account.clientToken);
+                    U.SaveAccount(Account);
+                }
+                catch (MCInvalidTokenException)
+                {
+                    frm_RefreshToken fTokRefresh = new frm_RefreshToken(Account.username);
+                    DialogResult res = fTokRefresh.ShowDialog();
+                    if (res == DialogResult.Cancel)
                     {
-                        myAccount.accessToken = A.Refresh(myAccount.accessToken, myAccount.clientToken);
+                        // Clear default user
+                        U.SetDefault("none");
                     }
-                    catch (Exception ex)
+                }
+                catch (Exception ex)
+                {
+                    this.Invoke(new Action(() =>
                     {
-                        if (ex.Message == "Invalid token.")
-                        {
-                            frm_RefreshToken fTokRefresh = new frm_RefreshToken(myAccount.username);
-                            DialogResult res = fTokRefresh.ShowDialog();
-                            if (res == DialogResult.Cancel)
-                            {
-                                // Clear default user
-                                U.SetDefault("none");
-                                this.Invoke(new Action(() =>
-                                {
-                                    txt_default_account.Text = U.GetDefault();
-
-                                }));
-                            }
-                        }
-                        else MessageBox.Show(this, ex.Message.ToString(), "Fehlermeldung von Minecraft.net", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    // save new Account
-                    MCPlayerName = myAccount.profiles[0].name;  // More work to do here
-                    UserObj.accounts[XmlID] = myAccount;
-                    U.SaveUserList(UserObj);
+                        MessageBox.Show(this, ex.Message.ToString(), "Verbindungsfehler!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                    U.SetDefault("none");
                 }
             }
-
-            startup_worker.ReportProgress(50);
-            System.Threading.Thread.Sleep(100);
-
-            // Get Packs
-            Minecraft.Launcher L = new Minecraft.Launcher();
-            Minecraft.Statics.PacksAvailable = L.GetClientPackList(MCPlayerName);
-
-            for (int i = 0; i < Minecraft.Statics.PacksAvailable.packs.Count; i++)
+            if (U.GetDefault() != "none") MCPlayerName = U.GetPlayerName(U.GetDefault());
+            // set statusbar
+            this.Invoke(new Action(() =>
             {
-                Minecraft.MCPacksAvailable.pack Pack = new Minecraft.MCPacksAvailable.pack();
-                ListViewItem LvItem = new ListViewItem();
-                Pack = Minecraft.Statics.PacksAvailable.packs[i];
+                lbl_default_account.Text = U.GetDefault();
+            }));
 
-                // Get Pack Icon
-                Http H = new Http();
-                MemoryStream ms = new MemoryStream();
-                ms = H.DownloadToStream(L.sPackServer + @"/packs/" + Pack.name + @"/" + Pack.name + @".png");
-
-                LvItem.Text = Pack.name;
+            worker.ReportProgress(50);
+            
+            // Get Packs from Server
+            L.LoadAvailablePacks(MCPlayerName);
+            MCPacksAvailable Packs = L.GetAvailablePacks();
+            foreach (MCPacksAvailablePack Pack in Packs.packs)
+            {
+                ListViewItem LvItem = new ListViewItem(Pack.name, Pack.name);
                 LvItem.Font = new Font("Thaoma", 20, FontStyle.Bold);
-                LvItem.ImageKey = Pack.name;
                 this.Invoke(new Action(() =>
                 {
-                    lvImages.Images.Add(Pack.name, System.Drawing.Image.FromStream(ms));
-                    listView1.Items.Add(LvItem);
+                    lst_packs_images.Images.Add(Pack.name, L.GetPackIcon(Pack));
+                    lst_packs.Items.Add(LvItem);
                 }));
             }
-            startup_worker.ReportProgress(75);
-            System.Threading.Thread.Sleep(100);
 
-            Minecraft.Statics.PacksInstalled = L.GetInstalledPacks();
+            worker.ReportProgress(75);
 
+            // Load installed Packs
+            L.LoadInstalledPacks();
 
-
-            startup_worker.ReportProgress(100);
-            System.Threading.Thread.Sleep(1000);
+            // end worker
+            worker.ReportProgress(100);
+            System.Threading.Thread.Sleep(500);
         }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listView1.SelectedItems.Count == 1)
+            if (lst_packs.SelectedItems.Count == 1)
             {
-                // Load Versions in Dropdown
-                Minecraft.MCPacksAvailable.pack Pack = new Minecraft.MCPacksAvailable.pack();
-                Pack = Minecraft.Statics.PacksAvailable.packs[listView1.SelectedItems[0].Index];
-
+                Launcher L = new Launcher();
+                MCPacksAvailablePack APack = L.GetAvailablePack(lst_packs.SelectedItems[0].Text);
+                // Clear dropdown
                 cmb_packversions.Items.Clear();
-                cmb_packversions.Items.Add("Recommended (" + Pack.recommended_version + ")");
-                for (int j = 0; j < Pack.versions.Count; j++)
-                {
-                    cmb_packversions.Items.Add(Pack.versions[j].ToString());
-                }
+                cmb_packversions.Items.Add("Recommended (" + APack.recommended_version + ")");
+                // Load Versions in Dropdown
+                foreach (string sPackVersion in APack.versions)
+                    cmb_packversions.Items.Add(sPackVersion);
 
-                bool installed = false;
-                // is pack installed ?
-                for (int i = 0; i < Minecraft.Statics.PacksInstalled.packs.Count; i++)
+                // select version in combo depend on if pack is installed and version number
+                if (L.IsPackInstalled(APack.name) == true)
                 {
-                    if (Minecraft.Statics.PacksInstalled.packs[i].name == Pack.name)
-                    {
-                        installed = true;
-                        // Seleced Pack is installed.
-                        if (Minecraft.Statics.PacksInstalled.packs[i].selected_version == "recommended")
-                        {
-                            cmb_packversions.SelectedIndex = 0; // recommended Version is Selected
-                        }
-                        else
-                        {
-                            cmb_packversions.SelectedIndex = cmb_packversions.FindStringExact(Minecraft.Statics.PacksInstalled.packs[i].selected_version);
-                        }
-                    }
+                    MCPacksInstalledPack IPack = L.GetInstalledPack(APack.name);
+                    if (IPack.current_version == "recommended") cmb_packversions.SelectedIndex = 0;
+                    else cmb_packversions.SelectedIndex = cmb_packversions.FindStringExact(IPack.current_version);
                 }
-                if(installed == false) cmb_packversions.SelectedIndex = 0;
-
-                Minecraft.Launcher U = new Minecraft.Launcher();
-                web_packdetails.Navigate(U.sPackServer + @"/packs/" + Pack.name + @"/" + Pack.name + @".html");
+                else cmb_packversions.SelectedIndex = 0;
+                web_packdetails.Navigate(L.sPackServer + @"/packs/" + APack.name + @"/" + APack.name + @".html");
             }
             else
             {
@@ -199,50 +169,34 @@ namespace UglyLauncher
             }
         }
 
-        private void startup_worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            bar.Dispose();
-        }
-
-        private void startup_worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            bar.update_bar(e.ProgressPercentage);
+            this.bar.update_bar(e.ProgressPercentage);
         }
 
         private void playToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (txt_default_account.Text == "none")
+            if (lbl_default_account.Text == "none")
             {
                 MessageBox.Show(this, "Nicht eingeloggt.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (listView1.SelectedItems.Count != 1)
+            if (lst_packs.SelectedItems.Count != 1)
             {
                 MessageBox.Show(this, "Kein Pack gewählt.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             
             // gather vars from Gui
-            string sSelectedPack = listView1.SelectedItems[0].Text;
+            string sSelectedPack = lst_packs.SelectedItems[0].Text;
             string sSelectedVersion = null;
             if (cmb_packversions.SelectedIndex == 0) sSelectedVersion = "recommended";
             else sSelectedVersion = cmb_packversions.Text;
 
-            Minecraft.Launcher MCLauncher = new Minecraft.Launcher();
-
-            //  Check if the pack is with the given version install
-            if (MCLauncher.IsPackInstalled(sSelectedPack, sSelectedVersion) == false) MCLauncher.InstallPack(sSelectedPack, sSelectedVersion);
-
-            // prepare the Pack
-            MCLauncher.PreparePack(sSelectedPack);
-
-            // Start th pack
-            MCLauncher.StartPack(sSelectedPack);
-
+            Launcher L = new Launcher();
+            L.StartPack(sSelectedPack, sSelectedVersion);
             this.WindowState = FormWindowState.Minimized;
-            
-
         }
     }
 }
