@@ -107,6 +107,7 @@
     <Reference Include="XamlBuildTask" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="configuration.cs" />
     <Compile Include="Forms\frm_console.cs">
       <SubType>Form</SubType>
     </Compile>

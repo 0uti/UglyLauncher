@@ -217,8 +217,11 @@ namespace UglyLauncher.Minecraft
         {
             //string tmpArgs = "\"" + args + "\"";
 
+            configuration C = new configuration();
+            string sJavaPath = C.GetJavaPath();
+
             Process minecraft = new Process();
-            minecraft.StartInfo.FileName = @"C:\Program Files\Java\jre7\bin\java";
+            minecraft.StartInfo.FileName = sJavaPath;
             minecraft.StartInfo.WorkingDirectory = sPacksDir + @"\" + sPackName + @"\minecraft";
             minecraft.StartInfo.Arguments = args;
             minecraft.StartInfo.RedirectStandardOutput = true;
