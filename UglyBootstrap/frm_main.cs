@@ -43,6 +43,8 @@ namespace UglyBootstrap
         private void frm_main_Shown(object sender, EventArgs e)
         {
             XmlDocument xmlDocument = new XmlDocument();
+            configuration c = new configuration();
+            c.SaveAppInfo();
 
             // check if Launcher executable exists
             if (!Directory.Exists(appData + @"\.UglyLauncher")) Directory.CreateDirectory(appData + @"\.UglyLauncher");

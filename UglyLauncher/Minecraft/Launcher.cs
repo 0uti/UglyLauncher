@@ -221,13 +221,16 @@ namespace UglyLauncher.Minecraft
             minecraft.StartInfo.FileName = "java";
             minecraft.StartInfo.Arguments = args;
             minecraft.StartInfo.RedirectStandardOutput = true;
+            minecraft.StartInfo.RedirectStandardError = true;
             minecraft.StartInfo.UseShellExecute = false;
             minecraft.StartInfo.CreateNoWindow = true;
             minecraft.OutputDataReceived += new DataReceivedEventHandler(minecraft_OutputDataReceived);
+            minecraft.ErrorDataReceived += new DataReceivedEventHandler(minecraft_ErrorDataReceived);
             minecraft.Exited += new EventHandler(minecraft_Exited);
             minecraft.EnableRaisingEvents = true;
             minecraft.Start();
             minecraft.BeginOutputReadLine();
+            minecraft.BeginErrorReadLine();
 
             // raise event
             EventHandler<FormWindowStateEventArgs> handler = restoreWindow;
@@ -238,6 +241,14 @@ namespace UglyLauncher.Minecraft
             con = new frm_console();
             con.Show();
             con.clearcon();
+        }
+
+        void minecraft_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            if (!String.IsNullOrEmpty(e.Data))
+            {
+                if (con != null) con.addline(e.Data);
+            }
         }
 
 
@@ -305,6 +316,7 @@ namespace UglyLauncher.Minecraft
             MCArgs = MCArgs.Replace("${assets_index_name}", MC.assets);
             MCArgs = MCArgs.Replace("${auth_uuid}", Profile.id);
             MCArgs = MCArgs.Replace("${auth_access_token}", Acc.accessToken);
+            MCArgs = MCArgs.Replace("${auth_session}", "token:" + Acc.accessToken + ":" + Profile.id);
             MCArgs = MCArgs.Replace("${user_properties}", "{}");
             MCArgs = MCArgs.Replace("${user_type}", "Mojang");
             args += " " + MCArgs;
