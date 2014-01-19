@@ -6,6 +6,8 @@ using System.Drawing;
 
 using UglyLauncher.Internet;
 using UglyLauncher.Minecraft;
+using System.Diagnostics;
+
 
 namespace UglyLauncher
 {
@@ -17,14 +19,9 @@ namespace UglyLauncher
         public frm_main()
         {
             InitializeComponent();
-            ToolStripLabel lbl_version = new ToolStripLabel("Packversion:");
-            lbl_version.Alignment = ToolStripItemAlignment.Right;
-            mnu_container.Items.Add(lbl_version);
-            cmb_packversions.Items.Clear();
-            cmb_packversions.Items.Add("Kein Pack gewählt");
-            cmb_packversions.SelectedIndex = 0;
         }
 
+        
         // close the launcher
         private void beendenToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -41,6 +38,13 @@ namespace UglyLauncher
         // form_load event
         private void main_Load(object sender, EventArgs e)
         {
+            ToolStripLabel lbl_version = new ToolStripLabel("Packversion:");
+            lbl_version.Alignment = ToolStripItemAlignment.Right;
+            mnu_container.Items.Add(lbl_version);
+            this.Text += " " + Application.ProductVersion;
+            cmb_packversions.Items.Clear();
+            cmb_packversions.Items.Add("Kein Pack gewählt");
+            cmb_packversions.SelectedIndex = 0;
             Shown += new EventHandler(main_Shown);
         }
 
@@ -64,6 +68,7 @@ namespace UglyLauncher
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
+            
             // Check Environment
             Launcher L = new Launcher();
             L.CheckDirectories();
@@ -195,17 +200,16 @@ namespace UglyLauncher
             else sSelectedVersion = cmb_packversions.Text;
             Launcher L = new Launcher();
             // get event
-            L.restoreWindow += new EventHandler(L_restoreWindow);
+            L.restoreWindow += new EventHandler<Launcher.FormWindowStateEventArgs>(L_restoreWindow);
             // start minecraft
             L.StartPack(sSelectedPack, sSelectedVersion);
         }
 
-        void L_restoreWindow(object sender, EventArgs e)
+        void L_restoreWindow(object sender, Launcher.FormWindowStateEventArgs e)
         {
             this.BeginInvoke(new Action(() =>
                 {
-                    this.WindowState = FormWindowState.Normal;
-                    this.Focus();
+                    this.WindowState = e.WindowState;
                 }
             ));
         }

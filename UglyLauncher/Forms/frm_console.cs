@@ -18,23 +18,21 @@ namespace UglyLauncher
 
         public void addline(string line)
         {
-            txt_console.BeginInvoke(
-                new Action(() =>
-                {
-                    txt_console.AppendText(line + Environment.NewLine);
-                    txt_console.ScrollToCaret();
-                }
-            ));
-            
-        }
+            try
+            {
+                txt_console.BeginInvoke(
+                    new Action(() =>
+                    {
+                        txt_console.AppendText(line + Environment.NewLine);
+                        txt_console.ScrollToCaret();
+                    }
+                ));
+            }
+            catch (Exception)
+            {
 
-        public void hideme()
-        {
-            this.BeginInvoke(new Action(() =>
-                {
-                    this.Hide();
-                }
-            ));
+            }
+            
         }
 
         public void clearcon()

@@ -16,10 +16,10 @@ namespace UglyLauncher.Minecraft
     class Launcher
     {
         // events
-        public event EventHandler restoreWindow;
+        public event EventHandler<FormWindowStateEventArgs> restoreWindow;
         // objects
         private frm_progressbar bar = new frm_progressbar();
-        private frm_console con = new frm_console();
+        private frm_console con;
         private WebClient Downloader = new WebClient();
 
         // Statics
@@ -223,38 +223,44 @@ namespace UglyLauncher.Minecraft
             minecraft.StartInfo.RedirectStandardOutput = true;
             minecraft.StartInfo.UseShellExecute = false;
             minecraft.StartInfo.CreateNoWindow = true;
-            minecraft.OutputDataReceived +=new DataReceivedEventHandler(minecraft_OutputDataReceived);
+            minecraft.OutputDataReceived += new DataReceivedEventHandler(minecraft_OutputDataReceived);
             minecraft.Exited += new EventHandler(minecraft_Exited);
             minecraft.EnableRaisingEvents = true;
             minecraft.Start();
             minecraft.BeginOutputReadLine();
 
+            // raise event
+            EventHandler<FormWindowStateEventArgs> handler = restoreWindow;
+            FormWindowStateEventArgs args2 = new FormWindowStateEventArgs();
+            args2.WindowState = FormWindowState.Minimized;
+            if (null != handler) handler(this, args2);
 
-            Form fmain = frm_main.ActiveForm;
-            fmain.WindowState = FormWindowState.Minimized;
             con = new frm_console();
-            con.clearcon();
             con.Show();
-            con.addline(args + Environment.NewLine);
-            
-            
-
-            //con.Hide();
-            //fmain.WindowState = FormWindowState.Normal;
-            //fmain.Focus();
+            con.clearcon();
         }
+
 
         private void minecraft_Exited(object sender, System.EventArgs e)
         {
-            con.BeginInvoke(new Action(() =>
-                {
-                    con.Dispose();
-                }
-            ));
+            try
+            {
+                con.BeginInvoke(new Action(() =>
+                    {
+                        con.Dispose();
+                    }
+                ));
 
+            }
+            catch (Exception)
+            {
+
+            }
             // raise event
-            EventHandler handler = restoreWindow;
-            if (null != handler) handler(this, EventArgs.Empty);
+            EventHandler<FormWindowStateEventArgs> handler = restoreWindow;
+            FormWindowStateEventArgs args = new FormWindowStateEventArgs();
+            args.WindowState = FormWindowState.Normal;
+            if (null != handler) handler(this, args);
             
         }
 
@@ -262,7 +268,7 @@ namespace UglyLauncher.Minecraft
         {
             if (!String.IsNullOrEmpty(outLine.Data))
             {
-                con.addline(outLine.Data);
+                if(con != null) con.addline(outLine.Data);
             }
         }
         
@@ -537,7 +543,10 @@ namespace UglyLauncher.Minecraft
 
 
 
-
+        public class FormWindowStateEventArgs : EventArgs
+        {
+            public FormWindowState WindowState { get; set; }
+        }
 
 
         
