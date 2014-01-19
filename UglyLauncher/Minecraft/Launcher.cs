@@ -208,17 +208,18 @@ namespace UglyLauncher.Minecraft
             // set selected version
             this.SetSelectedVersion(sPackName, sPackVersion);
             // start the pack
-            this.Start(this.buildArgs(MC,sPackName));
+            this.Start(this.buildArgs(MC,sPackName),sPackName);
             // close bar if open
             if (this.bar.Visible == true) this.bar.Hide();
         }
 
-        private void Start(string args)
+        private void Start(string args,string sPackName)
         {
             //string tmpArgs = "\"" + args + "\"";
 
             Process minecraft = new Process();
-            minecraft.StartInfo.FileName = "java";
+            minecraft.StartInfo.FileName = @"C:\Program Files\Java\jre7\bin\java";
+            minecraft.StartInfo.WorkingDirectory = sPacksDir + @"\" + sPackName + @"\minecraft";
             minecraft.StartInfo.Arguments = args;
             minecraft.StartInfo.RedirectStandardOutput = true;
             minecraft.StartInfo.RedirectStandardError = true;
@@ -228,6 +229,10 @@ namespace UglyLauncher.Minecraft
             minecraft.ErrorDataReceived += new DataReceivedEventHandler(minecraft_ErrorDataReceived);
             minecraft.Exited += new EventHandler(minecraft_Exited);
             minecraft.EnableRaisingEvents = true;
+
+            // cleanup logs
+            if (File.Exists(sDataDir + @"\output.log")) File.Delete(sDataDir + @"\output.log");
+
             minecraft.Start();
             minecraft.BeginOutputReadLine();
             minecraft.BeginErrorReadLine();
@@ -248,6 +253,22 @@ namespace UglyLauncher.Minecraft
             if (!String.IsNullOrEmpty(e.Data))
             {
                 if (con != null) con.addline(e.Data);
+                // WriteLogfile
+                string sLogFile = sDataDir + @"\output.log";
+                if (!File.Exists(sLogFile))
+                {
+                    using (StreamWriter sw = File.CreateText(sLogFile))
+                    {
+                        sw.WriteLine(e.Data);
+                    }
+                }
+                else
+                {
+                    using (StreamWriter sw = File.AppendText(sLogFile))
+                    {
+                        sw.WriteLine(e.Data);
+                    }
+                }
             }
         }
 
@@ -280,6 +301,22 @@ namespace UglyLauncher.Minecraft
             if (!String.IsNullOrEmpty(outLine.Data))
             {
                 if(con != null) con.addline(outLine.Data);
+                // WriteLogfile
+                string sLogFile = sDataDir + @"\output.log";
+                if (!File.Exists(sLogFile))
+                {
+                    using (StreamWriter sw = File.CreateText(sLogFile))
+                    {
+                        sw.WriteLine(outLine.Data);
+                    }
+                }
+                else
+                {
+                    using (StreamWriter sw = File.AppendText(sLogFile))
+                    {
+                        sw.WriteLine(outLine.Data);
+                    }
+                }
             }
         }
         
@@ -297,22 +334,22 @@ namespace UglyLauncher.Minecraft
             //args += "java";
             args += " -Xms1024m -Xmx2048m -XX:PermSize=128m";
             // Path to natives
-            args += " -Djava.library.path=" + Launcher.sNativesDir + @"\" + MC.id;
+            args += " -Djava.library.path=\"" + sNativesDir + @"\" + MC.id +"\"";
             // Libs
             args += " -cp ";
             foreach (string Lib in this.lLibraries)
-                args += Lib + ";";
+                args += "\"" + Lib + "\";";
             // version .jar
-            args += Launcher.sVersionDir + @"\" + MC.id + @"\" + MC.id + ".jar ";
+            args += "\"" + sVersionDir + @"\" + MC.id + @"\" + MC.id + ".jar" + "\" ";
             // startup class
             args += MC.mainClass;
             // minecraft arguments
             string MCArgs = MC.minecraftArguments;
             MCArgs = MCArgs.Replace("${auth_player_name}", Profile.name);
             MCArgs = MCArgs.Replace("${version_name}", MC.id);
-            MCArgs = MCArgs.Replace("${game_directory}", Launcher.sPacksDir + @"\" + sPackName + @"\minecraft");
-            MCArgs = MCArgs.Replace("${assets_root}", Launcher.sAssetsDir);
-            MCArgs = MCArgs.Replace("${game_assets}", Launcher.sAssetsDir + @"\virtual\legacy");
+            MCArgs = MCArgs.Replace("${game_directory}", "\"" + sPacksDir + @"\" + sPackName + @"\minecraft" + "\"");
+            MCArgs = MCArgs.Replace("${assets_root}", "\"" + sAssetsDir + "\"");
+            MCArgs = MCArgs.Replace("${game_assets}", "\"" + sAssetsDir + @"\virtual\legacy" + "\"");
             MCArgs = MCArgs.Replace("${assets_index_name}", MC.assets);
             MCArgs = MCArgs.Replace("${auth_uuid}", Profile.id);
             MCArgs = MCArgs.Replace("${auth_access_token}", Acc.accessToken);
@@ -422,7 +459,8 @@ namespace UglyLauncher.Minecraft
             if (!File.Exists(sAssetsDir + @"\indexes\" + MC.assets + ".json"))
                 DownloadFileTo(this.sAssetsIndexServer + "/" + MC.assets + ".json", sAssetsDir + @"\indexes\" + MC.assets + ".json");
             // getting asset jason
-            MCAssets Assets = new JavaScriptSerializer().Deserialize<MCAssets>(File.ReadAllText(sAssetsDir + @"\indexes\" + MC.assets + ".json").Trim());
+            string sJson = File.ReadAllText(sAssetsDir + @"\indexes\" + MC.assets + ".json").Trim();
+            MCAssets Assets = new JavaScriptSerializer().Deserialize<MCAssets>(sJson);
 
             foreach (KeyValuePair<string, MCAssetsObject> Asset in Assets.objects)
             {
@@ -593,7 +631,6 @@ namespace UglyLauncher.Minecraft
         public List<String> versions { get; set; }
     }
 
-
     /// <summary>
     /// The JSON Client installed Pack construct.
     /// </summary>
@@ -697,7 +734,6 @@ namespace UglyLauncher.Minecraft
         public MCGameStructureLibExtract extract;
     }
 
-
     [DataContract]
     public class MCAssets
     {
@@ -705,7 +741,6 @@ namespace UglyLauncher.Minecraft
         public string @virtual { get; set; }
         [DataMember]
         public Dictionary<string, MCAssetsObject> objects;
-
     }
 
     [DataContract]
@@ -716,5 +751,4 @@ namespace UglyLauncher.Minecraft
         [DataMember]
         public string size { get; set; }
     }
-
 }
