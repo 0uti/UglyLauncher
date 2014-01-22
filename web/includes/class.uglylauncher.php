@@ -5,7 +5,7 @@
  * author:      Stephan "Outi" Ihling
  * email:       outi@outi-networks.de
  * date:        21.01.2024
- * last change: 21.01.2014
+ * last change: 22.01.2014
 */
 
 if(!defined('PACK_SERVER')) exit();
@@ -68,6 +68,11 @@ class UglyLauncher
 		global $DBC;
 		
 		$RES_G = $DBC->query(sprintf("SELECT T.groups FROM mc_pay P LEFT JOIN tl_member T on T.id = P.contao_user_id WHERE upper(minecraft_nick) = upper('%s')",$player));
+		if($RES_G->numrows() == 0)
+		{
+			$ret = array();
+			return $ret;
+		}
 		$REC_G = $RES_G->fetcharray();
 		
 		return unserialize($REC_G['groups']);
