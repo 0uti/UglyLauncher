@@ -40,8 +40,7 @@ class UglyLauncher
     $this->player = $player;
   }
 
-
-  private function CheckWhiteList($whitelist)
+	private function CheckWhiteList($whitelist)
   {
     global $DB, $global;
     // get Whitelist
@@ -54,8 +53,39 @@ class UglyLauncher
 
   private function CheckContao($groupid)
   {
+  	$groups = $this->GetContaoGroups($this->player);
+  	
+  	foreach($groups as $group)
+  	{
+  		if($this->ContaoGroupToLevel(intval($group)) >= intval($groupid)) return true;
+  	}
+
     return false;
   }
+
+	private GetContaoGroups($player)
+	{
+		global $DBC;
+		
+		$RES_G = $DBC->query(sprintf("SELECT T.groups FROM mc_pay P LEFT JOIN tl_member T on T.id = P.contao_user_id WHERE upper(minecraft_nick) = upper('%s')",$player));
+		$REC_G = $RES_G->fetcharray();
+		
+		return unserialize($REC_G['groups']);
+	}
+
+	private function ContaoGroupToLevel($group)
+	{
+		switch($group)
+		{
+			case 1:	return 20; // Free-User
+			case 2: return 30; // Pay-User
+			case 3: return 50; // Admins
+			case 4: return 0;  // default
+			case 5: return 10; // Probe-User
+			case 6: return 40; // Moderatoren
+			default: return 0; // anything else :) i don't know, so default *ugly*
+		}
+	}
 
 
 }      

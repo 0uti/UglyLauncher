@@ -31,6 +31,7 @@ include_once($global['include_path']."class.uglylauncher.php");
 try
 {
   $DB = new UglyLauncherDB;
+  $DBC = new ContaoDB;
   $U = new UglyLauncher;
 }
 catch(ErrorException $e)
