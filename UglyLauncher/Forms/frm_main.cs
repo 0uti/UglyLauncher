@@ -21,13 +21,12 @@ namespace UglyLauncher
             InitializeComponent();
         }
 
-        
         // close the launcher
-        private void beendenToolStripMenuItem_Click(object sender, EventArgs e)
+        private void mnu_exit_program_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
-
+        
         // show useraccounts
         private void accountsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -45,7 +44,6 @@ namespace UglyLauncher
             cmb_packversions.Items.Clear();
             cmb_packversions.Items.Add("Kein Pack gewählt");
             cmb_packversions.SelectedIndex = 0;
-            Shown += new EventHandler(main_Shown);
         }
 
         //form_shown event
@@ -213,5 +211,9 @@ namespace UglyLauncher
                 }
             ));
         }
+
+       
+
+        
     }
 }

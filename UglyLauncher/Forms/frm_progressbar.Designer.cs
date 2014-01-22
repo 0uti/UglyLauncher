@@ -60,7 +60,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frm_progressbar";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Bitte Warten";
             this.ResumeLayout(false);
 

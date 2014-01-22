@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_main));
             this.mnu_container = new System.Windows.Forms.MenuStrip();
-            this.launcherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu_exit_program = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu_accounts = new System.Windows.Forms.ToolStripMenuItem();
             this.cmb_packversions = new System.Windows.Forms.ToolStripComboBox();
@@ -49,7 +48,7 @@
             // mnu_container
             // 
             this.mnu_container.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.launcherToolStripMenuItem,
+            this.mnu_exit_program,
             this.mnu_accounts,
             this.cmb_packversions,
             this.mnu_start_pack});
@@ -60,27 +59,19 @@
             this.mnu_container.TabIndex = 0;
             this.mnu_container.Text = "menuStrip1";
             // 
-            // launcherToolStripMenuItem
-            // 
-            this.launcherToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnu_exit_program});
-            this.launcherToolStripMenuItem.Name = "launcherToolStripMenuItem";
-            this.launcherToolStripMenuItem.Size = new System.Drawing.Size(68, 23);
-            this.launcherToolStripMenuItem.Text = "Launcher";
-            // 
             // mnu_exit_program
             // 
             this.mnu_exit_program.Name = "mnu_exit_program";
-            this.mnu_exit_program.Size = new System.Drawing.Size(120, 22);
+            this.mnu_exit_program.Size = new System.Drawing.Size(65, 23);
             this.mnu_exit_program.Text = "Beenden";
-            this.mnu_exit_program.Click += new System.EventHandler(this.beendenToolStripMenuItem_Click);
+            this.mnu_exit_program.Click += new System.EventHandler(this.mnu_exit_program_Click);
             // 
             // mnu_accounts
             // 
             this.mnu_accounts.Name = "mnu_accounts";
             this.mnu_accounts.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.mnu_accounts.Size = new System.Drawing.Size(69, 23);
-            this.mnu_accounts.Text = "Accounts";
+            this.mnu_accounts.Size = new System.Drawing.Size(123, 23);
+            this.mnu_accounts.Text = "Accountverwaltung";
             this.mnu_accounts.Click += new System.EventHandler(this.accountsToolStripMenuItem_Click);
             // 
             // cmb_packversions
@@ -94,8 +85,8 @@
             // mnu_start_pack
             // 
             this.mnu_start_pack.Name = "mnu_start_pack";
-            this.mnu_start_pack.Size = new System.Drawing.Size(41, 23);
-            this.mnu_start_pack.Text = "Play";
+            this.mnu_start_pack.Size = new System.Drawing.Size(71, 23);
+            this.mnu_start_pack.Text = "Start Pack";
             this.mnu_start_pack.Click += new System.EventHandler(this.playToolStripMenuItem_Click);
             // 
             // lst_packs
@@ -153,7 +144,6 @@
             // web_packdetails
             // 
             this.web_packdetails.AllowWebBrowserDrop = false;
-            this.web_packdetails.IsWebBrowserContextMenuEnabled = false;
             this.web_packdetails.Location = new System.Drawing.Point(270, 30);
             this.web_packdetails.MinimumSize = new System.Drawing.Size(20, 20);
             this.web_packdetails.Name = "web_packdetails";
@@ -176,8 +166,10 @@
             this.MaximizeBox = false;
             this.Name = "frm_main";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "UglyLauncher";
             this.Load += new System.EventHandler(this.main_Load);
+            this.Shown += new System.EventHandler(this.main_Shown);
             this.mnu_container.ResumeLayout(false);
             this.mnu_container.PerformLayout();
             this.oStatusBar.ResumeLayout(false);
@@ -191,7 +183,6 @@
 
         private System.Windows.Forms.MenuStrip mnu_container;
         private System.Windows.Forms.ToolStripMenuItem mnu_accounts;
-        private System.Windows.Forms.ToolStripMenuItem launcherToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnu_exit_program;
         private System.Windows.Forms.ToolStripComboBox cmb_packversions;
         private System.Windows.Forms.ListView lst_packs;

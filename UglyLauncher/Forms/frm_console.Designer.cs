@@ -65,6 +65,7 @@
             this.Controls.Add(this.btn_close);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frm_console";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Console";
             this.ResumeLayout(false);
 

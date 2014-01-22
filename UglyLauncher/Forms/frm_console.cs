@@ -30,7 +30,6 @@ namespace UglyLauncher
             }
             catch (Exception)
             {
-
             }
             
         }

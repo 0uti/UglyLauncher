@@ -236,6 +236,11 @@ namespace UglyLauncher.Minecraft
             // cleanup logs
             if (File.Exists(sDataDir + @"\output.log")) File.Delete(sDataDir + @"\output.log");
 
+            // load console
+            con = new frm_console();
+            con.Show();
+            con.clearcon();
+
             minecraft.Start();
             minecraft.BeginOutputReadLine();
             minecraft.BeginErrorReadLine();
@@ -245,17 +250,20 @@ namespace UglyLauncher.Minecraft
             FormWindowStateEventArgs args2 = new FormWindowStateEventArgs();
             args2.WindowState = FormWindowState.Minimized;
             if (null != handler) handler(this, args2);
-
-            con = new frm_console();
-            con.Show();
-            con.clearcon();
         }
 
         void minecraft_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (!String.IsNullOrEmpty(e.Data))
             {
-                if (con != null) con.addline(e.Data);
+                try
+                {
+                    if (con != null) con.addline(e.Data);
+                }
+                catch (Exception)
+                {
+                }
+
                 // WriteLogfile
                 string sLogFile = sDataDir + @"\output.log";
                 if (!File.Exists(sLogFile))
@@ -303,7 +311,13 @@ namespace UglyLauncher.Minecraft
         {
             if (!String.IsNullOrEmpty(outLine.Data))
             {
-                if(con != null) con.addline(outLine.Data);
+                try
+                {
+                    if (con != null) con.addline(outLine.Data);
+                }
+                catch (Exception)
+                {
+                }
                 // WriteLogfile
                 string sLogFile = sDataDir + @"\output.log";
                 if (!File.Exists(sLogFile))
@@ -323,9 +337,6 @@ namespace UglyLauncher.Minecraft
             }
         }
         
-
-
-
         private string buildArgs(MCGameStructure MC,string sPackName)
         {
             string args = null;
@@ -335,7 +346,7 @@ namespace UglyLauncher.Minecraft
             UglyLauncher.MCUserAccountProfile Profile = U.GetActiveProfile(Acc);
 
             //args += "java";
-            args += " -Xms1024m -Xmx2048m -XX:PermSize=128m";
+            args += " -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -Xms1024m -Xmx2048m -XX:PermSize=128m";
             // Path to natives
             args += " -Djava.library.path=\"" + sNativesDir + @"\" + MC.id +"\"";
             // Libs
@@ -418,11 +429,8 @@ namespace UglyLauncher.Minecraft
                     sFileName = sFileName.Replace("${arch}", "64");
                 }
                 else sFileName = LibName[1] + "-" + LibName[2];
-
                 if (Lib.nameappend != null) sFileName += Lib.nameappend;
-
                 sFileName += ".jar";
-
 
                 // build URL and pathes
                 DownLoadURL += "/" + sFileName;
@@ -594,15 +602,10 @@ namespace UglyLauncher.Minecraft
             }
         }
 
-
-
         public class FormWindowStateEventArgs : EventArgs
         {
             public FormWindowState WindowState { get; set; }
         }
-
-
-        
     }
 
 
