@@ -63,7 +63,7 @@ class UglyLauncher
     return false;
   }
 
-	private GetContaoGroups($player)
+	private function GetContaoGroups($player)
 	{
 		global $DBC;
 		
