@@ -34,7 +34,8 @@ namespace UglyLauncher.Minecraft
         public static string sNativesDir = appData + @"\.UglyLauncher\natives";
 
         // Strings
-        public string sPackServer = "http://outi-networks.de/UglyLauncher";
+        //public string sPackServer = "http://outi-networks.de/UglyLauncher";
+        public string sPackServer = "http://www.minestar.de/wiki";
         public string sVersionServer = "http://s3.amazonaws.com/Minecraft.Download/versions";
         public string sLibraryServer = "https://libraries.minecraft.net";
         public string sAssetsIndexServer = "https://s3.amazonaws.com/Minecraft.Download/indexes";
@@ -215,13 +216,10 @@ namespace UglyLauncher.Minecraft
 
         private void Start(string args,string sPackName)
         {
-            //string tmpArgs = "\"" + args + "\"";
-
             configuration C = new configuration();
-            string sJavaPath = C.GetJavaPath();
-
             Process minecraft = new Process();
-            minecraft.StartInfo.FileName = sJavaPath;
+
+            minecraft.StartInfo.FileName = C.GetJavaPath();
             minecraft.StartInfo.WorkingDirectory = sPacksDir + @"\" + sPackName + @"\minecraft";
             minecraft.StartInfo.Arguments = args;
             minecraft.StartInfo.RedirectStandardOutput = true;
@@ -241,6 +239,7 @@ namespace UglyLauncher.Minecraft
             con.Show();
             con.clearcon();
 
+            // start minecraft
             minecraft.Start();
             minecraft.BeginOutputReadLine();
             minecraft.BeginErrorReadLine();
@@ -258,7 +257,7 @@ namespace UglyLauncher.Minecraft
             {
                 try
                 {
-                    if (con != null) con.addline(e.Data);
+                    con.addline(e.Data);
                 }
                 catch (Exception)
                 {
@@ -297,14 +296,12 @@ namespace UglyLauncher.Minecraft
             }
             catch (Exception)
             {
-
             }
             // raise event
             EventHandler<FormWindowStateEventArgs> handler = restoreWindow;
             FormWindowStateEventArgs args = new FormWindowStateEventArgs();
             args.WindowState = FormWindowState.Normal;
             if (null != handler) handler(this, args);
-            
         }
 
         private void minecraft_OutputDataReceived(object sendingProcess, DataReceivedEventArgs outLine)
@@ -313,7 +310,7 @@ namespace UglyLauncher.Minecraft
             {
                 try
                 {
-                    if (con != null) con.addline(outLine.Data);
+                    con.addline(outLine.Data);
                 }
                 catch (Exception)
                 {
@@ -377,6 +374,9 @@ namespace UglyLauncher.Minecraft
 
         private void DownloadLibraries(MCGameStructure MC)
         {
+            configuration c = new configuration();
+            this.lLibraries.Clear();
+
             foreach (MCGameStructureLib Lib in MC.libraries)
             {
                 string DownLoadURL = this.sLibraryServer;
@@ -409,26 +409,16 @@ namespace UglyLauncher.Minecraft
                 {
                     DownLoadURL += "/" + LibOrgPart;
                     LocalPath += @"\" + LibOrgPart;
-                    if (!Directory.Exists(LocalPath)) Directory.CreateDirectory(LocalPath);
                 }
 
-                // create name directory
-                DownLoadURL += "/" + LibName[1];
-                LocalPath += @"\" + LibName[1];
-                if (!Directory.Exists(LocalPath)) Directory.CreateDirectory(LocalPath);
-
-                // create version directory
-                DownLoadURL += "/" + LibName[2];
-                LocalPath += @"\" + LibName[2];
+                // create directory
+                DownLoadURL += "/" + LibName[1] + "/" + LibName[2];
+                LocalPath += @"\" + LibName[1] + @"\" + LibName[2];
                 if (!Directory.Exists(LocalPath)) Directory.CreateDirectory(LocalPath);
 
                 // filename
-                if (Lib.natives != null)
-                {
-                    sFileName = LibName[1] + "-" + LibName[2] + "-" + Lib.natives.windows;
-                    sFileName = sFileName.Replace("${arch}", "64");
-                }
-                else sFileName = LibName[1] + "-" + LibName[2];
+                sFileName = LibName[1] + "-" + LibName[2];
+                if (Lib.natives != null) sFileName += "-" + Lib.natives.windows.Replace("${arch}", c.GetJavaArch());
                 if (Lib.nameappend != null) sFileName += Lib.nameappend;
                 sFileName += ".jar";
 
@@ -443,14 +433,9 @@ namespace UglyLauncher.Minecraft
                 if (Lib.extract != null)
                 {
                     if (!Directory.Exists(sNativesDir + @"\" + MC.id)) Directory.CreateDirectory(sNativesDir + @"\" + MC.id);
-                    ExtractZipFile(LocalPath, sNativesDir + @"\" + MC.id, "");
+                    ExtractZipFile(LocalPath, sNativesDir + @"\" + MC.id);
                 }
-                else
-                {
-                    // files need for startup
-                    this.lLibraries.Add(LocalPath);
-                }
-
+                else this.lLibraries.Add(LocalPath); // files needed for startup
             }
         }
 

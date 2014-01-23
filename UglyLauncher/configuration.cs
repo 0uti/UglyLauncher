@@ -8,46 +8,54 @@ namespace UglyLauncher
 {
     class configuration
     {
-        public string GetJavaPath()
+        private string sJavaPath = null;
+        private string sJavaArch = null;
+
+        public configuration()
         {
             // Get 64bit Java
-            string sJavaPath = this.GetJavaPath64();
+            this.GetJavaPath64();
             // if 64bit not found, look for 32bit Java
-            if (sJavaPath == null) sJavaPath = this.GetJavaPath32();
-            // if still no Java Found -> Bullshit!
-            return sJavaPath;
+            if (this.sJavaPath == null) this.GetJavaPath32();
+            // if still no Java Found -> Bullshit
         }
 
+        public string GetJavaArch()
+        {
+            return this.sJavaArch;
+        }
 
-        private string GetJavaPath64()
+        public string GetJavaPath()
+        {
+            return this.sJavaPath;
+        }
+
+        private void GetJavaPath64()
         {
             RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
-            if (key == null) return null;  // no java 64 found
+            if (key == null) return;  // no java 64 found
             string sCurrentVersion = key.GetValue("CurrentVersion",null) as String;
 
             key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment\" + sCurrentVersion);
-            if (key == null) return null;  // no java 64 found
-            string sJavaPath = key.GetValue("JavaHome", null) as String;
+            if (key == null) return ;  // no java 64 found
+            this.sJavaPath = key.GetValue("JavaHome", null) as String;
             // append executable
-            sJavaPath += @"\bin\java";
-
-            return sJavaPath;
+            this.sJavaPath += @"\bin\java";
+            this.sJavaArch = "64";
         }
 
-        private string GetJavaPath32()
+        private void GetJavaPath32()
         {
             RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\JavaSoft\Java Runtime Environment");
-            if (key == null) return null;  // no java 32 found
+            if (key == null) return;  // no java 32 found
             string sCurrentVersion = key.GetValue("CurrentVersion", null) as String;
 
             key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\JavaSoft\Java Runtime Environment\" + sCurrentVersion);
-            if (key == null) return null;  // no java 32 found
-            string sJavaPath = key.GetValue("JavaHome", null) as String;
+            if (key == null) return;  // no java 32 found
+            this.sJavaPath = key.GetValue("JavaHome", null) as String;
             // append executable
-            sJavaPath += @"\bin\java";
-
-            return sJavaPath;
+            this.sJavaPath += @"\bin\java";
+            this.sJavaArch = "32";
         }
-
     }
 }

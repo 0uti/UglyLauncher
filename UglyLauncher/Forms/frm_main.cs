@@ -119,17 +119,19 @@ namespace UglyLauncher
             // Get Packs from Server
             L.LoadAvailablePacks(MCPlayerName);
             MCPacksAvailable Packs = L.GetAvailablePacks();
-            foreach (MCPacksAvailablePack Pack in Packs.packs)
+            if (Packs.packs != null)
             {
-                ListViewItem LvItem = new ListViewItem(Pack.name, Pack.name);
-                LvItem.Font = new Font("Thaoma", 20, FontStyle.Bold);
-                this.Invoke(new Action(() =>
+                foreach (MCPacksAvailablePack Pack in Packs.packs)
                 {
-                    lst_packs_images.Images.Add(Pack.name, L.GetPackIcon(Pack));
-                    lst_packs.Items.Add(LvItem);
-                }));
+                    ListViewItem LvItem = new ListViewItem(Pack.name, Pack.name);
+                    LvItem.Font = new Font("Thaoma", 20, FontStyle.Bold);
+                    this.Invoke(new Action(() =>
+                    {
+                        lst_packs_images.Images.Add(Pack.name, L.GetPackIcon(Pack));
+                        lst_packs.Items.Add(LvItem);
+                    }));
+                }
             }
-
             worker.ReportProgress(75);
 
             // Load installed Packs
