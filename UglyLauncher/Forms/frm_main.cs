@@ -31,7 +31,7 @@ namespace UglyLauncher
         private void accountsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new frm_UserAccounts().ShowDialog();
-            lbl_default_account.Text = new UserManager().GetDefault();
+            this.DoInit();
         }
 
         // form_load event
@@ -49,6 +49,11 @@ namespace UglyLauncher
         //form_shown event
         void main_Shown(object sender, EventArgs e)
         {
+            this.DoInit();
+        }
+
+        private void DoInit()
+        {
             BackgroundWorker worker = new BackgroundWorker();
 
             worker.WorkerReportsProgress = true;
@@ -59,7 +64,6 @@ namespace UglyLauncher
             worker.RunWorkerAsync();
             while (worker.IsBusy)
                 Application.DoEvents();
-
             this.bar.Hide();
         }
 
@@ -71,6 +75,16 @@ namespace UglyLauncher
             Launcher L = new Launcher();
             L.CheckDirectories();
 
+            // Update bootstrap
+            try
+            {
+                BootStrapUpdater B = new BootStrapUpdater();
+                if (B.HaveUpdate()) B.DoUpdate();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Update vom Launcher (Bootstrap) fehlgeschlagen\n" + ex.Message,"Fehler beim Update",MessageBoxButtons.OK,MessageBoxIcon.Error);
+            }
             // Test User
             string MCPlayerName = null;
             worker.ReportProgress(25);
@@ -92,11 +106,7 @@ namespace UglyLauncher
                 {
                     frm_RefreshToken fTokRefresh = new frm_RefreshToken(Account.username);
                     DialogResult res = fTokRefresh.ShowDialog();
-                    if (res == DialogResult.Cancel)
-                    {
-                        // Clear default user
-                        U.SetDefault("none");
-                    }
+                    if (res == DialogResult.Cancel) U.SetDefault("none");
                 }
                 catch (Exception ex)
                 {
@@ -112,6 +122,8 @@ namespace UglyLauncher
             this.Invoke(new Action(() =>
             {
                 lbl_default_account.Text = U.GetDefault();
+                lst_packs.Clear();
+                lst_packs_images.Images.Clear();
             }));
 
             worker.ReportProgress(50);
@@ -124,7 +136,7 @@ namespace UglyLauncher
                 foreach (MCPacksAvailablePack Pack in Packs.packs)
                 {
                     ListViewItem LvItem = new ListViewItem(Pack.name, Pack.name);
-                    LvItem.Font = new Font("Thaoma", 20, FontStyle.Bold);
+                    LvItem.Font = new Font("Thaoma", 16, FontStyle.Bold);
                     this.Invoke(new Action(() =>
                     {
                         lst_packs_images.Images.Add(Pack.name, L.GetPackIcon(Pack));
@@ -210,12 +222,10 @@ namespace UglyLauncher
             this.BeginInvoke(new Action(() =>
                 {
                     this.WindowState = e.WindowState;
+                    if (e.WindowState == FormWindowState.Minimized) this.ShowInTaskbar = false;
+                    else this.ShowInTaskbar = true;
                 }
             ));
         }
-
-       
-
-        
     }
 }

@@ -97,10 +97,10 @@
             this.lst_packs.HideSelection = false;
             this.lst_packs.LabelWrap = false;
             this.lst_packs.LargeImageList = this.lst_packs_images;
-            this.lst_packs.Location = new System.Drawing.Point(3, 30);
+            this.lst_packs.Location = new System.Drawing.Point(0, 30);
             this.lst_packs.MultiSelect = false;
             this.lst_packs.Name = "lst_packs";
-            this.lst_packs.Size = new System.Drawing.Size(264, 357);
+            this.lst_packs.Size = new System.Drawing.Size(266, 360);
             this.lst_packs.TabIndex = 0;
             this.lst_packs.TabStop = false;
             this.lst_packs.TileSize = new System.Drawing.Size(260, 50);
@@ -144,10 +144,10 @@
             // web_packdetails
             // 
             this.web_packdetails.AllowWebBrowserDrop = false;
-            this.web_packdetails.Location = new System.Drawing.Point(270, 30);
+            this.web_packdetails.Location = new System.Drawing.Point(266, 30);
             this.web_packdetails.MinimumSize = new System.Drawing.Size(20, 20);
             this.web_packdetails.Name = "web_packdetails";
-            this.web_packdetails.Size = new System.Drawing.Size(413, 357);
+            this.web_packdetails.Size = new System.Drawing.Size(417, 360);
             this.web_packdetails.TabIndex = 3;
             this.web_packdetails.WebBrowserShortcutsEnabled = false;
             // 

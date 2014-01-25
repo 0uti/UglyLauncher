@@ -65,9 +65,9 @@ class UglyLauncher
 
 	private function GetContaoGroups($player)
 	{
-		global $DBC;
+		global $DB;
 		
-		$RES_G = $DBC->query(sprintf("SELECT T.groups FROM mc_pay P LEFT JOIN tl_member T on T.id = P.contao_user_id WHERE upper(minecraft_nick) = upper('%s')",$player));
+		$RES_G = $DB->query(sprintf("SELECT T.groups FROM mc_pay P LEFT JOIN tl_member T on T.id = P.contao_user_id WHERE upper(minecraft_nick) = upper('%s')",$player));
 		if($RES_G->numrows() == 0)
 		{
 			$ret = array();

@@ -45,7 +45,7 @@
             this.lbl_FileName.Name = "lbl_FileName";
             this.lbl_FileName.Size = new System.Drawing.Size(318, 23);
             this.lbl_FileName.TabIndex = 1;
-            this.lbl_FileName.Text = "Init";
+            this.lbl_FileName.Text = "Initialisierung (Account/Packlist)";
             this.lbl_FileName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // frm_progressbar

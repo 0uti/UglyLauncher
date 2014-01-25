@@ -19,7 +19,7 @@ namespace UglyBootstrap
     public partial class frm_main : Form
     {
         static string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        string sAppServer = "http://outi-networks.de/UglyLauncher/Updates/";
+        string sAppServer = "http://www.minestar.de/wiki/updates/";
 
         private WebClient Downloader = new WebClient();
 
@@ -42,47 +42,53 @@ namespace UglyBootstrap
 
         private void frm_main_Shown(object sender, EventArgs e)
         {
-            XmlDocument xmlDocument = new XmlDocument();
-            configuration c = new configuration();
-            c.SaveAppInfo();
-
-            // check if Launcher executable exists
-            if (!Directory.Exists(appData + @"\.UglyLauncher")) Directory.CreateDirectory(appData + @"\.UglyLauncher");
-            if (!File.Exists(appData + @"\.UglyLauncher\UglyLauncher.exe"))
+            try
             {
-                this.WindowState = FormWindowState.Normal;
-                this.DownloadFileTo(sAppServer + "UglyLauncher.exe", appData + @"\.UglyLauncher\UglyLauncher.exe");
-                Process.Start(new ProcessStartInfo(appData + @"\.UglyLauncher\UglyLauncher.exe"));
-                Application.Exit();
-                return;
+                // get remote xml
+                this.LoadXML(sAppServer + "launcher.xml");
+                configuration c = new configuration();
+                c.SaveAppInfo();
+                // Directory Check
+                if (!Directory.Exists(appData + @"\.UglyLauncher")) Directory.CreateDirectory(appData + @"\.UglyLauncher");
+                // File Check
+                if (!File.Exists(appData + @"\.UglyLauncher\UglyLauncher.exe")) this.DoUpdate();
+                // File exists, check for new version
+                if (this.HaveUpdate()) this.DoUpdate();
+                this.StartLauncher();
             }
-            // check for version
-            Version curVersion = AssemblyName.GetAssemblyName(appData + @"\.UglyLauncher\UglyLauncher.exe").Version;
-            // get remote xml
-            this.LoadXML(sAppServer + "version.xml");
-            Version newVersion = new Version(this.AppInfo.version);
-
-            if (curVersion.CompareTo(newVersion) < 0)
+            catch(Exception)
             {
-                try
-                {
-                    // do update
-                    if (File.Exists(appData + @"\.UglyLauncher\UglyLauncher.exe")) File.Delete(appData + @"\.UglyLauncher\UglyLauncher.exe");
-                    this.WindowState = FormWindowState.Normal;
-                    this.DownloadFileTo(this.AppInfo.installer, appData + @"\.UglyLauncher\UglyLauncher.exe");
-                }
-                catch (Exception)
-                {
-                    Application.Exit();
-                    return;
-                }
             }
-            
-            Process.Start(new ProcessStartInfo(appData + @"\.UglyLauncher\UglyLauncher.exe"));
-            Application.Exit();
-            return;
         }
 
+
+        private bool HaveUpdate()
+        {
+            try
+            {
+                Version curVersion = AssemblyName.GetAssemblyName(appData + @"\.UglyLauncher\UglyLauncher.exe").Version;
+                // compare
+                Version newVersion = new Version(this.AppInfo.version);
+                if (curVersion.CompareTo(newVersion) < 0) return true;
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private void DoUpdate()
+        {
+            this.WindowState = FormWindowState.Normal;
+            this.DownloadFileTo(this.AppInfo.url, appData + @"\.UglyLauncher\UglyLauncher.exe");
+        }
+
+        private void StartLauncher()
+        {
+            Process.Start(new ProcessStartInfo(appData + @"\.UglyLauncher\UglyLauncher.exe"));
+            Application.Exit();
+        }
 
         private void LoadXML(string xmlurl)
         {
@@ -101,9 +107,9 @@ namespace UglyBootstrap
                     read.Close();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //Log exception here
+                throw ex;
             }
         }
 
@@ -129,10 +135,6 @@ namespace UglyBootstrap
         public string version { get; set; }
         [DataMember]
         public string url { get; set; }
-        [DataMember]
-        public string installer { get; set; }
-        [DataMember]
-        public string date { get; set; }
     }
     /*
     <appinfo>

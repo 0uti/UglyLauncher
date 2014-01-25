@@ -12,28 +12,10 @@ include_once($global['include_path']."class.db.".$database['dbtype'].".php");
 final class UglyLauncherDB extends dbclass
 {
   protected $server     = "localhost";
-  protected $user       = "launcher";
-  protected $password   = "launcher";
+  protected $user       = "minestar_wiki";
+  protected $password   = "werJmiNYMGSg";
   protected $newlink	= true;
-  protected $database   = "launcher";
-  protected $charset    = "utf8";
-  
-  public function __construct()
-  {
-    parent::__construct();
-  }
-}
-
-
-$database['dbtype'] = "mysql";
-include_once($global['include_path']."class.db.".$database['dbtype'].".php");
-final class ContaoDB extends dbclass
-{
-  protected $server     = "localhost";
-  protected $user       = "launcher";
-  protected $password   = "launcher";
-  protected $newlink	= true;
-  protected $database   = "minestar_contao";
+  protected $database   = "minestar_wiki";
   protected $charset    = "utf8";
   
   public function __construct()

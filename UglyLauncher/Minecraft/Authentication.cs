@@ -129,12 +129,20 @@ namespace UglyLauncher.Minecraft
                 switch (ex.Status)
                 {
                     case WebExceptionStatus.ProtocolError:
-                        // Get Json Answer
-                        sJsonResponse = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd().Trim();
-                        // deserialize JSON
-                        MCError ErrorMessage = UglyLauncher.JsonHelper.JsonDeserializer<MCError>(sJsonResponse);
-                        if (ErrorMessage.errorMessage == "Invalid token.") throw new MCInvalidTokenException(ErrorMessage.errorMessage);
-                        throw new Exception(ErrorMessage.errorMessage);
+                        if (ex.Message.Contains("500") || ex.Message.Contains("503"))
+                        {
+                            throw new Exception("Mojang Loginservice nicht verfügbar.");
+                        }
+                        if (ex.Message.Contains("403"))
+                        {
+                            // Get Json Answer
+                            sJsonResponse = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd().Trim();
+                            // deserialize JSON
+                            MCError ErrorMessage = UglyLauncher.JsonHelper.JsonDeserializer<MCError>(sJsonResponse);
+                            if (ErrorMessage.errorMessage == "Invalid token.") throw new MCInvalidTokenException(ErrorMessage.errorMessage);
+                            throw new Exception(ErrorMessage.errorMessage);
+                        }
+                        throw new Exception(ex.Message);
                     default:
                         throw new Exception(ex.Message);
                 }
