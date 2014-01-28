@@ -81,7 +81,7 @@ namespace UglyBootstrap
         private void DoUpdate()
         {
             this.WindowState = FormWindowState.Normal;
-            this.DownloadFileTo(this.AppInfo.url, appData + @"\.UglyLauncher\UglyLauncher.exe");
+            this.DownloadFileTo(this.AppInfo.url, appData + @"\.UglyLauncher\UglyLauncher.exe",true);
         }
 
         private void StartLauncher()
@@ -115,16 +115,14 @@ namespace UglyBootstrap
 
 
         // download file if needed
-        private void DownloadFileTo(string sRemotePath, string sLocalPath)
+        private void DownloadFileTo(string sRemotePath, string sLocalPath,bool overwrite = false)
         {
-            if (!File.Exists(sLocalPath))
-            {
-                this.Downloader.DownloadFileAsync(new Uri(sRemotePath), sLocalPath);
+            if (File.Exists(sLocalPath) && !overwrite) return;
+            this.Downloader.DownloadFileAsync(new Uri(sRemotePath), sLocalPath);
+            Application.DoEvents();
+            while (this.Downloader.IsBusy)
                 Application.DoEvents();
-                while (this.Downloader.IsBusy)
-                    Application.DoEvents();
-                Application.DoEvents();
-            }
+            Application.DoEvents();
         }
     }
 

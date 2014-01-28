@@ -231,9 +231,6 @@ namespace UglyLauncher.Minecraft
             minecraft.Exited += new EventHandler(minecraft_Exited);
             minecraft.EnableRaisingEvents = true;
 
-            // cleanup logs
-            if (File.Exists(sDataDir + @"\output.log")) File.Delete(sDataDir + @"\output.log");
-
             // load console
             con = new frm_console();
             con.Show();
@@ -251,7 +248,7 @@ namespace UglyLauncher.Minecraft
             if (null != handler) handler(this, args2);
         }
 
-        void minecraft_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        private void minecraft_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (!String.IsNullOrEmpty(e.Data))
             {
@@ -261,23 +258,6 @@ namespace UglyLauncher.Minecraft
                 }
                 catch (Exception)
                 {
-                }
-
-                // WriteLogfile
-                string sLogFile = sDataDir + @"\output.log";
-                if (!File.Exists(sLogFile))
-                {
-                    using (StreamWriter sw = File.CreateText(sLogFile))
-                    {
-                        sw.WriteLine(e.Data);
-                    }
-                }
-                else
-                {
-                    using (StreamWriter sw = File.AppendText(sLogFile))
-                    {
-                        sw.WriteLine(e.Data);
-                    }
                 }
             }
         }
@@ -314,22 +294,6 @@ namespace UglyLauncher.Minecraft
                 }
                 catch (Exception)
                 {
-                }
-                // WriteLogfile
-                string sLogFile = sDataDir + @"\output.log";
-                if (!File.Exists(sLogFile))
-                {
-                    using (StreamWriter sw = File.CreateText(sLogFile))
-                    {
-                        sw.WriteLine(outLine.Data);
-                    }
-                }
-                else
-                {
-                    using (StreamWriter sw = File.AppendText(sLogFile))
-                    {
-                        sw.WriteLine(outLine.Data);
-                    }
                 }
             }
         }
@@ -368,6 +332,7 @@ namespace UglyLauncher.Minecraft
             MCArgs = MCArgs.Replace("${user_properties}", "{}");
             MCArgs = MCArgs.Replace("${user_type}", "Mojang");
             args += " " + MCArgs;
+
             return args;
         }
 
@@ -426,6 +391,9 @@ namespace UglyLauncher.Minecraft
                 DownLoadURL += "/" + sFileName;
                 LocalPath += @"\" + sFileName;
 
+                // use absolute Download URL
+                if (Lib.downloadurl != null) DownLoadURL = Lib.downloadurl;
+
                 // download file if needed
                 DownloadFileTo(DownLoadURL, LocalPath);
 
@@ -456,6 +424,7 @@ namespace UglyLauncher.Minecraft
                 DownloadFileTo(this.sAssetsIndexServer + "/" + MC.assets + ".json", sAssetsDir + @"\indexes\" + MC.assets + ".json");
             // getting asset jason
             string sJson = File.ReadAllText(sAssetsDir + @"\indexes\" + MC.assets + ".json").Trim();
+
             MCAssets Assets = new JavaScriptSerializer().Deserialize<MCAssets>(sJson);
 
             foreach (KeyValuePair<string, MCAssetsObject> Asset in Assets.objects)
@@ -716,7 +685,7 @@ namespace UglyLauncher.Minecraft
         [DataMember]
         public string nameappend { get; set; }
         [DataMember]
-        public string fullurl { get; set; }
+        public string downloadurl { get; set; }
         [DataMember]
         public List<MCGameStructureLibRule> rules;
         [DataMember]
@@ -728,7 +697,7 @@ namespace UglyLauncher.Minecraft
     [DataContract]
     public class MCAssets
     {
-        [DataMember]
+        [DataMember(Name="virtual")]
         public string @virtual { get; set; }
         [DataMember]
         public Dictionary<string, MCAssetsObject> objects;

@@ -94,11 +94,7 @@ namespace UglyLauncher
                 throw ex;
             }
         }
-
-
     }
-
-
 
     [DataContract]
     public class appinfo

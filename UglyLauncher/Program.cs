@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.IO;
 
 
+
 namespace UglyLauncher
 {
     static class Program
