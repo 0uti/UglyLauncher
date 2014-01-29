@@ -122,6 +122,9 @@
     <Compile Include="Forms\frm_settings.Designer.cs">
       <DependentUpon>frm_settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="NumericUpDownEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Minecraft\Launcher.cs" />
     <Compile Include="Forms\frm_progressbar.cs">
       <SubType>Form</SubType>
