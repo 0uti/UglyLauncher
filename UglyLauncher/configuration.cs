@@ -8,17 +8,84 @@ namespace UglyLauncher
 {
     class configuration
     {
+
+        private string sRegPath = "Software\\Minestar\\UglyLauncher";
         private string sJavaPath = null;
         private string sJavaArch = null;
 
+
+        private int iMinMemory = -1;
+        private int iMaxMemory = -1;
+        private int iPermGen = -1;
+
+        // Minimum memoryusage
+        public int MinimumMemory
+        {
+            get
+            {
+                if (iMinMemory != -1) return iMinMemory;
+                else return this.SetRegInt("min_memory", 1024);
+            }
+            set
+            {
+                this.iMinMemory = value;
+                this.SetRegInt("min_memory", this.iMinMemory);
+            }
+        }
+
+        // Maximum memoryusage
+        public int MaximumMemory
+        {
+            get
+            {
+                if (iMaxMemory != -1) return iMaxMemory;
+                else return this.SetRegInt("max_memory", 2048);
+            }
+            set
+            {
+                this.iMaxMemory = value;
+                this.SetRegInt("max_memory", this.iMaxMemory);
+            }
+        }
+
+        // PermGen
+        public int PermGen
+        {
+            get
+            {
+                if(iPermGen != -1) return iPermGen;
+                else return this.SetRegInt("perm_gen", 128);
+            }
+            set
+            {
+                this.iPermGen = value;
+                this.SetRegInt("perm_gen", this.iPermGen);
+            }
+        }
+
+        
+
+
         public configuration()
         {
-            // Get 64bit Java
-            this.GetJavaPath64();
-            // if 64bit not found, look for 32bit Java
-            if (this.sJavaPath == null) this.GetJavaPath32();
-            // if still no Java Found -> Bullshit
+            this.iMinMemory = this.GetRegInt("min_memory");
+            this.iMaxMemory = this.GetRegInt("max_memory");
+            int iPermGen = this.GetRegInt("perm_gen");
+            this.GetJavaPathAuto();
         }
+
+        
+
+        // Show console
+
+
+
+        // JavaPath
+
+
+
+
+        // Old Shit
 
         public string GetJavaArch()
         {
@@ -29,6 +96,18 @@ namespace UglyLauncher
         {
             return this.sJavaPath;
         }
+
+
+        private void GetJavaPathAuto()
+        {
+            // Get 64bit Java
+            this.GetJavaPath64();
+            // if 64bit not found, look for 32bit Java
+            if (this.sJavaPath == null) this.GetJavaPath32();
+            // if still no Java Found -> Bullshit
+        }
+
+
 
         private void GetJavaPath64()
         {
@@ -56,6 +135,38 @@ namespace UglyLauncher
             // append executable
             this.sJavaPath += @"\bin\java";
             this.sJavaArch = "32";
+        }
+
+
+
+        // Registry Handler
+
+        private string GetRegString(string sRegKey)
+        {
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(this.sRegPath);
+            if (key == null) return null;
+            return key.GetValue(sRegKey, null) as String;
+        }
+
+        private int GetRegInt(string sRegKey)
+        {
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(this.sRegPath);
+            if (key == null) return -1;
+            return (int)key.GetValue(sRegKey, -1);
+        }
+
+        private string SetRegString(string sRegKey, string sRegValue)
+        {
+            RegistryKey key = Registry.CurrentUser.CreateSubKey(this.sRegPath);
+            key.SetValue(sRegKey, sRegValue, RegistryValueKind.String);
+            return sRegValue;
+        }
+
+        private int SetRegInt(string sRegKey, int iRegValue)
+        {
+            RegistryKey key = Registry.CurrentUser.CreateSubKey(this.sRegPath);
+            key.SetValue(sRegKey, iRegValue, RegistryValueKind.DWord);
+            return iRegValue;
         }
     }
 }

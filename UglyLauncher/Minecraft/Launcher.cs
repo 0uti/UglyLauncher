@@ -9,6 +9,7 @@ using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
+using UglyLauncher;
 using UglyLauncher.Internet;
 
 namespace UglyLauncher.Minecraft
@@ -301,13 +302,15 @@ namespace UglyLauncher.Minecraft
         private string buildArgs(MCGameStructure MC,string sPackName)
         {
             string args = null;
+            configuration C = new configuration();
+            UserManager U = new UserManager();
+            MCUserAccount Acc = U.GetAccount(U.GetDefault());
+            MCUserAccountProfile Profile = U.GetActiveProfile(Acc);
 
-            UglyLauncher.UserManager U = new UglyLauncher.UserManager();
-            UglyLauncher.MCUserAccount Acc = U.GetAccount(U.GetDefault());
-            UglyLauncher.MCUserAccountProfile Profile = U.GetActiveProfile(Acc);
-
-            //args += "java";
-            args += " -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -Xms1024m -Xmx2048m -XX:PermSize=128m";
+            // fucking Mojang drivers Hack
+            args += " -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump";
+            // Java Memory
+            args += String.Format(" -Xms{0}m -Xmx{1}m -XX:PermSize={2}m",C.MinimumMemory,C.MaximumMemory,C.PermGen);
             // Path to natives
             args += " -Djava.library.path=\"" + sNativesDir + @"\" + MC.id +"\"";
             // Libs
@@ -315,7 +318,7 @@ namespace UglyLauncher.Minecraft
             foreach (string Lib in this.lLibraries)
                 args += "\"" + Lib + "\";";
             // version .jar
-            args += "\"" + sVersionDir + @"\" + MC.id + @"\" + MC.id + ".jar" + "\" ";
+            args += String.Format("\"{0}\\{1}\\{1}.jar\" ", sVersionDir, MC.id);
             // startup class
             args += MC.mainClass;
             // minecraft arguments

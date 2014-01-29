@@ -38,14 +38,14 @@ namespace UglyLauncher
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.numericUpDown3 = new UglyLauncher.NumericUpDownEx();
-            this.numericUpDown2 = new UglyLauncher.NumericUpDownEx();
-            this.numericUpDown1 = new UglyLauncher.NumericUpDownEx();
+            this.java_perm_gen = new UglyLauncher.NumericUpDownEx();
+            this.java_max_mem = new UglyLauncher.NumericUpDownEx();
+            this.java_min_mem = new UglyLauncher.NumericUpDownEx();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.java_perm_gen)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.java_max_mem)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.java_min_mem)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -66,6 +66,7 @@ namespace UglyLauncher
             this.button2.TabIndex = 2;
             this.button2.Text = "Speichern";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // groupBox1
             // 
@@ -92,9 +93,9 @@ namespace UglyLauncher
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.numericUpDown3);
-            this.groupBox2.Controls.Add(this.numericUpDown2);
-            this.groupBox2.Controls.Add(this.numericUpDown1);
+            this.groupBox2.Controls.Add(this.java_perm_gen);
+            this.groupBox2.Controls.Add(this.java_max_mem);
+            this.groupBox2.Controls.Add(this.java_min_mem);
             this.groupBox2.Location = new System.Drawing.Point(12, 66);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(328, 103);
@@ -129,83 +130,83 @@ namespace UglyLauncher
             this.label1.TabIndex = 3;
             this.label1.Text = "Minimaler Arbeitspeicher:";
             // 
-            // numericUpDown3
+            // java_perm_gen
             // 
-            this.numericUpDown3.Increment = new decimal(new int[] {
+            this.java_perm_gen.Increment = new decimal(new int[] {
             16,
             0,
             0,
             0});
-            this.numericUpDown3.Location = new System.Drawing.Point(172, 73);
-            this.numericUpDown3.Maximum = new decimal(new int[] {
+            this.java_perm_gen.Location = new System.Drawing.Point(172, 73);
+            this.java_perm_gen.Maximum = new decimal(new int[] {
             1024,
             0,
             0,
             0});
-            this.numericUpDown3.Minimum = new decimal(new int[] {
+            this.java_perm_gen.Minimum = new decimal(new int[] {
             64,
             0,
             0,
             0});
-            this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(143, 20);
-            this.numericUpDown3.TabIndex = 2;
-            this.numericUpDown3.Value = new decimal(new int[] {
-            128,
+            this.java_perm_gen.Name = "java_perm_gen";
+            this.java_perm_gen.Size = new System.Drawing.Size(143, 20);
+            this.java_perm_gen.TabIndex = 2;
+            this.java_perm_gen.Value = new decimal(new int[] {
+            64,
             0,
             0,
             0});
             // 
-            // numericUpDown2
+            // java_max_mem
             // 
-            this.numericUpDown2.Increment = new decimal(new int[] {
+            this.java_max_mem.Increment = new decimal(new int[] {
             128,
             0,
             0,
             0});
-            this.numericUpDown2.Location = new System.Drawing.Point(172, 47);
-            this.numericUpDown2.Maximum = new decimal(new int[] {
+            this.java_max_mem.Location = new System.Drawing.Point(172, 47);
+            this.java_max_mem.Maximum = new decimal(new int[] {
             8192,
             0,
             0,
             0});
-            this.numericUpDown2.Minimum = new decimal(new int[] {
+            this.java_max_mem.Minimum = new decimal(new int[] {
             1024,
             0,
             0,
             0});
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(143, 20);
-            this.numericUpDown2.TabIndex = 1;
-            this.numericUpDown2.Value = new decimal(new int[] {
-            2048,
+            this.java_max_mem.Name = "java_max_mem";
+            this.java_max_mem.Size = new System.Drawing.Size(143, 20);
+            this.java_max_mem.TabIndex = 1;
+            this.java_max_mem.Value = new decimal(new int[] {
+            1024,
             0,
             0,
             0});
             // 
-            // numericUpDown1
+            // java_min_mem
             // 
-            this.numericUpDown1.Increment = new decimal(new int[] {
+            this.java_min_mem.Increment = new decimal(new int[] {
             128,
             0,
             0,
             0});
-            this.numericUpDown1.Location = new System.Drawing.Point(172, 20);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
+            this.java_min_mem.Location = new System.Drawing.Point(172, 20);
+            this.java_min_mem.Maximum = new decimal(new int[] {
             8192,
             0,
             0,
             0});
-            this.numericUpDown1.Minimum = new decimal(new int[] {
+            this.java_min_mem.Minimum = new decimal(new int[] {
             512,
             0,
             0,
             0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(143, 20);
-            this.numericUpDown1.TabIndex = 0;
-            this.numericUpDown1.Value = new decimal(new int[] {
-            1024,
+            this.java_min_mem.Name = "java_min_mem";
+            this.java_min_mem.Size = new System.Drawing.Size(143, 20);
+            this.java_min_mem.TabIndex = 0;
+            this.java_min_mem.Value = new decimal(new int[] {
+            512,
             0,
             0,
             0});
@@ -225,13 +226,14 @@ namespace UglyLauncher
             this.MinimizeBox = false;
             this.Name = "frm_settings";
             this.Text = "Einstellungen";
+            this.Load += new System.EventHandler(this.frm_settings_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.java_perm_gen)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.java_max_mem)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.java_min_mem)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -246,8 +248,8 @@ namespace UglyLauncher
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private NumericUpDownEx numericUpDown3;
-        private NumericUpDownEx numericUpDown2;
-        private NumericUpDownEx numericUpDown1;
+        private NumericUpDownEx java_perm_gen;
+        private NumericUpDownEx java_max_mem;
+        private NumericUpDownEx java_min_mem;
     }
 }
