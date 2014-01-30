@@ -116,6 +116,15 @@
     <Compile Include="Forms\frm_console.Designer.cs">
       <DependentUpon>frm_console.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frm_settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_settings.Designer.cs">
+      <DependentUpon>frm_settings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NumericUpDownEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Minecraft\Launcher.cs" />
     <Compile Include="Forms\frm_progressbar.cs">
       <SubType>Form</SubType>
@@ -212,6 +221,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_console.resx">
       <DependentUpon>frm_console.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_settings.resx">
+      <DependentUpon>frm_settings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

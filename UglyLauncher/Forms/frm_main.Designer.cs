@@ -41,6 +41,7 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbl_default_account = new System.Windows.Forms.ToolStripStatusLabel();
             this.web_packdetails = new System.Windows.Forms.WebBrowser();
+            this.einstellungenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu_container.SuspendLayout();
             this.oStatusBar.SuspendLayout();
             this.SuspendLayout();
@@ -51,6 +52,7 @@
             this.mnu_exit_program,
             this.mnu_accounts,
             this.cmb_packversions,
+            this.einstellungenToolStripMenuItem,
             this.mnu_start_pack});
             this.mnu_container.Location = new System.Drawing.Point(0, 0);
             this.mnu_container.Name = "mnu_container";
@@ -151,6 +153,13 @@
             this.web_packdetails.TabIndex = 3;
             this.web_packdetails.WebBrowserShortcutsEnabled = false;
             // 
+            // einstellungenToolStripMenuItem
+            // 
+            this.einstellungenToolStripMenuItem.Name = "einstellungenToolStripMenuItem";
+            this.einstellungenToolStripMenuItem.Size = new System.Drawing.Size(90, 23);
+            this.einstellungenToolStripMenuItem.Text = "Einstellungen";
+            this.einstellungenToolStripMenuItem.Click += new System.EventHandler(this.einstellungenToolStripMenuItem_Click);
+            // 
             // frm_main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -192,6 +201,7 @@
         private System.Windows.Forms.ImageList lst_packs_images;
         private System.Windows.Forms.WebBrowser web_packdetails;
         private System.Windows.Forms.ToolStripMenuItem mnu_start_pack;
+        private System.Windows.Forms.ToolStripMenuItem einstellungenToolStripMenuItem;
     }
 }
 
