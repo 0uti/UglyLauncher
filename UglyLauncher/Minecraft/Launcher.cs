@@ -233,9 +233,12 @@ namespace UglyLauncher.Minecraft
             minecraft.EnableRaisingEvents = true;
 
             // load console
-            con = new frm_console();
-            con.Show();
-            con.clearcon();
+            if (C.ShowConsole == 1)
+            {
+                con = new frm_console();
+                con.Show();
+                con.clearcon();
+            }
 
             // start minecraft
             minecraft.Start();

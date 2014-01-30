@@ -33,7 +33,7 @@ namespace UglyLauncher
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.chk_console = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -70,7 +70,7 @@ namespace UglyLauncher
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.checkBox1);
+            this.groupBox1.Controls.Add(this.chk_console);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(328, 48);
@@ -78,15 +78,15 @@ namespace UglyLauncher
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Konsole";
             // 
-            // checkBox1
+            // chk_console
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(7, 20);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(119, 17);
-            this.checkBox1.TabIndex = 0;
-            this.checkBox1.Text = "Konsole einblenden";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.chk_console.AutoSize = true;
+            this.chk_console.Location = new System.Drawing.Point(7, 20);
+            this.chk_console.Name = "chk_console";
+            this.chk_console.Size = new System.Drawing.Size(119, 17);
+            this.chk_console.TabIndex = 0;
+            this.chk_console.Text = "Konsole einblenden";
+            this.chk_console.UseVisualStyleBackColor = true;
             // 
             // groupBox2
             // 
@@ -243,7 +243,7 @@ namespace UglyLauncher
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox chk_console;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;

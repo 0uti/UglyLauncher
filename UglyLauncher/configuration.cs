@@ -8,22 +8,32 @@ namespace UglyLauncher
 {
     class configuration
     {
-
         private string sRegPath = "Software\\Minestar\\UglyLauncher";
         private string sJavaPath = null;
         private string sJavaArch = null;
 
-
         private int iMinMemory = -1;
         private int iMaxMemory = -1;
         private int iPermGen = -1;
+        private int iConsole = -1;
+
+
+        // contructor
+        public configuration()
+        {
+            this.iMinMemory = this.GetRegInt("min_memory");
+            this.iMaxMemory = this.GetRegInt("max_memory");
+            this.iPermGen = this.GetRegInt("perm_gen");
+            this.iConsole = this.GetRegInt("show_console");
+            this.GetJavaPathAuto();
+        }
 
         // Minimum memoryusage
         public int MinimumMemory
         {
             get
             {
-                if (iMinMemory != -1) return iMinMemory;
+                if (this.iMinMemory != -1) return this.iMinMemory;
                 else return this.SetRegInt("min_memory", 1024);
             }
             set
@@ -38,7 +48,7 @@ namespace UglyLauncher
         {
             get
             {
-                if (iMaxMemory != -1) return iMaxMemory;
+                if (this.iMaxMemory != -1) return this.iMaxMemory;
                 else return this.SetRegInt("max_memory", 2048);
             }
             set
@@ -53,7 +63,7 @@ namespace UglyLauncher
         {
             get
             {
-                if(iPermGen != -1) return iPermGen;
+                if (this.iPermGen != -1) return this.iPermGen;
                 else return this.SetRegInt("perm_gen", 128);
             }
             set
@@ -63,24 +73,26 @@ namespace UglyLauncher
             }
         }
 
-        
-
-
-        public configuration()
+        // console
+        public int ShowConsole
         {
-            this.iMinMemory = this.GetRegInt("min_memory");
-            this.iMaxMemory = this.GetRegInt("max_memory");
-            int iPermGen = this.GetRegInt("perm_gen");
-            this.GetJavaPathAuto();
+            get
+            {
+                if (this.iConsole != -1) return this.iConsole;
+                else return this.SetRegInt("show_console", 0);
+            }
+            set
+            {
+                this.iConsole = value;
+                this.SetRegInt("show_console",this.iConsole);
+            }
         }
 
+
+       
+
         
 
-        // Show console
-
-
-
-        // JavaPath
 
 
 
