@@ -210,6 +210,7 @@ namespace UglyLauncher
             0,
             0,
             0});
+            this.java_min_mem.ValueChanged += new System.EventHandler(this.java_min_mem_ValueChanged);
             // 
             // frm_settings
             // 

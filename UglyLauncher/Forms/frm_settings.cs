@@ -26,7 +26,11 @@ namespace UglyLauncher
         private void frm_settings_Load(object sender, EventArgs e)
         {
             this.java_min_mem.Value = C.MinimumMemory;
+            this.java_max_mem.Minimum = C.MinimumMemory;
+
             this.java_max_mem.Value = C.MaximumMemory;
+            this.java_min_mem.Maximum = C.MaximumMemory;
+
             this.java_perm_gen.Value = C.PermGen;
             if (C.ShowConsole == 1) this.chk_console.Checked = true;
             else this.chk_console.Checked = false;
@@ -40,6 +44,11 @@ namespace UglyLauncher
             if (this.chk_console.Checked == true) C.ShowConsole = 1;
             else C.ShowConsole = 0;
             this.Close();
+        }
+
+        private void java_min_mem_ValueChanged(object sender, EventArgs e)
+        {
+            this.java_max_mem.Minimum = this.java_min_mem.Value;
         }
     }
 }

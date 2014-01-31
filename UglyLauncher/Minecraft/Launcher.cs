@@ -258,7 +258,7 @@ namespace UglyLauncher.Minecraft
             {
                 try
                 {
-                    con.addline(e.Data);
+                    con.addline(e.Data,Color.Red);
                 }
                 catch (Exception)
                 {
@@ -294,7 +294,7 @@ namespace UglyLauncher.Minecraft
             {
                 try
                 {
-                    con.addline(outLine.Data);
+                    con.addline(outLine.Data,Color.Black);
                 }
                 catch (Exception)
                 {
@@ -315,11 +315,11 @@ namespace UglyLauncher.Minecraft
             // Java Memory
             args += String.Format(" -Xms{0}m -Xmx{1}m -XX:PermSize={2}m",C.MinimumMemory,C.MaximumMemory,C.PermGen);
             // Path to natives
-            args += " -Djava.library.path=\"" + sNativesDir + @"\" + MC.id +"\"";
+            args += String.Format(" -Djava.library.path=\"{0}\\{1}\"", sNativesDir, MC.id);
             // Libs
             args += " -cp ";
             foreach (string Lib in this.lLibraries)
-                args += "\"" + Lib + "\";";
+                args += String.Format("\"{0}\";",Lib);
             // version .jar
             args += String.Format("\"{0}\\{1}\\{1}.jar\" ", sVersionDir, MC.id);
             // startup class
@@ -328,13 +328,13 @@ namespace UglyLauncher.Minecraft
             string MCArgs = MC.minecraftArguments;
             MCArgs = MCArgs.Replace("${auth_player_name}", Profile.name);
             MCArgs = MCArgs.Replace("${version_name}", MC.id);
-            MCArgs = MCArgs.Replace("${game_directory}", "\"" + sPacksDir + @"\" + sPackName + @"\minecraft" + "\"");
-            MCArgs = MCArgs.Replace("${assets_root}", "\"" + sAssetsDir + "\"");
-            MCArgs = MCArgs.Replace("${game_assets}", "\"" + sAssetsDir + @"\virtual\legacy" + "\"");
+            MCArgs = MCArgs.Replace("${game_directory}", String.Format("\"{0}\\{1}\\minecraft\"", sPacksDir, sPackName));
+            MCArgs = MCArgs.Replace("${assets_root}", String.Format("\"{0}\"",sAssetsDir));
+            MCArgs = MCArgs.Replace("${game_assets}", String.Format("\"{0}\\virtual\\legacy\"",sAssetsDir));
             MCArgs = MCArgs.Replace("${assets_index_name}", MC.assets);
             MCArgs = MCArgs.Replace("${auth_uuid}", Profile.id);
             MCArgs = MCArgs.Replace("${auth_access_token}", Acc.accessToken);
-            MCArgs = MCArgs.Replace("${auth_session}", "token:" + Acc.accessToken + ":" + Profile.id);
+            MCArgs = MCArgs.Replace("${auth_session}", String.Format("token:{0}:{1}",Acc.accessToken,Profile.id));
             MCArgs = MCArgs.Replace("${user_properties}", "{}");
             MCArgs = MCArgs.Replace("${user_type}", "Mojang");
             args += " " + MCArgs;

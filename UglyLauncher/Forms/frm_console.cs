@@ -16,13 +16,14 @@ namespace UglyLauncher
             InitializeComponent();
         }
 
-        public void addline(string line)
+        public void addline(string line,Color color)
         {
             try
             {
                 txt_console.BeginInvoke(
                     new Action(() =>
                     {
+                        txt_console.SelectionColor = color;
                         txt_console.AppendText(line + Environment.NewLine);
                         txt_console.ScrollToCaret();
                     }
