@@ -240,6 +240,8 @@ namespace UglyLauncher.Minecraft
                 con.clearcon();
             }
 
+            con.addline(args, Color.Blue);
+
             // start minecraft
             minecraft.Start();
             minecraft.BeginOutputReadLine();

@@ -232,5 +232,10 @@ namespace UglyLauncher
         {
             new frm_settings().ShowDialog();
         }
+
+        private void infoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new frm_about().ShowDialog();
+        }
     }
 }

@@ -34,6 +34,7 @@
             this.mnu_exit_program = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu_accounts = new System.Windows.Forms.ToolStripMenuItem();
             this.cmb_packversions = new System.Windows.Forms.ToolStripComboBox();
+            this.einstellungenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu_start_pack = new System.Windows.Forms.ToolStripMenuItem();
             this.lst_packs = new System.Windows.Forms.ListView();
             this.lst_packs_images = new System.Windows.Forms.ImageList(this.components);
@@ -41,7 +42,7 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbl_default_account = new System.Windows.Forms.ToolStripStatusLabel();
             this.web_packdetails = new System.Windows.Forms.WebBrowser();
-            this.einstellungenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu_container.SuspendLayout();
             this.oStatusBar.SuspendLayout();
             this.SuspendLayout();
@@ -53,7 +54,8 @@
             this.mnu_accounts,
             this.cmb_packversions,
             this.einstellungenToolStripMenuItem,
-            this.mnu_start_pack});
+            this.mnu_start_pack,
+            this.infoToolStripMenuItem});
             this.mnu_container.Location = new System.Drawing.Point(0, 0);
             this.mnu_container.Name = "mnu_container";
             this.mnu_container.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
@@ -83,6 +85,13 @@
             this.cmb_packversions.Margin = new System.Windows.Forms.Padding(1, 0, 2, 0);
             this.cmb_packversions.Name = "cmb_packversions";
             this.cmb_packversions.Size = new System.Drawing.Size(150, 23);
+            // 
+            // einstellungenToolStripMenuItem
+            // 
+            this.einstellungenToolStripMenuItem.Name = "einstellungenToolStripMenuItem";
+            this.einstellungenToolStripMenuItem.Size = new System.Drawing.Size(90, 23);
+            this.einstellungenToolStripMenuItem.Text = "Einstellungen";
+            this.einstellungenToolStripMenuItem.Click += new System.EventHandler(this.einstellungenToolStripMenuItem_Click);
             // 
             // mnu_start_pack
             // 
@@ -153,12 +162,12 @@
             this.web_packdetails.TabIndex = 3;
             this.web_packdetails.WebBrowserShortcutsEnabled = false;
             // 
-            // einstellungenToolStripMenuItem
+            // infoToolStripMenuItem
             // 
-            this.einstellungenToolStripMenuItem.Name = "einstellungenToolStripMenuItem";
-            this.einstellungenToolStripMenuItem.Size = new System.Drawing.Size(90, 23);
-            this.einstellungenToolStripMenuItem.Text = "Einstellungen";
-            this.einstellungenToolStripMenuItem.Click += new System.EventHandler(this.einstellungenToolStripMenuItem_Click);
+            this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
+            this.infoToolStripMenuItem.Size = new System.Drawing.Size(40, 23);
+            this.infoToolStripMenuItem.Text = "Info";
+            this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
             // 
             // frm_main
             // 
@@ -202,6 +211,7 @@
         private System.Windows.Forms.WebBrowser web_packdetails;
         private System.Windows.Forms.ToolStripMenuItem mnu_start_pack;
         private System.Windows.Forms.ToolStripMenuItem einstellungenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
     }
 }
 

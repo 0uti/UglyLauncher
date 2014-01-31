@@ -122,6 +122,12 @@
     <Compile Include="Forms\frm_settings.Designer.cs">
       <DependentUpon>frm_settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frm_about.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_about.Designer.cs">
+      <DependentUpon>frm_about.cs</DependentUpon>
+    </Compile>
     <Compile Include="NumericUpDownEx.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -224,6 +230,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_settings.resx">
       <DependentUpon>frm_settings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_about.resx">
+      <DependentUpon>frm_about.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
