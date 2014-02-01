@@ -56,6 +56,7 @@
             this.txt_console.Size = new System.Drawing.Size(866, 495);
             this.txt_console.TabIndex = 1;
             this.txt_console.Text = "";
+            this.txt_console.WordWrap = false;
             // 
             // frm_console
             // 

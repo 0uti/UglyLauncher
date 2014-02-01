@@ -238,9 +238,8 @@ namespace UglyLauncher.Minecraft
                 con = new frm_console();
                 con.Show();
                 con.clearcon();
+                con.addline(args, Color.Blue);
             }
-
-            con.addline(args, Color.Blue);
 
             // start minecraft
             minecraft.Start();
