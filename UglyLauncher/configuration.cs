@@ -15,8 +15,9 @@ namespace UglyLauncher
         private int iMinMemory = -1;
         private int iMaxMemory = -1;
         private int iPermGen = -1;
-        private int iConsole = -1;
-
+        private int iConsole_Show = -1;
+        private int iConsole_Keep = -1;
+        private int iCloseLauncher = -1;
 
         // contructor
         public configuration()
@@ -24,7 +25,9 @@ namespace UglyLauncher
             this.iMinMemory = this.GetRegInt("min_memory");
             this.iMaxMemory = this.GetRegInt("max_memory");
             this.iPermGen = this.GetRegInt("perm_gen");
-            this.iConsole = this.GetRegInt("show_console");
+            this.iConsole_Show = this.GetRegInt("show_console");
+            this.iConsole_Keep = this.GetRegInt("keep_console");
+            this.iCloseLauncher = this.GetRegInt("close_Launcher");
             this.GetJavaPathAuto();
         }
 
@@ -34,7 +37,7 @@ namespace UglyLauncher
             get
             {
                 if (this.iMinMemory != -1) return this.iMinMemory;
-                else return this.SetRegInt("min_memory", 1024);
+                else return this.SetRegInt("min_memory", 512);
             }
             set
             {
@@ -49,7 +52,7 @@ namespace UglyLauncher
             get
             {
                 if (this.iMaxMemory != -1) return this.iMaxMemory;
-                else return this.SetRegInt("max_memory", 2048);
+                else return this.SetRegInt("max_memory", 1024);
             }
             set
             {
@@ -73,30 +76,51 @@ namespace UglyLauncher
             }
         }
 
-        // console
+        // show console
         public int ShowConsole
         {
             get
             {
-                if (this.iConsole != -1) return this.iConsole;
+                if (this.iConsole_Show != -1) return this.iConsole_Show;
                 else return this.SetRegInt("show_console", 0);
             }
             set
             {
-                this.iConsole = value;
-                this.SetRegInt("show_console",this.iConsole);
+                this.iConsole_Show = value;
+                this.SetRegInt("show_console",this.iConsole_Show);
             }
         }
 
+        // keep console
+        public int KeepConsole
+        {
+            get
+            {
+                if (this.iConsole_Keep != -1) return this.iConsole_Keep;
+                else return this.SetRegInt("keep_console", 0);
+            }
+            set
+            {
+                this.iConsole_Keep = value;
+                this.SetRegInt("keep_console", this.iConsole_Keep);
+            }
+        }
 
-       
-
+        // close Launcher
+        public int CloseLauncher
+        {
+            get
+            {
+                if (this.iCloseLauncher != -1) return this.iCloseLauncher;
+                else return this.SetRegInt("close_Launcher", 0);
+            }
+            set
+            {
+                this.iCloseLauncher = value;
+                this.SetRegInt("close_Launcher", this.iCloseLauncher);
+            }
+        }
         
-
-
-
-
-
         // Old Shit
 
         public string GetJavaArch()

@@ -219,6 +219,15 @@ namespace UglyLauncher
 
         void L_restoreWindow(object sender, Launcher.FormWindowStateEventArgs e)
         {
+
+            configuration C = new configuration();
+
+            if (C.CloseLauncher == 1 && e.MCExitCode == 0)
+            {
+                Application.Exit();
+                return;
+            }
+
             this.BeginInvoke(new Action(() =>
                 {
                     this.WindowState = e.WindowState;

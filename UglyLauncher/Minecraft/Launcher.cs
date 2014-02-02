@@ -250,11 +250,15 @@ namespace UglyLauncher.Minecraft
             EventHandler<FormWindowStateEventArgs> handler = restoreWindow;
             FormWindowStateEventArgs args2 = new FormWindowStateEventArgs();
             args2.WindowState = FormWindowState.Minimized;
+            args2.MCExitCode = -1;
             if (null != handler) handler(this, args2);
         }
 
         private void minecraft_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
+
+
+
             if (!String.IsNullOrEmpty(e.Data))
             {
                 try
@@ -270,22 +274,31 @@ namespace UglyLauncher.Minecraft
 
         private void minecraft_Exited(object sender, System.EventArgs e)
         {
-            try
-            {
-                con.BeginInvoke(new Action(() =>
-                    {
-                        con.Dispose();
-                    }
-                ));
+            configuration C = new configuration();
+            Process minecraft = sender as Process;
 
-            }
-            catch (Exception)
+            if (C.KeepConsole == 0 && minecraft.ExitCode == 0)
             {
+
+                try
+                {
+                    con.BeginInvoke(new Action(() =>
+                        {
+                            con.Dispose();
+                        }
+                    ));
+
+                }
+                catch (Exception)
+                {
+                }
             }
+
             // raise event
             EventHandler<FormWindowStateEventArgs> handler = restoreWindow;
             FormWindowStateEventArgs args = new FormWindowStateEventArgs();
             args.WindowState = FormWindowState.Normal;
+            args.MCExitCode = minecraft.ExitCode;
             if (null != handler) handler(this, args);
         }
 
@@ -566,6 +579,7 @@ namespace UglyLauncher.Minecraft
         public class FormWindowStateEventArgs : EventArgs
         {
             public FormWindowState WindowState { get; set; }
+            public int MCExitCode { get; set; }
         }
     }
 

@@ -18,7 +18,7 @@ namespace UglyLauncher
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btn_cancel_click(object sender, EventArgs e)
         {
             this.Close();
         }
@@ -32,23 +32,53 @@ namespace UglyLauncher
             this.java_min_mem.Maximum = C.MaximumMemory;
 
             this.java_perm_gen.Value = C.PermGen;
-            if (C.ShowConsole == 1) this.chk_console.Checked = true;
-            else this.chk_console.Checked = false;
+
+            if (C.KeepConsole == 1) this.chk_keep_console.Checked = true;
+            else this.chk_keep_console.Checked = false;
+          
+            if (C.ShowConsole == 1)
+            {
+                this.chk_console.Checked = true;
+                this.chk_keep_console.Enabled = true;
+            }
+            else
+            {
+                this.chk_console.Checked = false;
+                this.chk_keep_console.Enabled = false;
+            }
+
+            if (C.CloseLauncher == 1) this.chk_keep_launcher.Checked = false;
+            else this.chk_keep_launcher.Checked = true;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void btn_save_click(object sender, EventArgs e)
         {
             C.MinimumMemory = (int) this.java_min_mem.Value;
+
             C.MaximumMemory = (int) this.java_max_mem.Value;
+
             C.PermGen = (int)this.java_perm_gen.Value;
+
             if (this.chk_console.Checked == true) C.ShowConsole = 1;
             else C.ShowConsole = 0;
+
+            if (this.chk_keep_console.Checked == true) C.KeepConsole = 1;
+            else C.KeepConsole = 0;
+
+            if (this.chk_keep_launcher.Checked == false) C.CloseLauncher = 1;
+            else C.CloseLauncher = 0;
+
             this.Close();
         }
 
         private void java_min_mem_ValueChanged(object sender, EventArgs e)
         {
             this.java_max_mem.Minimum = this.java_min_mem.Value;
+        }
+
+        private void chk_console_CheckedChanged(object sender, EventArgs e)
+        {
+            this.chk_keep_console.Enabled = this.chk_console.Checked;
         }
     }
 }
