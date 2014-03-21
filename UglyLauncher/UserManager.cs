@@ -88,6 +88,12 @@ namespace UglyLauncher
             return null;
         }
 
+        // get num accounts
+        public int GetNumAccounts()
+        {
+            return this.Users.accounts.Count;
+        }
+
         // get default account
         public string GetDefault()
         {

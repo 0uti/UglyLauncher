@@ -52,7 +52,7 @@ namespace UglyLauncher
             get
             {
                 if (this.iMaxMemory != -1) return this.iMaxMemory;
-                else return this.SetRegInt("max_memory", 1024);
+                else return this.SetRegInt("max_memory", 2048);
             }
             set
             {
@@ -67,7 +67,7 @@ namespace UglyLauncher
             get
             {
                 if (this.iPermGen != -1) return this.iPermGen;
-                else return this.SetRegInt("perm_gen", 128);
+                else return this.SetRegInt("perm_gen", 256);
             }
             set
             {

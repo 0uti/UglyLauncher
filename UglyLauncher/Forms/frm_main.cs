@@ -37,9 +37,6 @@ namespace UglyLauncher
         // form_load event
         private void main_Load(object sender, EventArgs e)
         {
-            ToolStripLabel lbl_version = new ToolStripLabel("Packversion:");
-            lbl_version.Alignment = ToolStripItemAlignment.Right;
-            mnu_container.Items.Add(lbl_version);
             this.Text += " " + Application.ProductVersion;
             cmb_packversions.Items.Clear();
             cmb_packversions.Items.Add("Kein Pack gewählt");
@@ -65,6 +62,18 @@ namespace UglyLauncher
             while (worker.IsBusy)
                 Application.DoEvents();
             this.bar.Hide();
+
+            // Check if Users available
+            UserManager U = new UserManager();
+            if (U.GetNumAccounts() == 0)
+            {
+                DialogResult MBres = MessageBox.Show("Es ist noch kein Account vorhanden.\nWollen Sie jetzt einen anlegen?", "Kein Account angelegt", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (MBres == DialogResult.Yes)
+                {
+                    new frm_UserAccounts().ShowDialog();
+                    this.DoInit();
+                }
+            }
         }
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)

@@ -33,16 +33,17 @@
             this.mnu_container = new System.Windows.Forms.MenuStrip();
             this.mnu_exit_program = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu_accounts = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmb_packversions = new System.Windows.Forms.ToolStripComboBox();
             this.einstellungenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnu_start_pack = new System.Windows.Forms.ToolStripMenuItem();
+            this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lst_packs = new System.Windows.Forms.ListView();
             this.lst_packs_images = new System.Windows.Forms.ImageList(this.components);
             this.oStatusBar = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbl_default_account = new System.Windows.Forms.ToolStripStatusLabel();
             this.web_packdetails = new System.Windows.Forms.WebBrowser();
-            this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button1 = new System.Windows.Forms.Button();
+            this.cmb_packversions = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.mnu_container.SuspendLayout();
             this.oStatusBar.SuspendLayout();
             this.SuspendLayout();
@@ -52,21 +53,19 @@
             this.mnu_container.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnu_exit_program,
             this.mnu_accounts,
-            this.cmb_packversions,
             this.einstellungenToolStripMenuItem,
-            this.mnu_start_pack,
             this.infoToolStripMenuItem});
             this.mnu_container.Location = new System.Drawing.Point(0, 0);
             this.mnu_container.Name = "mnu_container";
             this.mnu_container.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.mnu_container.Size = new System.Drawing.Size(683, 27);
+            this.mnu_container.Size = new System.Drawing.Size(683, 24);
             this.mnu_container.TabIndex = 0;
             this.mnu_container.Text = "menuStrip1";
             // 
             // mnu_exit_program
             // 
             this.mnu_exit_program.Name = "mnu_exit_program";
-            this.mnu_exit_program.Size = new System.Drawing.Size(65, 23);
+            this.mnu_exit_program.Size = new System.Drawing.Size(65, 20);
             this.mnu_exit_program.Text = "Beenden";
             this.mnu_exit_program.Click += new System.EventHandler(this.mnu_exit_program_Click);
             // 
@@ -74,31 +73,23 @@
             // 
             this.mnu_accounts.Name = "mnu_accounts";
             this.mnu_accounts.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.mnu_accounts.Size = new System.Drawing.Size(123, 23);
+            this.mnu_accounts.Size = new System.Drawing.Size(123, 20);
             this.mnu_accounts.Text = "Accountverwaltung";
             this.mnu_accounts.Click += new System.EventHandler(this.accountsToolStripMenuItem_Click);
-            // 
-            // cmb_packversions
-            // 
-            this.cmb_packversions.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.cmb_packversions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmb_packversions.Margin = new System.Windows.Forms.Padding(1, 0, 2, 0);
-            this.cmb_packversions.Name = "cmb_packversions";
-            this.cmb_packversions.Size = new System.Drawing.Size(150, 23);
             // 
             // einstellungenToolStripMenuItem
             // 
             this.einstellungenToolStripMenuItem.Name = "einstellungenToolStripMenuItem";
-            this.einstellungenToolStripMenuItem.Size = new System.Drawing.Size(90, 23);
+            this.einstellungenToolStripMenuItem.Size = new System.Drawing.Size(90, 20);
             this.einstellungenToolStripMenuItem.Text = "Einstellungen";
             this.einstellungenToolStripMenuItem.Click += new System.EventHandler(this.einstellungenToolStripMenuItem_Click);
             // 
-            // mnu_start_pack
+            // infoToolStripMenuItem
             // 
-            this.mnu_start_pack.Name = "mnu_start_pack";
-            this.mnu_start_pack.Size = new System.Drawing.Size(71, 23);
-            this.mnu_start_pack.Text = "Start Pack";
-            this.mnu_start_pack.Click += new System.EventHandler(this.playToolStripMenuItem_Click);
+            this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
+            this.infoToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+            this.infoToolStripMenuItem.Text = "Info";
+            this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
             // 
             // lst_packs
             // 
@@ -111,7 +102,7 @@
             this.lst_packs.Location = new System.Drawing.Point(0, 30);
             this.lst_packs.MultiSelect = false;
             this.lst_packs.Name = "lst_packs";
-            this.lst_packs.Size = new System.Drawing.Size(266, 360);
+            this.lst_packs.Size = new System.Drawing.Size(266, 337);
             this.lst_packs.TabIndex = 0;
             this.lst_packs.TabStop = false;
             this.lst_packs.TileSize = new System.Drawing.Size(260, 50);
@@ -162,18 +153,42 @@
             this.web_packdetails.TabIndex = 3;
             this.web_packdetails.WebBrowserShortcutsEnabled = false;
             // 
-            // infoToolStripMenuItem
+            // button1
             // 
-            this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
-            this.infoToolStripMenuItem.Size = new System.Drawing.Size(40, 23);
-            this.infoToolStripMenuItem.Text = "Info";
-            this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
+            this.button1.Location = new System.Drawing.Point(202, 367);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(64, 23);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Start";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.playToolStripMenuItem_Click);
+            // 
+            // cmb_packversions
+            // 
+            this.cmb_packversions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_packversions.FormattingEnabled = true;
+            this.cmb_packversions.Location = new System.Drawing.Point(48, 368);
+            this.cmb_packversions.Name = "cmb_packversions";
+            this.cmb_packversions.Size = new System.Drawing.Size(153, 21);
+            this.cmb_packversions.TabIndex = 5;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(0, 372);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(42, 13);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Version";
             // 
             // frm_main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(683, 412);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.cmb_packversions);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.web_packdetails);
             this.Controls.Add(this.lst_packs);
             this.Controls.Add(this.oStatusBar);
@@ -202,16 +217,17 @@
         private System.Windows.Forms.MenuStrip mnu_container;
         private System.Windows.Forms.ToolStripMenuItem mnu_accounts;
         private System.Windows.Forms.ToolStripMenuItem mnu_exit_program;
-        private System.Windows.Forms.ToolStripComboBox cmb_packversions;
         private System.Windows.Forms.ListView lst_packs;
         private System.Windows.Forms.StatusStrip oStatusBar;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel lbl_default_account;
         private System.Windows.Forms.ImageList lst_packs_images;
         private System.Windows.Forms.WebBrowser web_packdetails;
-        private System.Windows.Forms.ToolStripMenuItem mnu_start_pack;
         private System.Windows.Forms.ToolStripMenuItem einstellungenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ComboBox cmb_packversions;
+        private System.Windows.Forms.Label label1;
     }
 }
 

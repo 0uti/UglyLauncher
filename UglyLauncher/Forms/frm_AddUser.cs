@@ -83,6 +83,10 @@ namespace UglyLauncher
                 UserManager U = new UserManager();
                 U.AddAccount(newAcc);
 
+                // set default user if only one given
+                MCUser user = U.GetAccounts();
+                if (U.GetNumAccounts() == 1) U.SetDefault(newAcc.username);
+
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }

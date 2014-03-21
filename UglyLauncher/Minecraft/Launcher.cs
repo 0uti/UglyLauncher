@@ -327,7 +327,9 @@ namespace UglyLauncher.Minecraft
             // fucking Mojang drivers Hack
             args += " -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump";
             // Java Memory
-            args += String.Format(" -Xms{0}m -Xmx{1}m -XX:PermSize={2}m",C.MinimumMemory,C.MaximumMemory,C.PermGen);
+            args += String.Format(" -Xms{0}m -Xmx{1}m -XX:PermSize={2}m -XX:MaxPermSize={2}m", C.MinimumMemory, C.MaximumMemory, C.PermGen);
+            // Tweaks
+            args += " -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true";
             // Path to natives
             args += String.Format(" -Djava.library.path=\"{0}\\{1}\"", sNativesDir, MC.id);
             // Libs
@@ -519,8 +521,6 @@ namespace UglyLauncher.Minecraft
             // Deleting .1 Files
             foreach (FileInfo f in new DirectoryInfo(PackDir + @"\minecraft").GetFiles("*.1"))
                 f.Delete();
-            // Deleting minecraft\options.txt
-            if (File.Exists(PackDir + @"\minecraft\options.txt")) File.Delete(PackDir + @"\minecraft\options.txt");
             // Deleting pack.json
             if (File.Exists(PackDir + @"\pack.json")) File.Delete(PackDir + @"\pack.json");
             // Deleting version
