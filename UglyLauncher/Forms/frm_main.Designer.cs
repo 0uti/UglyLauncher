@@ -41,7 +41,7 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbl_default_account = new System.Windows.Forms.ToolStripStatusLabel();
             this.web_packdetails = new System.Windows.Forms.WebBrowser();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btn_start = new System.Windows.Forms.Button();
             this.cmb_packversions = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.mnu_container.SuspendLayout();
@@ -153,15 +153,15 @@
             this.web_packdetails.TabIndex = 3;
             this.web_packdetails.WebBrowserShortcutsEnabled = false;
             // 
-            // button1
+            // btn_start
             // 
-            this.button1.Location = new System.Drawing.Point(202, 367);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(64, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Start";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.playToolStripMenuItem_Click);
+            this.btn_start.Location = new System.Drawing.Point(202, 367);
+            this.btn_start.Name = "btn_start";
+            this.btn_start.Size = new System.Drawing.Size(64, 23);
+            this.btn_start.TabIndex = 4;
+            this.btn_start.Text = "Start";
+            this.btn_start.UseVisualStyleBackColor = true;
+            this.btn_start.Click += new System.EventHandler(this.playToolStripMenuItem_Click);
             // 
             // cmb_packversions
             // 
@@ -188,7 +188,7 @@
             this.ClientSize = new System.Drawing.Size(683, 412);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cmb_packversions);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btn_start);
             this.Controls.Add(this.web_packdetails);
             this.Controls.Add(this.lst_packs);
             this.Controls.Add(this.oStatusBar);
@@ -225,7 +225,7 @@
         private System.Windows.Forms.WebBrowser web_packdetails;
         private System.Windows.Forms.ToolStripMenuItem einstellungenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btn_start;
         private System.Windows.Forms.ComboBox cmb_packversions;
         private System.Windows.Forms.Label label1;
     }

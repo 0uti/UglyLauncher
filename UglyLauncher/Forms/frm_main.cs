@@ -222,6 +222,9 @@ namespace UglyLauncher
             Launcher L = new Launcher();
             // get event
             L.restoreWindow += new EventHandler<Launcher.FormWindowStateEventArgs>(L_restoreWindow);
+            // disable Startbutton
+            this.btn_start.Enabled = false;
+            this.lst_packs.Enabled = false;
             // start minecraft
             L.StartPack(sSelectedPack, sSelectedVersion);
         }
@@ -242,6 +245,8 @@ namespace UglyLauncher
                     this.WindowState = e.WindowState;
                     if (e.WindowState == FormWindowState.Minimized) this.ShowInTaskbar = false;
                     else this.ShowInTaskbar = true;
+                    this.btn_start.Enabled = true;
+                    this.lst_packs.Enabled = true;
                 }
             ));
         }
