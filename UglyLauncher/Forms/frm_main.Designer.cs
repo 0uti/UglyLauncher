@@ -33,6 +33,7 @@
             this.mnu_container = new System.Windows.Forms.MenuStrip();
             this.mnu_exit_program = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu_accounts = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnu_edit_Pack = new System.Windows.Forms.ToolStripMenuItem();
             this.einstellungenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lst_packs = new System.Windows.Forms.ListView();
@@ -53,6 +54,7 @@
             this.mnu_container.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnu_exit_program,
             this.mnu_accounts,
+            this.mnu_edit_Pack,
             this.einstellungenToolStripMenuItem,
             this.infoToolStripMenuItem});
             this.mnu_container.Location = new System.Drawing.Point(0, 0);
@@ -76,6 +78,13 @@
             this.mnu_accounts.Size = new System.Drawing.Size(123, 20);
             this.mnu_accounts.Text = "Accountverwaltung";
             this.mnu_accounts.Click += new System.EventHandler(this.accountsToolStripMenuItem_Click);
+            // 
+            // mnu_edit_Pack
+            // 
+            this.mnu_edit_Pack.Name = "mnu_edit_Pack";
+            this.mnu_edit_Pack.Size = new System.Drawing.Size(103, 20);
+            this.mnu_edit_Pack.Text = "Pack bearbeiten";
+            this.mnu_edit_Pack.Click += new System.EventHandler(this.packBearbeitenToolStripMenuItem_Click);
             // 
             // einstellungenToolStripMenuItem
             // 
@@ -228,6 +237,7 @@
         private System.Windows.Forms.Button btn_start;
         private System.Windows.Forms.ComboBox cmb_packversions;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ToolStripMenuItem mnu_edit_Pack;
     }
 }
 

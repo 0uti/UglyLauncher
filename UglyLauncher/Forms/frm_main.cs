@@ -41,6 +41,10 @@ namespace UglyLauncher
             cmb_packversions.Items.Clear();
             cmb_packversions.Items.Add("Kein Pack gewählt");
             cmb_packversions.SelectedIndex = 0;
+
+            btn_start.Enabled = false;
+            mnu_edit_Pack.Enabled = false;
+            cmb_packversions.Enabled = false;
         }
 
         //form_shown event
@@ -185,6 +189,9 @@ namespace UglyLauncher
                 }
                 else cmb_packversions.SelectedIndex = 0;
                 web_packdetails.Navigate(L.sPackServer + @"/packs/" + APack.name + @"/" + APack.name + @".html");
+                btn_start.Enabled = true;
+                mnu_edit_Pack.Enabled = true;
+                cmb_packversions.Enabled = true;
             }
             else
             {
@@ -192,6 +199,9 @@ namespace UglyLauncher
                 cmb_packversions.Items.Add("Kein Pack gewählt");
                 cmb_packversions.SelectedIndex = 0;
                 web_packdetails.Navigate("about:blank");
+                btn_start.Enabled = false;
+                mnu_edit_Pack.Enabled = false;
+                cmb_packversions.Enabled = false;
             }
         }
 
@@ -259,6 +269,29 @@ namespace UglyLauncher
         private void infoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new frm_about().ShowDialog();
+        }
+
+        private void packBearbeitenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lst_packs.SelectedItems.Count != 1)
+            {
+                MessageBox.Show(this, "Kein Pack gewählt.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // gather vars from Gui
+            string sSelectedPack = lst_packs.SelectedItems[0].Text;
+            string sSelectedVersion = null;
+            if (cmb_packversions.SelectedIndex == 0) sSelectedVersion = "recommended";
+            else sSelectedVersion = cmb_packversions.Text;
+            Launcher L = new Launcher();
+            if (L.IsPackInstalled(sSelectedPack, sSelectedVersion) == false)
+            {
+                MessageBox.Show(this, "Dieses Pack ist nicht installiert oder liegt in einer anderen Version vor.\r\nBitte dieses Pack starten und danach bearbeiten.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            new frm_EditPack(sSelectedPack).ShowDialog();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Web.Script.Serialization;
@@ -35,7 +36,6 @@ namespace UglyLauncher.Minecraft
         public static string sNativesDir = appData + @"\.UglyLauncher\natives";
 
         // Strings
-        //public string sPackServer = "http://outi-networks.de/UglyLauncher";
         public string sPackServer = "http://www.minestar.de/wiki";
         public string sVersionServer = "http://s3.amazonaws.com/Minecraft.Download/versions";
         public string sLibraryServer = "https://libraries.minecraft.net";
@@ -109,7 +109,6 @@ namespace UglyLauncher.Minecraft
             return null;
         }
 
-
         // get pack icon
         public Image GetPackIcon(MCPacksAvailablePack Pack)
         {
@@ -170,6 +169,48 @@ namespace UglyLauncher.Minecraft
             return true;
         }
 
+
+        // Get ModFolderContents
+        public List<string> GetModFolderContents(string sPackname, IEnumerable<string> sFileExtensions)
+        {
+            List<string> Mods = new List<string>();
+            try
+            {
+                string sModsPath = string.Format(@"{0}\{1}\minecraft\mods\", sPacksDir, sPackname);
+                Mods =  Directory.EnumerateFiles(sModsPath, "*.*")
+                    .Where(f => sFileExtensions.Contains(Path.GetExtension(f).ToLower()))
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Kein Mod Verzeichniss gefunden. Vanilla ?", "kein Modverzeichniss", MessageBoxButtons.OK,MessageBoxIcon.Error);
+                throw ex;
+            }
+
+            return Mods;
+        }
+
+        // Get mcmod.info file as string
+        public string GetMcModInfo(string sFileName)
+        {
+            FileStream fs = new FileStream(sFileName, FileMode.Open, FileAccess.Read);
+            ZipFile zf = new ZipFile(fs);
+            ZipEntry ze = zf.GetEntry("mcmod.info");
+            string result = null;
+            byte[] ret = null;
+            if (ze != null)
+            {
+                Stream s = zf.GetInputStream(ze);
+                ret = new byte[ze.Size];
+                s.Read(ret, 0, ret.Length);
+                result = System.Text.Encoding.UTF8.GetString(ret).Trim();
+            }
+            zf.Close();
+            fs.Close();
+
+            return result;
+        }
+
         public string GetRecommendedVersion(string sPackName)
         {
             MCPacksAvailablePack Pack = this.GetAvailablePack(sPackName);
@@ -219,6 +260,9 @@ namespace UglyLauncher.Minecraft
         {
             configuration C = new configuration();
             Process minecraft = new Process();
+
+            // check for "minecraft" folder
+            if (!Directory.Exists(sPacksDir + @"\" + sPackName + @"\minecraft")) Directory.CreateDirectory(sPacksDir + @"\" + sPackName + @"\minecraft");
 
             minecraft.StartInfo.FileName = C.GetJavaPath();
             minecraft.StartInfo.WorkingDirectory = sPacksDir + @"\" + sPackName + @"\minecraft";
@@ -270,7 +314,6 @@ namespace UglyLauncher.Minecraft
                 }
             }
         }
-
 
         private void minecraft_Exited(object sender, System.EventArgs e)
         {
@@ -357,7 +400,6 @@ namespace UglyLauncher.Minecraft
 
             return args;
         }
-
 
         private void DownloadLibraries(MCGameStructure MC)
         {
@@ -486,17 +528,19 @@ namespace UglyLauncher.Minecraft
 
         private void InstallPack(string sPackName, string sPackVersion)
         {
-            //delete pack if installed
+            // delete pack if installed
             if (this.IsPackInstalled(sPackName)) this.DeletePack(sPackName);
             // if recommended version, getting the version from available packs
             if (sPackVersion == "recommended") sPackVersion = GetRecommendedVersion(sPackName);
-            //download pack
+            // download pack
             this.DownloadFileTo(this.sPackServer + "/packs/" + sPackName + "/" + sPackName + "-" + sPackVersion + ".zip", sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip", true, "Downloading Pack " + sPackName);
             this.bar.Hide();
-            //unzip pack
+            // unzip pack
             this.ExtractZipFile(sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip", sPacksDir);
-            //delete zip file
+            // delete zip file
             File.Delete(sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip");
+            // check for "minecraft" folder
+            if (!Directory.Exists(sPacksDir + @"\" + sPackName + @"\minecraft")) Directory.CreateDirectory(sPacksDir + @"\" + sPackName + @"\minecraft");
         }
 
         private void DeletePack(string sPackName)
