@@ -43,7 +43,7 @@ namespace UglyLauncher.Minecraft
         public string sAssetsFileServer = "http://resources.download.minecraft.net";
 
         // Lists
-        private List<string> lLibraries = new List<string>();
+        private List<string> lLibraries = new List<string>();           // Library list for startup
 
         // constructor
         public Launcher()
@@ -518,8 +518,32 @@ namespace UglyLauncher.Minecraft
         {
             if (VersionPack.libraries != null)
             {
+                // Backup Mojang lib list
+                List<MCGameStructureLib> MJLibs = new List<MCGameStructureLib>();
+                foreach (MCGameStructureLib Lib in VersionMojang.libraries)
+                    MJLibs.Add(Lib);
+                VersionMojang.libraries.Clear();
+
+                // Build Pack lib list (with helper)
                 foreach (MCGameStructureLib Lib in VersionPack.libraries)
+                {
+                    string[] LibName = Lib.name.Split(':');
+                    Lib.name2 = LibName[0] + ":" + LibName[1];
                     VersionMojang.libraries.Add(Lib);
+                }
+
+                // Merge 
+                foreach (MCGameStructureLib Lib in MJLibs)
+                {
+                    Boolean bFoundLib = false;
+                    foreach (MCGameStructureLib Lib2 in VersionMojang.libraries)
+                    {
+                        string[] LibName = Lib.name.Split(':');
+                        if (Lib2.name2 == LibName[0] + ":" + LibName[1])
+                            bFoundLib = true;
+                    }
+                    if (bFoundLib == false) VersionMojang.libraries.Add(Lib);
+                }
             }
             if (VersionPack.mainClass != null) VersionMojang.mainClass = VersionPack.mainClass;
             if (VersionPack.minecraftArguments != null) VersionMojang.minecraftArguments = VersionPack.minecraftArguments;
@@ -745,6 +769,8 @@ namespace UglyLauncher.Minecraft
     {
         [DataMember]
         public string name { get; set; }
+        [DataMember]
+        public string name2 { get; set; }
         [DataMember]
         public string url { get; set; }
         [DataMember]
