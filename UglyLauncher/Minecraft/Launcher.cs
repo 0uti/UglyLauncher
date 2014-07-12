@@ -42,6 +42,8 @@ namespace UglyLauncher.Minecraft
         public string sAssetsIndexServer = "https://s3.amazonaws.com/Minecraft.Download/indexes";
         public string sAssetsFileServer = "http://resources.download.minecraft.net";
 
+        private bool downloadfinished = false;
+
         // Lists
         private List<string> lLibraries = new List<string>();           // Library list for startup
 
@@ -49,6 +51,12 @@ namespace UglyLauncher.Minecraft
         public Launcher()
         {
             this.Downloader.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressCallback);
+            this.Downloader.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(Downloader_DownloadFileCompleted);
+        }
+
+        void Downloader_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        {
+            this.downloadfinished = true;
         }
 
         // Progress event from downloader
@@ -68,12 +76,17 @@ namespace UglyLauncher.Minecraft
                     if (sBarDisplayText == null) this.bar.setLabel(sRemotePath.Substring(sRemotePath.LastIndexOf('/') + 1));
                     else this.bar.setLabel(sBarDisplayText);
                 }
+                this.downloadfinished = false;
                 this.Downloader.DownloadFileAsync(new Uri(sRemotePath), sLocalPath);
                 Application.DoEvents();
-                while (this.Downloader.IsBusy)
+                while (this.downloadfinished == false)
                     Application.DoEvents();
+
+                
             }
         }
+
+
 
         // Check Directories
         public void CheckDirectories()

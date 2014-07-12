@@ -60,7 +60,7 @@
             this.mnu_container.Location = new System.Drawing.Point(0, 0);
             this.mnu_container.Name = "mnu_container";
             this.mnu_container.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.mnu_container.Size = new System.Drawing.Size(683, 24);
+            this.mnu_container.Size = new System.Drawing.Size(744, 24);
             this.mnu_container.TabIndex = 0;
             this.mnu_container.Text = "menuStrip1";
             // 
@@ -102,16 +102,16 @@
             // 
             // lst_packs
             // 
-            this.lst_packs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lst_packs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lst_packs.HideSelection = false;
             this.lst_packs.LabelWrap = false;
             this.lst_packs.LargeImageList = this.lst_packs_images;
             this.lst_packs.Location = new System.Drawing.Point(0, 30);
             this.lst_packs.MultiSelect = false;
             this.lst_packs.Name = "lst_packs";
-            this.lst_packs.Size = new System.Drawing.Size(266, 337);
+            this.lst_packs.Size = new System.Drawing.Size(327, 337);
             this.lst_packs.TabIndex = 0;
             this.lst_packs.TabStop = false;
             this.lst_packs.TileSize = new System.Drawing.Size(260, 50);
@@ -133,7 +133,7 @@
             this.lbl_default_account});
             this.oStatusBar.Location = new System.Drawing.Point(0, 390);
             this.oStatusBar.Name = "oStatusBar";
-            this.oStatusBar.Size = new System.Drawing.Size(683, 22);
+            this.oStatusBar.Size = new System.Drawing.Size(744, 22);
             this.oStatusBar.SizingGrip = false;
             this.oStatusBar.TabIndex = 2;
             this.oStatusBar.Text = "statusStrip1";
@@ -155,7 +155,8 @@
             // web_packdetails
             // 
             this.web_packdetails.AllowWebBrowserDrop = false;
-            this.web_packdetails.Location = new System.Drawing.Point(266, 30);
+            this.web_packdetails.IsWebBrowserContextMenuEnabled = false;
+            this.web_packdetails.Location = new System.Drawing.Point(327, 30);
             this.web_packdetails.MinimumSize = new System.Drawing.Size(20, 20);
             this.web_packdetails.Name = "web_packdetails";
             this.web_packdetails.Size = new System.Drawing.Size(417, 360);
@@ -164,7 +165,7 @@
             // 
             // btn_start
             // 
-            this.btn_start.Location = new System.Drawing.Point(202, 367);
+            this.btn_start.Location = new System.Drawing.Point(257, 367);
             this.btn_start.Name = "btn_start";
             this.btn_start.Size = new System.Drawing.Size(64, 23);
             this.btn_start.TabIndex = 4;
@@ -178,7 +179,7 @@
             this.cmb_packversions.FormattingEnabled = true;
             this.cmb_packversions.Location = new System.Drawing.Point(48, 368);
             this.cmb_packversions.Name = "cmb_packversions";
-            this.cmb_packversions.Size = new System.Drawing.Size(153, 21);
+            this.cmb_packversions.Size = new System.Drawing.Size(203, 21);
             this.cmb_packversions.TabIndex = 5;
             // 
             // label1
@@ -194,7 +195,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(683, 412);
+            this.ClientSize = new System.Drawing.Size(744, 412);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cmb_packversions);
             this.Controls.Add(this.btn_start);
