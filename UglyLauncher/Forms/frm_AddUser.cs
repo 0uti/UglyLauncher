@@ -91,5 +91,17 @@ namespace UglyLauncher
                 this.Close();
             }
         }
+
+        private void txt_user_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                this.txt_pass.Focus();
+        }
+
+        private void txt_pass_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                button2_Click(sender, e);
+        }
     }
 }

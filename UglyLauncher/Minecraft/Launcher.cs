@@ -105,8 +105,19 @@ namespace UglyLauncher.Minecraft
         // load Packlist from server
         public void LoadAvailablePacks(string sPlayerName)
         {
-            string sPackListJson = Http.GET(this.sPackServer + @"/packs.php?player=" + sPlayerName);
-            PacksAvailable = JsonHelper.JsonDeserializer<MCPacksAvailable>(sPackListJson);
+            try
+            {
+                string sPackListJson = Http.GET(this.sPackServer + @"/packs.php?player=" + sPlayerName);
+                PacksAvailable = JsonHelper.JsonDeserializer<MCPacksAvailable>(sPackListJson);
+            }
+            catch (WebException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         // Get packe liste
@@ -591,8 +602,8 @@ namespace UglyLauncher.Minecraft
             if (Directory.Exists(PackDir + @"\minecraft\config")) Directory.Delete(PackDir + @"\minecraft\config", true);
             if (Directory.Exists(PackDir + @"\minecraft\stats")) Directory.Delete(PackDir + @"\minecraft\stats", true);
             if (Directory.Exists(PackDir + @"\minecraft\crash-reports")) Directory.Delete(PackDir + @"\minecraft\crash-reports", true);
-            if (Directory.Exists(PackDir + @"\minecraft\resourcepacks")) Directory.Delete(PackDir + @"\minecraft\resourcepacks", true);
-            if (Directory.Exists(PackDir + @"\minecraft\CustomDISkins")) Directory.Delete(PackDir + @"\minecraft\CustomDISkins", true);
+            //if (Directory.Exists(PackDir + @"\minecraft\resourcepacks")) Directory.Delete(PackDir + @"\minecraft\resourcepacks", true);
+            //if (Directory.Exists(PackDir + @"\minecraft\CustomDISkins")) Directory.Delete(PackDir + @"\minecraft\CustomDISkins", true);
             // Deleting .log Files
             foreach (FileInfo f in new DirectoryInfo(PackDir + @"\minecraft").GetFiles("*.log"))
                 f.Delete();

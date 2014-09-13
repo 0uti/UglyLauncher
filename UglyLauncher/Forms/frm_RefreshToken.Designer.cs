@@ -69,6 +69,7 @@
             this.txt_pass.PasswordChar = '*';
             this.txt_pass.Size = new System.Drawing.Size(216, 20);
             this.txt_pass.TabIndex = 3;
+            this.txt_pass.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txt_pass_KeyDown);
             // 
             // btn_cancel
             // 

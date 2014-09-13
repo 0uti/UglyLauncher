@@ -16,6 +16,7 @@ namespace UglyLauncher.Internet
             try
             {
                 request = WebRequest.Create(url);
+                request.Timeout = 5000;
                 response = request.GetResponse();
                 stringResponse = new StreamReader(response.GetResponseStream());
                 return stringResponse.ReadToEnd().Trim();
@@ -23,11 +24,6 @@ namespace UglyLauncher.Internet
             catch (WebException ex)
             {
                 throw ex;
-            }
-            finally
-            {
-                stringResponse.Close();
-                response.Close();
             }
         }
 

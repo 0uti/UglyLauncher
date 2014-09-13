@@ -60,7 +60,17 @@ namespace UglyLauncher
             try
             {
                 XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(xmlurl);
+                HttpWebRequest rq = (HttpWebRequest)WebRequest.Create(xmlurl);
+                rq.Timeout = 5000;
+                HttpWebResponse response = rq.GetResponse() as HttpWebResponse;
+
+                using (Stream responseStream = response.GetResponseStream())
+                {
+                    XmlTextReader reader = new XmlTextReader(responseStream);
+                    xmlDocument.Load(reader);
+                }
+
+                // xmlDocument.Load(xmlurl);
                 using (StringReader read = new StringReader(xmlDocument.OuterXml))
                 {
                     XmlSerializer serializer = new XmlSerializer(typeof(appinfo));

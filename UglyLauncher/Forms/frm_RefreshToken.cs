@@ -60,5 +60,11 @@ namespace UglyLauncher
                 this.Close();
             }
         }
+
+        private void txt_pass_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                this.button2_Click(sender,e);
+        }
     }
 }

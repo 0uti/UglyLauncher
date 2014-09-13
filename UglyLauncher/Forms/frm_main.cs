@@ -7,6 +7,7 @@ using System.Drawing;
 using UglyLauncher.Internet;
 using UglyLauncher.Minecraft;
 using System.Diagnostics;
+using System.Net;
 
 
 namespace UglyLauncher
@@ -125,7 +126,7 @@ namespace UglyLauncher
                 {
                     this.Invoke(new Action(() =>
                     {
-                        MessageBox.Show(this, ex.Message.ToString(), "Verbindungsfehler!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this, ex.Message.ToString(), "Verbindungsfehler zu Mojang!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }));
                     U.SetDefault("none");
                 }
@@ -142,20 +143,30 @@ namespace UglyLauncher
             worker.ReportProgress(50);
             
             // Get Packs from Server
-            L.LoadAvailablePacks(MCPlayerName);
-            MCPacksAvailable Packs = L.GetAvailablePacks();
-            if (Packs.packs != null)
+            try
             {
-                foreach (MCPacksAvailablePack Pack in Packs.packs)
+                L.LoadAvailablePacks(MCPlayerName);
+                MCPacksAvailable Packs = L.GetAvailablePacks();
+                if (Packs.packs != null)
                 {
-                    ListViewItem LvItem = new ListViewItem(Pack.name, Pack.name);
-                    LvItem.Font = new Font("Thaoma", 16, FontStyle.Bold);
-                    this.Invoke(new Action(() =>
+                    foreach (MCPacksAvailablePack Pack in Packs.packs)
                     {
-                        lst_packs_images.Images.Add(Pack.name, L.GetPackIcon(Pack));
-                        lst_packs.Items.Add(LvItem);
-                    }));
+                        ListViewItem LvItem = new ListViewItem(Pack.name, Pack.name);
+                        LvItem.Font = new Font("Thaoma", 16, FontStyle.Bold);
+                        this.Invoke(new Action(() =>
+                        {
+                            lst_packs_images.Images.Add(Pack.name, L.GetPackIcon(Pack));
+                            lst_packs.Items.Add(LvItem);
+                        }));
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                this.Invoke(new Action(() =>
+                {
+                    MessageBox.Show(this, ex.Message.ToString(), "Verbindungsfehler zu Minestar!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }));
             }
             worker.ReportProgress(75);
 

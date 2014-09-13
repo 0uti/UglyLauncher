@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // die mit einer Assembly verknüpft sind.
 [assembly: AssemblyTitle("UglyLauncher")]
 [assembly: AssemblyDescription("Minestar related launcher for Minecraft")]
-[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyConfiguration("Retail")]
 [assembly: AssemblyCompany("Minestar (FidelCastor)")]
 [assembly: AssemblyProduct("UglyLauncher")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.35")]
-[assembly: AssemblyFileVersion("1.0.0.35")]
+[assembly: AssemblyVersion("1.0.0.37")]
+[assembly: AssemblyFileVersion("1.0.0.37")]
