@@ -37,6 +37,7 @@
             this.einstellungenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lst_packs = new System.Windows.Forms.ListView();
+            this.PackListContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.lst_packs_images = new System.Windows.Forms.ImageList(this.components);
             this.oStatusBar = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -45,7 +46,10 @@
             this.btn_start = new System.Windows.Forms.Button();
             this.cmb_packversions = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.downloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu_container.SuspendLayout();
+            this.PackListContext.SuspendLayout();
             this.oStatusBar.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -105,6 +109,7 @@
             this.lst_packs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lst_packs.ContextMenuStrip = this.PackListContext;
             this.lst_packs.HideSelection = false;
             this.lst_packs.LabelWrap = false;
             this.lst_packs.LargeImageList = this.lst_packs_images;
@@ -118,7 +123,15 @@
             this.lst_packs.UseCompatibleStateImageBehavior = false;
             this.lst_packs.View = System.Windows.Forms.View.Tile;
             this.lst_packs.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
-            this.lst_packs.DoubleClick += new System.EventHandler(this.playToolStripMenuItem_Click);
+            this.lst_packs.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lst_packs_MouseDown);
+            // 
+            // PackListContext
+            // 
+            this.PackListContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.downloadToolStripMenuItem,
+            this.startToolStripMenuItem});
+            this.PackListContext.Name = "contextMenuStrip1";
+            this.PackListContext.Size = new System.Drawing.Size(153, 70);
             // 
             // lst_packs_images
             // 
@@ -165,13 +178,13 @@
             // 
             // btn_start
             // 
-            this.btn_start.Location = new System.Drawing.Point(257, 367);
+            this.btn_start.Location = new System.Drawing.Point(263, 367);
             this.btn_start.Name = "btn_start";
             this.btn_start.Size = new System.Drawing.Size(64, 23);
             this.btn_start.TabIndex = 4;
             this.btn_start.Text = "Start";
             this.btn_start.UseVisualStyleBackColor = true;
-            this.btn_start.Click += new System.EventHandler(this.playToolStripMenuItem_Click);
+            this.btn_start.Click += new System.EventHandler(this.btn_start_Click);
             // 
             // cmb_packversions
             // 
@@ -179,7 +192,7 @@
             this.cmb_packversions.FormattingEnabled = true;
             this.cmb_packversions.Location = new System.Drawing.Point(48, 368);
             this.cmb_packversions.Name = "cmb_packversions";
-            this.cmb_packversions.Size = new System.Drawing.Size(203, 21);
+            this.cmb_packversions.Size = new System.Drawing.Size(209, 21);
             this.cmb_packversions.TabIndex = 5;
             // 
             // label1
@@ -190,6 +203,19 @@
             this.label1.Size = new System.Drawing.Size(42, 13);
             this.label1.TabIndex = 6;
             this.label1.Text = "Version";
+            // 
+            // downloadToolStripMenuItem
+            // 
+            this.downloadToolStripMenuItem.Name = "downloadToolStripMenuItem";
+            this.downloadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.downloadToolStripMenuItem.Text = "Download";
+            // 
+            // startToolStripMenuItem
+            // 
+            this.startToolStripMenuItem.Name = "startToolStripMenuItem";
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.startToolStripMenuItem.Text = "Start";
+            this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
             // 
             // frm_main
             // 
@@ -215,6 +241,7 @@
             this.Shown += new System.EventHandler(this.main_Shown);
             this.mnu_container.ResumeLayout(false);
             this.mnu_container.PerformLayout();
+            this.PackListContext.ResumeLayout(false);
             this.oStatusBar.ResumeLayout(false);
             this.oStatusBar.PerformLayout();
             this.ResumeLayout(false);
@@ -239,6 +266,9 @@
         private System.Windows.Forms.ComboBox cmb_packversions;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ToolStripMenuItem mnu_edit_Pack;
+        private System.Windows.Forms.ContextMenuStrip PackListContext;
+        private System.Windows.Forms.ToolStripMenuItem downloadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem startToolStripMenuItem;
     }
 }
 

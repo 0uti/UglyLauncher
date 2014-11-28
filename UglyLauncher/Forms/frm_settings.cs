@@ -47,8 +47,30 @@ namespace UglyLauncher
                 this.chk_keep_console.Enabled = false;
             }
 
+
+            if (C.UseGC == 1) this.chk_use_gc.Checked = false;
+            else this.chk_use_gc.Checked = true;
+
             if (C.CloseLauncher == 1) this.chk_keep_launcher.Checked = false;
             else this.chk_keep_launcher.Checked = true;
+
+
+            this.comboBox1.Items.Clear();
+            this.comboBox1.Items.Add("Automatisch");
+
+            List<String> lVersions = C.GetJavaVersions();
+            foreach (string version in lVersions)
+            {
+                this.comboBox1.Items.Add(version);
+            }
+            if (C.JavaVersion == "auto")
+            {
+                this.comboBox1.SelectedIndex = this.comboBox1.FindStringExact("Automatisch");
+            }
+            else
+            {
+                this.comboBox1.SelectedIndex = this.comboBox1.FindStringExact(C.JavaVersion);
+            }
         }
 
         private void btn_save_click(object sender, EventArgs e)
@@ -67,6 +89,12 @@ namespace UglyLauncher
 
             if (this.chk_keep_launcher.Checked == false) C.CloseLauncher = 1;
             else C.CloseLauncher = 0;
+
+            if (this.comboBox1.SelectedItem.ToString() == "Automatisch") C.JavaVersion = "auto";
+            else C.JavaVersion = this.comboBox1.SelectedItem.ToString();
+
+            if (this.chk_use_gc.Checked == false) C.UseGC = 1;
+            else C.UseGC = 0;
 
             this.Close();
         }

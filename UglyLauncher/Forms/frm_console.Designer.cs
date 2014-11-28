@@ -47,9 +47,9 @@
             // 
             // txt_console
             // 
-            this.txt_console.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txt_console.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txt_console.Location = new System.Drawing.Point(0, 0);
             this.txt_console.Name = "txt_console";
             this.txt_console.ReadOnly = true;
@@ -57,6 +57,7 @@
             this.txt_console.TabIndex = 1;
             this.txt_console.Text = "";
             this.txt_console.WordWrap = false;
+            this.txt_console.TextChanged += new System.EventHandler(this.txt_console_TextChanged);
             // 
             // frm_console
             // 

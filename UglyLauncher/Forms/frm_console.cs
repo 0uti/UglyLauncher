@@ -24,7 +24,7 @@ namespace UglyLauncher
                     new Action(() =>
                     {
                         txt_console.SelectionColor = color;
-                        txt_console.AppendText(line + Environment.NewLine);
+                        txt_console.AppendText(line + "\n");
                         txt_console.ScrollToCaret();
                     }
                 ));
@@ -43,6 +43,14 @@ namespace UglyLauncher
         private void btn_close_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void txt_console_TextChanged(object sender, EventArgs e)
+        {
+            if (txt_console.Lines.Length > 500)
+            {
+                
+            }
         }
     }
 }

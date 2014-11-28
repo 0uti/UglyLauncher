@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Win32;
+using System.Globalization;
 
 namespace UglyLauncher
 {
@@ -11,6 +12,7 @@ namespace UglyLauncher
         private string sRegPath = "Software\\Minestar\\UglyLauncher";
         private string sJavaPath = null;
         private string sJavaArch = null;
+        private double dJava_version = 0;
 
         private int iMinMemory = -1;
         private int iMaxMemory = -1;
@@ -18,6 +20,9 @@ namespace UglyLauncher
         private int iConsole_Show = -1;
         private int iConsole_Keep = -1;
         private int iCloseLauncher = -1;
+        private int iUseGC = -1;
+        private string sJavaVersion = null;
+
 
         // contructor
         public configuration()
@@ -28,7 +33,33 @@ namespace UglyLauncher
             this.iConsole_Show = this.GetRegInt("show_console");
             this.iConsole_Keep = this.GetRegInt("keep_console");
             this.iCloseLauncher = this.GetRegInt("close_Launcher");
-            this.GetJavaPathAuto();
+            this.iUseGC = this.GetRegInt("use_gc");
+            this.sJavaVersion = this.GetRegString("java_version");
+            this.GetJavaPathAuto(this.JavaVersion);
+        }
+
+        // java version double
+        public double dJavaVesion
+        {
+            get
+            {
+                return this.dJava_version;
+            }
+        }
+
+        // Java search methode
+        public string JavaVersion
+        {
+            get
+            {
+                if (this.sJavaVersion != null) return this.sJavaVersion;
+                else return this.SetRegString("java_version", "auto");
+            }
+            set
+            {
+                this.sJavaVersion = value;
+                this.SetRegString("java_version", this.sJavaVersion);
+            }
         }
 
         // Minimum memoryusage
@@ -73,6 +104,21 @@ namespace UglyLauncher
             {
                 this.iPermGen = value;
                 this.SetRegInt("perm_gen", this.iPermGen);
+            }
+        }
+
+        // Garbage Collector
+        public int UseGC
+        {
+            get
+            {
+                if (this.iUseGC != -1) return this.iUseGC;
+                else return this.SetRegInt("use_gc", 0);
+            }
+            set
+            {
+                this.iUseGC = value;
+                this.SetRegInt("use_gc", this.iUseGC);
             }
         }
 
@@ -134,49 +180,103 @@ namespace UglyLauncher
         }
 
 
-        private void GetJavaPathAuto()
+        public List<string> GetJavaVersions()
         {
-            // Get 64bit Java
-            this.GetJavaPath64();
-            // if 64bit not found, look for 32bit Java
-            if (this.sJavaPath == null) this.GetJavaPath32();
-            // if still no Java Found -> Bullshit
+            List<string> lVersions = new List<string>();
+            string[] lSubkeys;
+            RegistryKey key;
+
+            // get 64bit vrsions
+            key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
+            if (key != null)
+            {
+                lSubkeys = key.GetSubKeyNames();
+
+                foreach (string version in lSubkeys)
+                {
+                    if (version.Length == 3)
+                    {
+                        lVersions.Add(version + "_64");
+                    }
+                }
+            }
+            // get 32bit versions
+            key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\JavaSoft\Java Runtime Environment");
+            if (key != null)
+            {
+                lSubkeys = key.GetSubKeyNames();
+
+                foreach (string version in lSubkeys)
+                {
+                    if (version.Length == 3)
+                    {
+                        lVersions.Add(version + "_32");
+                    }
+                }
+            }
+            return lVersions;
         }
 
 
-
-        private void GetJavaPath64()
+        private void GetJavaPathAuto(string sVersion = "auto")
         {
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
-            if (key == null) return;  // no java 64 found
-            string sCurrentVersion = key.GetValue("CurrentVersion",null) as String;
+            if (sVersion == "auto")
+            {
+                // Get 64bit Java
+                this.GetJavaPath64(sVersion);
+                // if 64bit not found, look for 32bit Java
+                if (this.sJavaPath == null) this.GetJavaPath32(sVersion);
+                // if still no Java Found -> Bullshit
+            }
+            else
+            {
+                string[] versions = sVersion.Split('_');
+                if (versions[1] == "64") this.GetJavaPath64(versions[0]);
+                if (versions[1] == "32") this.GetJavaPath32(versions[0]);
+            }
+        }
 
-            key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment\" + sCurrentVersion);
+        private void GetJavaPath64(string sVersion)
+        {
+            RegistryKey key ;
+
+            if (sVersion == "auto")
+            {
+                key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
+                if (key == null) return;  // no java 64 found
+                sVersion = key.GetValue("CurrentVersion", null) as String;
+            }
+
+            key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment\" + sVersion);
             if (key == null) return ;  // no java 64 found
             this.sJavaPath = key.GetValue("JavaHome", null) as String;
             // append executable
             this.sJavaPath += @"\bin\java";
             this.sJavaArch = "64";
+            this.dJava_version = Double.Parse(sVersion, CultureInfo.InvariantCulture);
         }
 
-        private void GetJavaPath32()
+        private void GetJavaPath32(string sVersion)
         {
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\JavaSoft\Java Runtime Environment");
-            if (key == null) return;  // no java 32 found
-            string sCurrentVersion = key.GetValue("CurrentVersion", null) as String;
+            RegistryKey key;
 
-            key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\JavaSoft\Java Runtime Environment\" + sCurrentVersion);
+            if (sVersion == "auto")
+            {
+                key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\JavaSoft\Java Runtime Environment");
+                if (key == null) return;  // no java 32 found
+                sVersion = key.GetValue("CurrentVersion", null) as String;
+            }
+
+            key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\JavaSoft\Java Runtime Environment\" + sVersion);
             if (key == null) return;  // no java 32 found
             this.sJavaPath = key.GetValue("JavaHome", null) as String;
             // append executable
             this.sJavaPath += @"\bin\java";
             this.sJavaArch = "32";
+            this.dJava_version = Double.Parse(sVersion, CultureInfo.InvariantCulture);
         }
 
-
-
         // Registry Handler
-
         private string GetRegString(string sRegKey)
         {
             RegistryKey key = Registry.CurrentUser.OpenSubKey(this.sRegPath);

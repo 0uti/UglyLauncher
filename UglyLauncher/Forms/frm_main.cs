@@ -221,7 +221,7 @@ namespace UglyLauncher
             this.bar.update_bar(e.ProgressPercentage);
         }
 
-        private void playToolStripMenuItem_Click(object sender, EventArgs e)
+        private void startpack()
         {
             if (lbl_default_account.Text == "none")
             {
@@ -249,6 +249,33 @@ namespace UglyLauncher
             // start minecraft
             L.StartPack(sSelectedPack, sSelectedVersion);
         }
+
+
+        private void downloadpack()
+        {
+            if (lbl_default_account.Text == "none")
+            {
+                MessageBox.Show(this, "Nicht eingeloggt.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (lst_packs.SelectedItems.Count != 1)
+            {
+                MessageBox.Show(this, "Kein Pack gewählt.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // gather vars from Gui
+            string sSelectedPack = lst_packs.SelectedItems[0].Text;
+            string sSelectedVersion = null;
+            if (cmb_packversions.SelectedIndex == 0) sSelectedVersion = "recommended";
+            else sSelectedVersion = cmb_packversions.Text;
+            Launcher L = new Launcher();
+            // download minecraft
+            L.StartPack(sSelectedPack, sSelectedVersion);
+        }
+
+
 
         void L_restoreWindow(object sender, Launcher.FormWindowStateEventArgs e)
         {
@@ -303,6 +330,22 @@ namespace UglyLauncher
             }
 
             new frm_EditPack(sSelectedPack).ShowDialog();
+        }
+
+        private void lst_packs_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != System.Windows.Forms.MouseButtons.Left) return;
+            if (e.Clicks == 2) startpack();
+        }
+
+        private void btn_start_Click(object sender, EventArgs e)
+        {
+            startpack();
+        }
+
+        private void startToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            startpack();
         }
     }
 }

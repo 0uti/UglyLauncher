@@ -12,6 +12,8 @@ using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using UglyLauncher;
 using UglyLauncher.Internet;
+using System.Reflection;
+using System.Globalization;
 
 namespace UglyLauncher.Minecraft
 {
@@ -280,6 +282,28 @@ namespace UglyLauncher.Minecraft
             if (this.bar.Visible == true) this.bar.Hide();
         }
 
+        public void DownloadPack(string sPackName, string sPackVersion)
+        {
+            // check if pack is installed with given version is installed
+            if (!this.IsPackInstalled(sPackName, sPackVersion)) this.InstallPack(sPackName, sPackVersion);
+            // getting pack version json file
+            MCGameStructure MCLocal = JsonHelper.JsonDeserializer<MCGameStructure>(File.ReadAllText(sPacksDir + @"\" + sPackName + @"\pack.json").Trim());
+            // download gameversion and json file if needed
+            this.DownloadGameJar(MCLocal);
+            // getting mojang version json file
+            MCGameStructure MCMojang = JsonHelper.JsonDeserializer<MCGameStructure>(File.ReadAllText(sVersionDir + @"\" + MCLocal.id + @"\" + MCLocal.id + ".json").Trim());
+            // fix assets
+            if (MCMojang.assets == null) MCMojang.assets = "legacy";
+            // merging both json objects
+            MCGameStructure MC = this.MergeObjects(MCLocal, MCMojang);
+            // download libraries if needed
+            this.DownloadLibraries(MC);
+            // download assets if needed
+            this.DownloadAssets(MC);
+        }
+
+
+
         private void Start(string args,string sPackName)
         {
             configuration C = new configuration();
@@ -303,10 +327,13 @@ namespace UglyLauncher.Minecraft
             // load console
             if (C.ShowConsole == 1)
             {
+                this.closeOldConsole();
                 con = new frm_console();
                 con.Show();
                 con.clearcon();
-                con.addline(args, Color.Blue);
+                con.addline(String.Format("UglyLauncher-Version: {0}", Application.ProductVersion),Color.Blue);
+                con.addline("Using Java-Version: " + C.GetJavaPath() + " (" + C.GetJavaArch()+ "bit)", Color.Blue);
+                con.addline("Startparameter:" + args, Color.Blue);
             }
 
             // start minecraft
@@ -320,6 +347,20 @@ namespace UglyLauncher.Minecraft
             args2.WindowState = FormWindowState.Minimized;
             args2.MCExitCode = -1;
             if (null != handler) handler(this, args2);
+        }
+
+        private void closeOldConsole()
+        {
+            FormCollection fc = Application.OpenForms;
+
+            foreach (Form frm in fc)
+            {
+                if (frm.Name == "frm_console")
+                {
+                    frm.Close();
+                    return;
+                }
+            }
         }
 
         private void minecraft_ErrorDataReceived(object sender, DataReceivedEventArgs e)
@@ -391,10 +432,20 @@ namespace UglyLauncher.Minecraft
             MCUserAccount Acc = U.GetAccount(U.GetDefault());
             MCUserAccountProfile Profile = U.GetActiveProfile(Acc);
 
+            // Garbage Collector
+            if(C.UseGC == 1) args += " -XX:+UseParNewGC";
             // fucking Mojang drivers Hack
             args += " -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump";
             // Java Memory
-            args += String.Format(" -Xms{0}m -Xmx{1}m -XX:PermSize={2}m -XX:MaxPermSize={2}m", C.MinimumMemory, C.MaximumMemory, C.PermGen);
+            double dJava = C.dJavaVesion;
+            if (dJava >= 1.8)
+            {
+                args += String.Format(" -Xms{0}m -Xmx{1}m", C.MinimumMemory, C.MaximumMemory);
+            }
+            else
+            {
+                args += String.Format(" -Xms{0}m -Xmx{1}m -XX:PermSize={2}m -XX:MaxPermSize={2}m", C.MinimumMemory, C.MaximumMemory, C.PermGen);
+            }
             // Tweaks
             args += " -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true";
             // Path to natives
@@ -428,6 +479,7 @@ namespace UglyLauncher.Minecraft
         private void DownloadLibraries(MCGameStructure MC)
         {
             configuration c = new configuration();
+            string sJavaArch = c.GetJavaArch();
             this.lLibraries.Clear();
 
             foreach (MCGameStructureLib Lib in MC.libraries)
@@ -471,7 +523,7 @@ namespace UglyLauncher.Minecraft
 
                 // filename
                 sFileName = LibName[1] + "-" + LibName[2];
-                if (Lib.natives != null) sFileName += "-" + Lib.natives.windows.Replace("${arch}", c.GetJavaArch());
+                if (Lib.natives != null) sFileName += "-" + Lib.natives.windows.Replace("${arch}", sJavaArch);
                 if (Lib.nameappend != null) sFileName += Lib.nameappend;
                 sFileName += ".jar";
 
