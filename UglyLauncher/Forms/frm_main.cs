@@ -101,6 +101,7 @@ namespace UglyLauncher
             }
             // Test User
             string MCPlayerName = null;
+            string MCUID = null;
             worker.ReportProgress(25);
 
             UserManager U = new UserManager();
@@ -131,7 +132,11 @@ namespace UglyLauncher
                     U.SetDefault("none");
                 }
             }
-            if (U.GetDefault() != "none") MCPlayerName = U.GetPlayerName(U.GetDefault());
+            if (U.GetDefault() != "none")
+            {
+                MCPlayerName = U.GetPlayerName(U.GetDefault());
+                MCUID = U.GetMCProfileID(U.GetDefault());
+            }
             // set statusbar
             this.Invoke(new Action(() =>
             {
@@ -145,7 +150,7 @@ namespace UglyLauncher
             // Get Packs from Server
             try
             {
-                L.LoadAvailablePacks(MCPlayerName);
+                L.LoadAvailablePacks(MCPlayerName, MCUID);
                 MCPacksAvailable Packs = L.GetAvailablePacks();
                 if (Packs.packs != null)
                 {

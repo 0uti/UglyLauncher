@@ -131,6 +131,13 @@ namespace UglyLauncher
             return Profile.name;
         }
 
+        // get minecraft Profile ID
+        public string GetMCProfileID(string sAccountName)
+        {
+            MCUserAccountProfile Profile = this.GetActiveProfile(this.GetAccount(sAccountName));
+            return Profile.id;
+        }
+
         public void AddAccount(MCUserAccount Account)
         {
             this.Users.accounts.Add(Account);

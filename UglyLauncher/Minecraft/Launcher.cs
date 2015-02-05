@@ -105,11 +105,11 @@ namespace UglyLauncher.Minecraft
         }
 
         // load Packlist from server
-        public void LoadAvailablePacks(string sPlayerName)
+        public void LoadAvailablePacks(string sPlayerName,string sMCUID)
         {
             try
             {
-                string sPackListJson = Http.GET(this.sPackServer + @"/packs.php?player=" + sPlayerName);
+                string sPackListJson = Http.GET(this.sPackServer + @"/packs.php?player=" + sPlayerName + @"&uid=" + sMCUID);
                 PacksAvailable = JsonHelper.JsonDeserializer<MCPacksAvailable>(sPackListJson);
             }
             catch (WebException ex)
