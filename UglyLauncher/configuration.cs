@@ -185,9 +185,11 @@ namespace UglyLauncher
             List<string> lVersions = new List<string>();
             string[] lSubkeys;
             RegistryKey key;
+            var hklm64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+            var hklm32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
 
             // get 64bit vrsions
-            key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
+            key = hklm64.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
             if (key != null)
             {
                 lSubkeys = key.GetSubKeyNames();
@@ -201,7 +203,7 @@ namespace UglyLauncher
                 }
             }
             // get 32bit versions
-            key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\JavaSoft\Java Runtime Environment");
+            key = hklm32.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
             if (key != null)
             {
                 lSubkeys = key.GetSubKeyNames();
@@ -239,15 +241,16 @@ namespace UglyLauncher
         private void GetJavaPath64(string sVersion)
         {
             RegistryKey key ;
+            var hklm64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
 
             if (sVersion == "auto")
             {
-                key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
+                key = hklm64.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
                 if (key == null) return;  // no java 64 found
                 sVersion = key.GetValue("CurrentVersion", null) as String;
             }
 
-            key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment\" + sVersion);
+            key = hklm64.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment\" + sVersion);
             if (key == null) return ;  // no java 64 found
             this.sJavaPath = key.GetValue("JavaHome", null) as String;
             // append executable
@@ -259,15 +262,16 @@ namespace UglyLauncher
         private void GetJavaPath32(string sVersion)
         {
             RegistryKey key;
+            var hklm32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
 
             if (sVersion == "auto")
             {
-                key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\JavaSoft\Java Runtime Environment");
+                key = hklm32.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
                 if (key == null) return;  // no java 32 found
                 sVersion = key.GetValue("CurrentVersion", null) as String;
             }
 
-            key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\JavaSoft\Java Runtime Environment\" + sVersion);
+            key = hklm32.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment\" + sVersion);
             if (key == null) return;  // no java 32 found
             this.sJavaPath = key.GetValue("JavaHome", null) as String;
             // append executable

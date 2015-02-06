@@ -64,7 +64,7 @@ namespace UglyLauncher.Minecraft
         // Progress event from downloader
         private void DownloadProgressCallback(object sender, DownloadProgressChangedEventArgs e)
         {
-            this.bar.update_bar(e.ProgressPercentage);
+            if(this.bar.Visible) this.bar.update_bar(e.ProgressPercentage);
         }
 
         // download file if needed
@@ -553,8 +553,9 @@ namespace UglyLauncher.Minecraft
             if (!Directory.Exists(sVersionDir + @"\" + MC.id)) Directory.CreateDirectory(sVersionDir + @"\" + MC.id);
             // download jar
             DownloadFileTo(this.sVersionServer + "/" + MC.id + "/" + MC.id + ".jar", sVersionDir + @"\" + MC.id + @"\" + MC.id + ".jar");
-            // download json
-            DownloadFileTo(this.sVersionServer + "/" + MC.id + "/" + MC.id + ".json", sVersionDir + @"\" + MC.id + @"\" + MC.id + ".json");
+            // delete and download json
+            if (File.Exists(sVersionDir + @"\" + MC.id + @"\" + MC.id + ".json")) File.Delete(sVersionDir + @"\" + MC.id + @"\" + MC.id + ".json");
+            DownloadFileTo(this.sVersionServer + "/" + MC.id + "/" + MC.id + ".json", sVersionDir + @"\" + MC.id + @"\" + MC.id + ".json",false);
         }
 
         private void DownloadAssets(MCGameStructure MC)
