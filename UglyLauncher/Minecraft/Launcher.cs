@@ -19,6 +19,7 @@ namespace UglyLauncher.Minecraft
 {
     class Launcher
     {
+       
         // events
         public event EventHandler<FormWindowStateEventArgs> restoreWindow;
         // objects
@@ -231,8 +232,8 @@ namespace UglyLauncher.Minecraft
                 s.Read(ret, 0, ret.Length);
                 result = System.Text.Encoding.UTF8.GetString(ret).Trim();
             }
-            zf.Close();
-            fs.Close();
+            //zf.Close();
+            //fs.Close();
 
             return result;
         }
@@ -719,6 +720,11 @@ namespace UglyLauncher.Minecraft
                     zf.Close(); // Ensure we release resources
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose();
         }
 
         public class FormWindowStateEventArgs : EventArgs

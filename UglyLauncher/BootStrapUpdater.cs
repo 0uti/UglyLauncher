@@ -77,9 +77,9 @@ namespace UglyLauncher
                     using (XmlReader reader = new XmlTextReader(read))
                     {
                         this.AppInfo = (appinfo)serializer.Deserialize(reader);
-                        reader.Close();
+                        //reader.Close();
                     }
-                    read.Close();
+                    //read.Close();
                 }
             }
             catch (Exception ex)

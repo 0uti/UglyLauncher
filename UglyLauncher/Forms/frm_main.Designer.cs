@@ -38,6 +38,8 @@
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lst_packs = new System.Windows.Forms.ListView();
             this.PackListContext = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.downloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lst_packs_images = new System.Windows.Forms.ImageList(this.components);
             this.oStatusBar = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -46,8 +48,6 @@
             this.btn_start = new System.Windows.Forms.Button();
             this.cmb_packversions = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.downloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu_container.SuspendLayout();
             this.PackListContext.SuspendLayout();
             this.oStatusBar.SuspendLayout();
@@ -131,7 +131,20 @@
             this.downloadToolStripMenuItem,
             this.startToolStripMenuItem});
             this.PackListContext.Name = "contextMenuStrip1";
-            this.PackListContext.Size = new System.Drawing.Size(153, 70);
+            this.PackListContext.Size = new System.Drawing.Size(129, 48);
+            // 
+            // downloadToolStripMenuItem
+            // 
+            this.downloadToolStripMenuItem.Name = "downloadToolStripMenuItem";
+            this.downloadToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.downloadToolStripMenuItem.Text = "Download";
+            // 
+            // startToolStripMenuItem
+            // 
+            this.startToolStripMenuItem.Name = "startToolStripMenuItem";
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.startToolStripMenuItem.Text = "Start";
+            this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
             // 
             // lst_packs_images
             // 
@@ -203,19 +216,6 @@
             this.label1.Size = new System.Drawing.Size(42, 13);
             this.label1.TabIndex = 6;
             this.label1.Text = "Version";
-            // 
-            // downloadToolStripMenuItem
-            // 
-            this.downloadToolStripMenuItem.Name = "downloadToolStripMenuItem";
-            this.downloadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.downloadToolStripMenuItem.Text = "Download";
-            // 
-            // startToolStripMenuItem
-            // 
-            this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.startToolStripMenuItem.Text = "Start";
-            this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
             // 
             // frm_main
             // 

@@ -56,7 +56,7 @@
     <StartupObject>UglyBootstrap.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>

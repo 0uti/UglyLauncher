@@ -34,9 +34,9 @@ namespace UglyLauncher
                     using (XmlReader reader = new XmlTextReader(read))
                     {
                         this.Users = (MCUser)serializer.Deserialize(reader);
-                        reader.Close();
+                        //reader.Close();
                     }
-                    read.Close();
+                    //read.Close();
                 }
             }
             catch (Exception)
@@ -58,7 +58,7 @@ namespace UglyLauncher
                     stream.Position = 0;
                     xmlDocument.Load(stream);
                     xmlDocument.Save(Launcher.sDataDir + this.xmlfile);
-                    stream.Close();
+                    //stream.Close();
                 }
             }
             catch (Exception)

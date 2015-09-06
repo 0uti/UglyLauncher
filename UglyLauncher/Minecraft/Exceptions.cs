@@ -2,7 +2,7 @@
 
 namespace UglyLauncher.Minecraft
 {
-
+    [Serializable]
     class MCInvalidCredentialsException : Exception
     {
         public MCInvalidCredentialsException() : base("mööp.") { }
@@ -11,6 +11,7 @@ namespace UglyLauncher.Minecraft
         public MCInvalidCredentialsException(String message) : base(message) { }
     }
 
+    [Serializable]
     class MCUserMigratedException : Exception
     {
         public MCUserMigratedException() : base("mööp.") { }
@@ -19,6 +20,7 @@ namespace UglyLauncher.Minecraft
         public MCUserMigratedException(String message) : base(message) { }
     }
 
+    [Serializable]
     class MCInvalidTokenException : Exception
     {
         public MCInvalidTokenException() : base("mööp.") { }
