@@ -31,8 +31,6 @@ namespace UglyLauncher
             this.java_max_mem.Value = C.MaximumMemory;
             this.java_min_mem.Maximum = C.MaximumMemory;
 
-            this.java_perm_gen.Value = C.PermGen;
-
             if (C.KeepConsole == 1) this.chk_keep_console.Checked = true;
             else this.chk_keep_console.Checked = false;
           
@@ -78,8 +76,6 @@ namespace UglyLauncher
             C.MinimumMemory = (int) this.java_min_mem.Value;
 
             C.MaximumMemory = (int) this.java_max_mem.Value;
-
-            C.PermGen = (int)this.java_perm_gen.Value;
 
             if (this.chk_console.Checked == true) C.ShowConsole = 1;
             else C.ShowConsole = 0;

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
-using System.IO;
+//using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
 
-using UglyLauncher.Internet;
+//using UglyLauncher.Internet;
 using UglyLauncher.Minecraft;
-using System.Diagnostics;
-using System.Net;
+//using System.Diagnostics;
+//using System.Net;
 
 
 namespace UglyLauncher
@@ -351,6 +351,14 @@ namespace UglyLauncher
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
             startpack();
+        }
+
+        private void öffneVerzeichnissToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string sSelectedPack = lst_packs.SelectedItems[0].Text;
+            Launcher L = new Launcher();
+            L.OpenPackFolder(sSelectedPack);
+
         }
     }
 }

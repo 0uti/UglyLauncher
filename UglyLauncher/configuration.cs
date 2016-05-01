@@ -9,6 +9,7 @@ namespace UglyLauncher
 {
     class configuration
     {
+        private string sJavaExecutable = @"\bin\javaw";
         private string sRegPath = "Software\\Minestar\\UglyLauncher";
         private string sJavaPath = null;
         private string sJavaArch = null;
@@ -16,7 +17,6 @@ namespace UglyLauncher
 
         private int iMinMemory = -1;
         private int iMaxMemory = -1;
-        private int iPermGen = -1;
         private int iConsole_Show = -1;
         private int iConsole_Keep = -1;
         private int iCloseLauncher = -1;
@@ -29,7 +29,6 @@ namespace UglyLauncher
         {
             this.iMinMemory = this.GetRegInt("min_memory");
             this.iMaxMemory = this.GetRegInt("max_memory");
-            this.iPermGen = this.GetRegInt("perm_gen");
             this.iConsole_Show = this.GetRegInt("show_console");
             this.iConsole_Keep = this.GetRegInt("keep_console");
             this.iCloseLauncher = this.GetRegInt("close_Launcher");
@@ -89,21 +88,6 @@ namespace UglyLauncher
             {
                 this.iMaxMemory = value;
                 this.SetRegInt("max_memory", this.iMaxMemory);
-            }
-        }
-
-        // PermGen
-        public int PermGen
-        {
-            get
-            {
-                if (this.iPermGen != -1) return this.iPermGen;
-                else return this.SetRegInt("perm_gen", 256);
-            }
-            set
-            {
-                this.iPermGen = value;
-                this.SetRegInt("perm_gen", this.iPermGen);
             }
         }
 
@@ -254,7 +238,7 @@ namespace UglyLauncher
             if (key == null) return ;  // no java 64 found
             this.sJavaPath = key.GetValue("JavaHome", null) as String;
             // append executable
-            this.sJavaPath += @"\bin\java";
+            this.sJavaPath += this.sJavaExecutable;
             this.sJavaArch = "64";
             this.dJava_version = Double.Parse(sVersion, CultureInfo.InvariantCulture);
         }
@@ -275,7 +259,7 @@ namespace UglyLauncher
             if (key == null) return;  // no java 32 found
             this.sJavaPath = key.GetValue("JavaHome", null) as String;
             // append executable
-            this.sJavaPath += @"\bin\java";
+            this.sJavaPath += this.sJavaExecutable;
             this.sJavaArch = "32";
             this.dJava_version = Double.Parse(sVersion, CultureInfo.InvariantCulture);
         }

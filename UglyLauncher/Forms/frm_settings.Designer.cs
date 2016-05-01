@@ -36,30 +36,28 @@ namespace UglyLauncher
             this.chk_keep_console = new System.Windows.Forms.CheckBox();
             this.chk_console = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.chk_use_gc = new System.Windows.Forms.CheckBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.chk_keep_launcher = new System.Windows.Forms.CheckBox();
-            this.chk_use_gc = new System.Windows.Forms.CheckBox();
-            this.java_perm_gen = new UglyLauncher.NumericUpDownEx();
             this.java_max_mem = new UglyLauncher.NumericUpDownEx();
             this.java_min_mem = new UglyLauncher.NumericUpDownEx();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.chk_keep_launcher = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.java_perm_gen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.java_max_mem)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.java_min_mem)).BeginInit();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_cancel
             // 
-            this.btn_cancel.Location = new System.Drawing.Point(265, 297);
+            this.btn_cancel.Location = new System.Drawing.Point(398, 457);
+            this.btn_cancel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btn_cancel.Name = "btn_cancel";
-            this.btn_cancel.Size = new System.Drawing.Size(75, 23);
+            this.btn_cancel.Size = new System.Drawing.Size(112, 35);
             this.btn_cancel.TabIndex = 1;
             this.btn_cancel.Text = "Abbrechen";
             this.btn_cancel.UseVisualStyleBackColor = true;
@@ -67,9 +65,10 @@ namespace UglyLauncher
             // 
             // btn_save
             // 
-            this.btn_save.Location = new System.Drawing.Point(184, 297);
+            this.btn_save.Location = new System.Drawing.Point(276, 457);
+            this.btn_save.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btn_save.Name = "btn_save";
-            this.btn_save.Size = new System.Drawing.Size(75, 23);
+            this.btn_save.Size = new System.Drawing.Size(112, 35);
             this.btn_save.TabIndex = 2;
             this.btn_save.Text = "Speichern";
             this.btn_save.UseVisualStyleBackColor = true;
@@ -79,9 +78,11 @@ namespace UglyLauncher
             // 
             this.groupBox1.Controls.Add(this.chk_keep_console);
             this.groupBox1.Controls.Add(this.chk_console);
-            this.groupBox1.Location = new System.Drawing.Point(12, 61);
+            this.groupBox1.Location = new System.Drawing.Point(18, 94);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(328, 70);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox1.Size = new System.Drawing.Size(492, 108);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Konsole";
@@ -89,9 +90,10 @@ namespace UglyLauncher
             // chk_keep_console
             // 
             this.chk_keep_console.AutoSize = true;
-            this.chk_keep_console.Location = new System.Drawing.Point(7, 44);
+            this.chk_keep_console.Location = new System.Drawing.Point(10, 68);
+            this.chk_keep_console.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chk_keep_console.Name = "chk_keep_console";
-            this.chk_keep_console.Size = new System.Drawing.Size(279, 17);
+            this.chk_keep_console.Size = new System.Drawing.Size(411, 24);
             this.chk_keep_console.TabIndex = 1;
             this.chk_keep_console.Text = "Konsole nach Beenden von Minecraft geöffnet halten";
             this.chk_keep_console.UseVisualStyleBackColor = true;
@@ -99,9 +101,10 @@ namespace UglyLauncher
             // chk_console
             // 
             this.chk_console.AutoSize = true;
-            this.chk_console.Location = new System.Drawing.Point(7, 20);
+            this.chk_console.Location = new System.Drawing.Point(10, 31);
+            this.chk_console.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chk_console.Name = "chk_console";
-            this.chk_console.Size = new System.Drawing.Size(119, 17);
+            this.chk_console.Size = new System.Drawing.Size(174, 24);
             this.chk_console.TabIndex = 0;
             this.chk_console.Text = "Konsole einblenden";
             this.chk_console.UseVisualStyleBackColor = true;
@@ -111,19 +114,30 @@ namespace UglyLauncher
             // 
             this.groupBox2.Controls.Add(this.chk_use_gc);
             this.groupBox2.Controls.Add(this.comboBox1);
-            this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.java_perm_gen);
             this.groupBox2.Controls.Add(this.java_max_mem);
             this.groupBox2.Controls.Add(this.java_min_mem);
-            this.groupBox2.Location = new System.Drawing.Point(12, 137);
+            this.groupBox2.Location = new System.Drawing.Point(18, 211);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(328, 154);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox2.Size = new System.Drawing.Size(492, 237);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Java";
+            // 
+            // chk_use_gc
+            // 
+            this.chk_use_gc.AutoSize = true;
+            this.chk_use_gc.Location = new System.Drawing.Point(8, 203);
+            this.chk_use_gc.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chk_use_gc.Name = "chk_use_gc";
+            this.chk_use_gc.Size = new System.Drawing.Size(228, 24);
+            this.chk_use_gc.TabIndex = 6;
+            this.chk_use_gc.Text = "Benutze Garbage Collector";
+            this.chk_use_gc.UseVisualStyleBackColor = true;
             // 
             // comboBox1
             // 
@@ -131,103 +145,41 @@ namespace UglyLauncher
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
             "auto"});
-            this.comboBox1.Location = new System.Drawing.Point(172, 19);
+            this.comboBox1.Location = new System.Drawing.Point(258, 29);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(143, 21);
+            this.comboBox1.Size = new System.Drawing.Size(212, 28);
             this.comboBox1.TabIndex = 1;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 100);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 13);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "PermGen:";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 22);
+            this.label4.Location = new System.Drawing.Point(9, 34);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(42, 13);
+            this.label4.Size = new System.Drawing.Size(63, 20);
             this.label4.TabIndex = 0;
             this.label4.Text = "Version";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 74);
+            this.label2.Location = new System.Drawing.Point(9, 114);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(132, 13);
+            this.label2.Size = new System.Drawing.Size(198, 20);
             this.label2.TabIndex = 4;
             this.label2.Text = "Maximaler Arbeitsspeicher:";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 48);
+            this.label1.Location = new System.Drawing.Point(9, 74);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(129, 13);
+            this.label1.Size = new System.Drawing.Size(194, 20);
             this.label1.TabIndex = 3;
             this.label1.Text = "Minimaler Arbeitsspeicher:";
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.chk_keep_launcher);
-            this.groupBox3.Location = new System.Drawing.Point(12, 12);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(328, 43);
-            this.groupBox3.TabIndex = 3;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Launcher";
-            // 
-            // chk_keep_launcher
-            // 
-            this.chk_keep_launcher.AutoSize = true;
-            this.chk_keep_launcher.Location = new System.Drawing.Point(7, 20);
-            this.chk_keep_launcher.Name = "chk_keep_launcher";
-            this.chk_keep_launcher.Size = new System.Drawing.Size(292, 17);
-            this.chk_keep_launcher.TabIndex = 0;
-            this.chk_keep_launcher.Text = "Launcher nach Beenden von Minecraft wieder anzeigen";
-            this.chk_keep_launcher.UseVisualStyleBackColor = true;
-            // 
-            // chk_use_gc
-            // 
-            this.chk_use_gc.AutoSize = true;
-            this.chk_use_gc.Location = new System.Drawing.Point(6, 125);
-            this.chk_use_gc.Name = "chk_use_gc";
-            this.chk_use_gc.Size = new System.Drawing.Size(234, 17);
-            this.chk_use_gc.TabIndex = 6;
-            this.chk_use_gc.Text = "Benutze Garbage Collector (UseParNewGC)";
-            this.chk_use_gc.UseVisualStyleBackColor = true;
-            // 
-            // java_perm_gen
-            // 
-            this.java_perm_gen.Increment = new decimal(new int[] {
-            16,
-            0,
-            0,
-            0});
-            this.java_perm_gen.Location = new System.Drawing.Point(172, 98);
-            this.java_perm_gen.Maximum = new decimal(new int[] {
-            1024,
-            0,
-            0,
-            0});
-            this.java_perm_gen.Minimum = new decimal(new int[] {
-            64,
-            0,
-            0,
-            0});
-            this.java_perm_gen.Name = "java_perm_gen";
-            this.java_perm_gen.Size = new System.Drawing.Size(143, 20);
-            this.java_perm_gen.TabIndex = 2;
-            this.java_perm_gen.Value = new decimal(new int[] {
-            64,
-            0,
-            0,
-            0});
             // 
             // java_max_mem
             // 
@@ -236,7 +188,8 @@ namespace UglyLauncher
             0,
             0,
             0});
-            this.java_max_mem.Location = new System.Drawing.Point(172, 72);
+            this.java_max_mem.Location = new System.Drawing.Point(258, 111);
+            this.java_max_mem.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.java_max_mem.Maximum = new decimal(new int[] {
             8192,
             0,
@@ -248,7 +201,7 @@ namespace UglyLauncher
             0,
             0});
             this.java_max_mem.Name = "java_max_mem";
-            this.java_max_mem.Size = new System.Drawing.Size(143, 20);
+            this.java_max_mem.Size = new System.Drawing.Size(214, 26);
             this.java_max_mem.TabIndex = 1;
             this.java_max_mem.Value = new decimal(new int[] {
             1024,
@@ -263,7 +216,8 @@ namespace UglyLauncher
             0,
             0,
             0});
-            this.java_min_mem.Location = new System.Drawing.Point(172, 46);
+            this.java_min_mem.Location = new System.Drawing.Point(258, 71);
+            this.java_min_mem.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.java_min_mem.Maximum = new decimal(new int[] {
             8192,
             0,
@@ -275,7 +229,7 @@ namespace UglyLauncher
             0,
             0});
             this.java_min_mem.Name = "java_min_mem";
-            this.java_min_mem.Size = new System.Drawing.Size(143, 20);
+            this.java_min_mem.Size = new System.Drawing.Size(214, 26);
             this.java_min_mem.TabIndex = 0;
             this.java_min_mem.Value = new decimal(new int[] {
             512,
@@ -284,11 +238,34 @@ namespace UglyLauncher
             0});
             this.java_min_mem.ValueChanged += new System.EventHandler(this.java_min_mem_ValueChanged);
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.chk_keep_launcher);
+            this.groupBox3.Location = new System.Drawing.Point(18, 18);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox3.Size = new System.Drawing.Size(492, 66);
+            this.groupBox3.TabIndex = 3;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Launcher";
+            // 
+            // chk_keep_launcher
+            // 
+            this.chk_keep_launcher.AutoSize = true;
+            this.chk_keep_launcher.Location = new System.Drawing.Point(10, 31);
+            this.chk_keep_launcher.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chk_keep_launcher.Name = "chk_keep_launcher";
+            this.chk_keep_launcher.Size = new System.Drawing.Size(428, 24);
+            this.chk_keep_launcher.TabIndex = 0;
+            this.chk_keep_launcher.Text = "Launcher nach Beenden von Minecraft wieder anzeigen";
+            this.chk_keep_launcher.UseVisualStyleBackColor = true;
+            // 
             // frm_settings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(352, 327);
+            this.ClientSize = new System.Drawing.Size(528, 503);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
@@ -296,6 +273,7 @@ namespace UglyLauncher
             this.Controls.Add(this.btn_cancel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frm_settings";
@@ -305,11 +283,10 @@ namespace UglyLauncher
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.java_perm_gen)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.java_max_mem)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.java_min_mem)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -321,10 +298,8 @@ namespace UglyLauncher
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox chk_console;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private NumericUpDownEx java_perm_gen;
         private NumericUpDownEx java_max_mem;
         private NumericUpDownEx java_min_mem;
         private System.Windows.Forms.CheckBox chk_keep_console;

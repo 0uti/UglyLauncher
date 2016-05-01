@@ -48,6 +48,7 @@
             this.btn_start = new System.Windows.Forms.Button();
             this.cmb_packversions = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.öffneVerzeichnissToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu_container.SuspendLayout();
             this.PackListContext.SuspendLayout();
             this.oStatusBar.SuspendLayout();
@@ -129,20 +130,21 @@
             // 
             this.PackListContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.downloadToolStripMenuItem,
-            this.startToolStripMenuItem});
+            this.startToolStripMenuItem,
+            this.öffneVerzeichnissToolStripMenuItem});
             this.PackListContext.Name = "contextMenuStrip1";
-            this.PackListContext.Size = new System.Drawing.Size(129, 48);
+            this.PackListContext.Size = new System.Drawing.Size(171, 92);
             // 
             // downloadToolStripMenuItem
             // 
             this.downloadToolStripMenuItem.Name = "downloadToolStripMenuItem";
-            this.downloadToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.downloadToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.downloadToolStripMenuItem.Text = "Download";
             // 
             // startToolStripMenuItem
             // 
             this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.startToolStripMenuItem.Text = "Start";
             this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
             // 
@@ -217,6 +219,13 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "Version";
             // 
+            // öffneVerzeichnissToolStripMenuItem
+            // 
+            this.öffneVerzeichnissToolStripMenuItem.Name = "öffneVerzeichnissToolStripMenuItem";
+            this.öffneVerzeichnissToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.öffneVerzeichnissToolStripMenuItem.Text = "Öffne Verzeichniss";
+            this.öffneVerzeichnissToolStripMenuItem.Click += new System.EventHandler(this.öffneVerzeichnissToolStripMenuItem_Click);
+            // 
             // frm_main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -269,6 +278,7 @@
         private System.Windows.Forms.ContextMenuStrip PackListContext;
         private System.Windows.Forms.ToolStripMenuItem downloadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem öffneVerzeichnissToolStripMenuItem;
     }
 }
 

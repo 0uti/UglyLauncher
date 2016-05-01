@@ -10,10 +10,10 @@ using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
-using UglyLauncher;
+//using UglyLauncher;
 using UglyLauncher.Internet;
-using System.Reflection;
-using System.Globalization;
+//using System.Reflection;
+//using System.Globalization;
 
 namespace UglyLauncher.Minecraft
 {
@@ -32,9 +32,9 @@ namespace UglyLauncher.Minecraft
         private static MCPacksInstalled PacksInstalled = new MCPacksInstalled();
         public static string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         public static string sDataDir = appData + @"\.UglyLauncher";
-        public static string sLibraryDir = appData + @"\.UglyLauncher\libraries";
-        public static string sAssetsDir = appData + @"\.UglyLauncher\assets";
-        public static string sVersionDir = appData + @"\.UglyLauncher\versions";
+        public static string sLibraryDir = appData + @"\.minecraft\libraries";
+        public static string sAssetsDir = appData + @"\.minecraft\assets";
+        public static string sVersionDir = appData + @"\.minecraft\versions";
         public static string sPacksDir = appData + @"\.UglyLauncher\packs";
         public static string sNativesDir = appData + @"\.UglyLauncher\natives";
 
@@ -62,6 +62,12 @@ namespace UglyLauncher.Minecraft
             this.downloadfinished = true;
         }
 
+        // Open Pack folder
+        public void OpenPackFolder(string sSelectedPack)
+        {
+            if(Directory.Exists(sPacksDir + @"\" + sSelectedPack)) Process.Start(sPacksDir + @"\" + sSelectedPack);
+        }
+
         // Progress event from downloader
         private void DownloadProgressCallback(object sender, DownloadProgressChangedEventArgs e)
         {
@@ -71,8 +77,19 @@ namespace UglyLauncher.Minecraft
         // download file if needed
         private void DownloadFileTo(string sRemotePath, string sLocalPath,bool bShowBar = true,string sBarDisplayText = null)
         {
-            if (!File.Exists(sLocalPath))
+            Boolean _download = false;
+            if (!File.Exists(sLocalPath)) _download = true;
+            else
             {
+                FileInfo f = new FileInfo(sLocalPath);
+                if (f.Length == 0) _download = true;
+            }
+
+            if (_download)
+            {
+                // Create Directory, if needed
+                if (!Directory.Exists(sLocalPath.Substring(0, sLocalPath.LastIndexOf(@"\")))) Directory.CreateDirectory(sLocalPath.Substring(0, sLocalPath.LastIndexOf(@"\")));
+
                 if (bShowBar == true)
                 {
                     if (this.bar.Visible == false) this.bar.Show();
@@ -84,8 +101,6 @@ namespace UglyLauncher.Minecraft
                 Application.DoEvents();
                 while (this.downloadfinished == false)
                     Application.DoEvents();
-
-                
             }
         }
 
@@ -232,8 +247,8 @@ namespace UglyLauncher.Minecraft
                 s.Read(ret, 0, ret.Length);
                 result = System.Text.Encoding.UTF8.GetString(ret).Trim();
             }
-            //zf.Close();
-            //fs.Close();
+            zf.Close();
+            fs.Close();
 
             return result;
         }
@@ -262,7 +277,10 @@ namespace UglyLauncher.Minecraft
             // check if pack is installed with given version is installed
             if (!this.IsPackInstalled(sPackName, sPackVersion)) this.InstallPack(sPackName, sPackVersion);
             // getting pack version json file
-            MCGameStructure MCLocal = JsonHelper.JsonDeserializer<MCGameStructure>(File.ReadAllText(sPacksDir + @"\" + sPackName + @"\pack.json").Trim());
+            //MCGameStructure MCLocal = JsonHelper.JsonDeserializer<MCGameStructure>(File.ReadAllText(sPacksDir + @"\" + sPackName + @"\pack.json").Trim());
+            MCGameStructure MCLocal = new JavaScriptSerializer().Deserialize<MCGameStructure>(File.ReadAllText(sPacksDir + @"\" + sPackName + @"\pack.json").Trim());
+
+
             // download gameversion and json file if needed
             this.DownloadGameJar(MCLocal);
             // getting mojang version json file
@@ -434,7 +452,7 @@ namespace UglyLauncher.Minecraft
             MCUserAccountProfile Profile = U.GetActiveProfile(Acc);
 
             // Garbage Collector
-            if(C.UseGC == 1) args += " -XX:+UseParNewGC";
+            if (C.UseGC == 1) args += " -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:-UseAdaptiveSizePolicy";
             // fucking Mojang drivers Hack
             args += " -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump";
             // Java Memory
@@ -445,7 +463,7 @@ namespace UglyLauncher.Minecraft
             }
             else
             {
-                args += String.Format(" -Xms{0}m -Xmx{1}m -XX:PermSize={2}m -XX:MaxPermSize={2}m", C.MinimumMemory, C.MaximumMemory, C.PermGen);
+                args += String.Format(" -Xms{0}m -Xmx{1}m", C.MinimumMemory, C.MaximumMemory);
             }
             // Tweaks
             args += " -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true";
@@ -472,6 +490,8 @@ namespace UglyLauncher.Minecraft
             MCArgs = MCArgs.Replace("${auth_session}", String.Format("token:{0}:{1}",Acc.accessToken,Profile.id));
             MCArgs = MCArgs.Replace("${user_properties}", "{}");
             MCArgs = MCArgs.Replace("${user_type}", "Mojang");
+            MCArgs = MCArgs.Replace("${version_type}",MC.type);
+
             args += " " + MCArgs;
 
             return args;
@@ -488,8 +508,6 @@ namespace UglyLauncher.Minecraft
                 string DownLoadURL = this.sLibraryServer;
                 string LocalPath = sLibraryDir;
 
-                // Custom DownloadURL
-                if (Lib.url != null) DownLoadURL = Lib.url;
                 // Checking rules
                 if (Lib.rules != null)
                 {
@@ -506,34 +524,58 @@ namespace UglyLauncher.Minecraft
                     if (bWindows == false) continue;
                 }
 
-                string[] LibName = Lib.name.Split(':');
-                string[] LibOrg = LibName[0].Split('.');
-                string sFileName = null;
-
-                // create package directories
-                foreach (string LibOrgPart in LibOrg)
+                if (Lib.downloads != null && Lib.downloads.artifact != null)
                 {
-                    DownLoadURL += "/" + LibOrgPart;
-                    LocalPath += @"\" + LibOrgPart;
+                    // Natives ?
+                    if (Lib.natives != null)
+                    {
+                        MCGameStructureArtifact natives = Lib.downloads.classifiers.GetType().GetProperty(Lib.natives.windows.Replace("${arch}", sJavaArch).Replace("-", "")).GetValue(Lib.downloads.classifiers, null) as MCGameStructureArtifact;
+                        DownLoadURL = natives.url;
+                        LocalPath += @"\" + natives.path.Replace("/", @"\");
+                    }
+                    else
+                    {
+                        DownLoadURL = Lib.downloads.artifact.url;
+                        LocalPath += @"\" + Lib.downloads.artifact.path.Replace("/", @"\");
+                    }
                 }
+                else
+                {
+                    // Old Style 
+                    // must remain. forge use this
+                    string[] LibName = Lib.name.Split(':');
+                    string[] LibOrg = LibName[0].Split('.');
+                    string sFileName = null;
 
-                // create directory
-                DownLoadURL += "/" + LibName[1] + "/" + LibName[2];
-                LocalPath += @"\" + LibName[1] + @"\" + LibName[2];
-                if (!Directory.Exists(LocalPath)) Directory.CreateDirectory(LocalPath);
+                    // Custom DownloadURL
+                    if (Lib.url != null) DownLoadURL = Lib.url;
 
-                // filename
-                sFileName = LibName[1] + "-" + LibName[2];
-                if (Lib.natives != null) sFileName += "-" + Lib.natives.windows.Replace("${arch}", sJavaArch);
-                if (Lib.nameappend != null) sFileName += Lib.nameappend;
-                sFileName += ".jar";
+                    // create package directories
+                    foreach (string LibOrgPart in LibOrg)
+                    {
+                        DownLoadURL += "/" + LibOrgPart;
+                        LocalPath += @"\" + LibOrgPart;
+                    }
 
-                // build URL and pathes
-                DownLoadURL += "/" + sFileName;
-                LocalPath += @"\" + sFileName;
+                    // create directory
+                    DownLoadURL += "/" + LibName[1] + "/" + LibName[2];
+                    LocalPath += @"\" + LibName[1] + @"\" + LibName[2];
 
-                // use absolute Download URL
-                if (Lib.downloadurl != null) DownLoadURL = Lib.downloadurl;
+                    // filename
+                    sFileName = LibName[1] + "-" + LibName[2];
+
+                    // natives
+                    if (Lib.natives != null) sFileName += "-" + Lib.natives.windows.Replace("${arch}", sJavaArch);
+                    if (Lib.nameappend != null) sFileName += Lib.nameappend;
+                    sFileName += ".jar";
+
+                    // build URL and pathes
+                    DownLoadURL += "/" + sFileName;
+                    LocalPath += @"\" + sFileName;
+
+                    // use absolute Download URL
+                    if (Lib.downloadurl != null) DownLoadURL = Lib.downloadurl;
+                }
 
                 // download file if needed
                 DownloadFileTo(DownLoadURL, LocalPath);
@@ -634,6 +676,8 @@ namespace UglyLauncher.Minecraft
             if (this.IsPackInstalled(sPackName)) this.DeletePack(sPackName);
             // if recommended version, getting the version from available packs
             if (sPackVersion == "recommended") sPackVersion = GetRecommendedVersion(sPackName);
+            // delete old download
+            if(File.Exists(sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip")) File.Delete(sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip");
             // download pack
             this.DownloadFileTo(this.sPackServer + "/packs/" + sPackName + "/" + sPackName + "-" + sPackVersion + ".zip", sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip", true, "Downloading Pack " + sPackName);
             this.bar.Hide();
@@ -656,8 +700,6 @@ namespace UglyLauncher.Minecraft
             if (Directory.Exists(PackDir + @"\minecraft\config")) Directory.Delete(PackDir + @"\minecraft\config", true);
             if (Directory.Exists(PackDir + @"\minecraft\stats")) Directory.Delete(PackDir + @"\minecraft\stats", true);
             if (Directory.Exists(PackDir + @"\minecraft\crash-reports")) Directory.Delete(PackDir + @"\minecraft\crash-reports", true);
-            //if (Directory.Exists(PackDir + @"\minecraft\resourcepacks")) Directory.Delete(PackDir + @"\minecraft\resourcepacks", true);
-            //if (Directory.Exists(PackDir + @"\minecraft\CustomDISkins")) Directory.Delete(PackDir + @"\minecraft\CustomDISkins", true);
             // Deleting .log Files
             foreach (FileInfo f in new DirectoryInfo(PackDir + @"\minecraft").GetFiles("*.log"))
                 f.Delete();
@@ -808,8 +850,20 @@ namespace UglyLauncher.Minecraft
         [DataMember]
         public string mainClass { get; set; }
         [DataMember]
+        public MCGamestructureDownloads downloads;
+        [DataMember]
         public List<MCGameStructureLib> libraries = new List<MCGameStructureLib>();
     }
+
+    [DataContract]
+    public class MCGamestructureDownloads
+    {
+        [DataMember]
+        public MCGameStructureArtifact client;
+        [DataMember]
+        public MCGameStructureArtifact server;
+    }
+
 
     [DataContract]
     public class MCGameStructureLibExtract
@@ -848,6 +902,43 @@ namespace UglyLauncher.Minecraft
     }
 
     [DataContract]
+    public class MCGameStructureLibDownload
+    {
+        [DataMember]
+        public MCGameStructureLibDownloadClassifiers classifiers;
+        [DataMember]
+        public MCGameStructureArtifact artifact;
+    }
+
+    [DataContract]
+    public class MCGameStructureLibDownloadClassifiers
+    {
+        [DataMember(Name = "natives-linux")]
+        public MCGameStructureArtifact nativeslinux { get; set; }
+        [DataMember(Name = "natives-osx")]
+        public MCGameStructureArtifact nativesosx { get; set; }
+        [DataMember(Name = "natives-windows")]
+        public MCGameStructureArtifact nativeswindows { get; set; }
+        [DataMember(Name = "natives-windows-32")]
+        public MCGameStructureArtifact nativeswindows32 { get; set; }
+        [DataMember(Name = "natives-windows-64")]
+        public MCGameStructureArtifact nativeswindows64 { get; set; }
+    }
+
+    [DataContract]
+    public class MCGameStructureArtifact
+    {
+        [DataMember]
+        public string size { get; set; }
+        [DataMember]
+        public string sha1 { get; set; }
+        [DataMember]
+        public string path { get; set; }
+        [DataMember]
+        public string url { get; set; }
+    }
+
+    [DataContract]
     public class MCGameStructureLib
     {
         [DataMember]
@@ -866,6 +957,8 @@ namespace UglyLauncher.Minecraft
         public MCGameStructureLibNative natives;
         [DataMember]
         public MCGameStructureLibExtract extract;
+        [DataMember]
+        public MCGameStructureLibDownload downloads;
     }
 
     [DataContract]
