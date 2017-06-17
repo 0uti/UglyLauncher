@@ -1,13 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
-//using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
 
-//using UglyLauncher.Internet;
 using UglyLauncher.Minecraft;
-//using System.Diagnostics;
-//using System.Net;
 
 
 namespace UglyLauncher
@@ -16,6 +12,8 @@ namespace UglyLauncher
     {
         public delegate void startup();
         public frm_progressbar bar = new frm_progressbar();
+        public bool Offline = false;
+
 
         public frm_main()
         {
@@ -54,7 +52,7 @@ namespace UglyLauncher
             this.DoInit();
         }
 
-        private void DoInit()
+        private void DoInit(bool refreshUser = true)
         {
             BackgroundWorker worker = new BackgroundWorker();
 
@@ -63,7 +61,7 @@ namespace UglyLauncher
             worker.DoWork += new DoWorkEventHandler(worker_DoWork);
             worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
             this.bar.Show();
-            worker.RunWorkerAsync();
+            worker.RunWorkerAsync(refreshUser);
             while (worker.IsBusy)
                 Application.DoEvents();
             this.bar.Hide();
@@ -83,12 +81,16 @@ namespace UglyLauncher
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
+            bool refreshUser = (bool)e.Argument;   // the 'argument' parameter resurfaces here
+
+
             BackgroundWorker worker = sender as BackgroundWorker;
             
             // Check Environment
-            Launcher L = new Launcher();
+            Launcher L = new Launcher(Offline);
+            UserManager U = new UserManager();
             L.CheckDirectories();
-
+            /*
             // Update bootstrap
             try
             {
@@ -97,41 +99,56 @@ namespace UglyLauncher
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Update vom Launcher (Bootstrap) fehlgeschlagen\n" + ex.Message,"Fehler beim Update",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                //MessageBox.Show("Update vom Launcher (Bootstrap) fehlgeschlagen\n" + ex.Message,"Fehler beim Update",MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
+            */
             // Test User
             string MCPlayerName = null;
             string MCUID = null;
             worker.ReportProgress(25);
 
-            UserManager U = new UserManager();
-            if (U.GetDefault() != "none")
-            {
-                // Get Account
-                MCUserAccount Account = U.GetAccount(U.GetDefault());
 
-                // Validate Account
-                Authentication A = new Authentication();
-                try
+            if (refreshUser == true)
+            {
+                if (U.GetDefault() != "none")
                 {
-                    Account.accessToken = A.Refresh(Account.accessToken, Account.clientToken);
-                    U.SaveAccount(Account);
-                }
-                catch (MCInvalidTokenException)
-                {
-                    frm_RefreshToken fTokRefresh = new frm_RefreshToken(Account.username);
-                    DialogResult res = fTokRefresh.ShowDialog();
-                    if (res == DialogResult.Cancel) U.SetDefault("none");
-                }
-                catch (Exception ex)
-                {
-                    this.Invoke(new Action(() =>
+                    // Get Account
+                    MCUserAccount Account = U.GetAccount(U.GetDefault());
+
+                    // Validate Account
+                    Authentication A = new Authentication();
+                    try
                     {
-                        MessageBox.Show(this, ex.Message.ToString(), "Verbindungsfehler zu Mojang!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }));
-                    U.SetDefault("none");
+                        Account.accessToken = A.Refresh(Account.accessToken, Account.clientToken);
+                        U.SaveAccount(Account);
+                    }
+                    catch (MCInvalidTokenException)
+                    {
+                        frm_RefreshToken fTokRefresh = new frm_RefreshToken(Account.username);
+                        DialogResult res = fTokRefresh.ShowDialog();
+                        if (res == DialogResult.Cancel) U.SetDefault("none");
+                    }
+                    catch (Exception ex)
+                    {
+                        DialogResult res = DialogResult.No;
+                        this.Invoke(new Action(() =>
+                        {
+                            res = MessageBox.Show(this, "In Offlinemodus wechseln?", "Verbindungsfehler zu Mojang!", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                        }));
+
+                        if (res == DialogResult.Yes)
+                        {
+                            Offline = true;
+                            this.Invoke(new Action(() =>
+                            {
+                                mnu_accounts.Enabled = false;
+                            }));
+                        }
+                        else U.SetDefault("none");
+                    }
                 }
             }
+
             if (U.GetDefault() != "none")
             {
                 MCPlayerName = U.GetPlayerName(U.GetDefault());
@@ -150,19 +167,43 @@ namespace UglyLauncher
             // Get Packs from Server
             try
             {
-                L.LoadAvailablePacks(MCPlayerName, MCUID);
-                MCPacksAvailable Packs = L.GetAvailablePacks();
-                if (Packs.packs != null)
+                if (Offline == false)
                 {
-                    foreach (MCPacksAvailablePack Pack in Packs.packs)
+                    L.LoadAvailablePacks(MCPlayerName, MCUID);
+                    MCPacksAvailable Packs = L.GetAvailablePacks();
+                    if (Packs.packs != null)
                     {
-                        ListViewItem LvItem = new ListViewItem(Pack.name, Pack.name);
-                        LvItem.Font = new Font("Thaoma", 16, FontStyle.Bold);
-                        this.Invoke(new Action(() =>
+                        foreach (MCPacksAvailablePack Pack in Packs.packs)
                         {
-                            lst_packs_images.Images.Add(Pack.name, L.GetPackIcon(Pack));
-                            lst_packs.Items.Add(LvItem);
-                        }));
+                            ListViewItem LvItem = new ListViewItem(Pack.name, Pack.name);
+                            LvItem.Font = new Font("Thaoma", 16, FontStyle.Bold);
+                            this.Invoke(new Action(() =>
+                            {
+                                lst_packs_images.Images.Add(Pack.name, L.GetPackIcon(Pack));
+                                lst_packs.Items.Add(LvItem);
+                            }));
+                        }
+                    }
+                }
+                else
+                {
+                    L.LoadInstalledPacks();
+                    MCPacksInstalled Packs = L.GetInstalledPacks();
+                    if (Packs.packs != null)
+                    {
+                        foreach (MCPacksInstalledPack Pack in Packs.packs)
+                        {
+                            ListViewItem LvItem = new ListViewItem(Pack.name, Pack.name);
+                            LvItem.Font = new Font("Thaoma", 16, FontStyle.Bold);
+                            this.Invoke(new Action(() =>
+                            {
+                                if(L.GetPackIconOffline(Pack) != null)
+                                {
+                                    lst_packs_images.Images.Add(Pack.name, L.GetPackIconOffline(Pack));
+                                }
+                                lst_packs.Items.Add(LvItem);
+                            }));
+                        }
                     }
                 }
             }
@@ -187,24 +228,37 @@ namespace UglyLauncher
         {
             if (lst_packs.SelectedItems.Count == 1)
             {
-                Launcher L = new Launcher();
-                MCPacksAvailablePack APack = L.GetAvailablePack(lst_packs.SelectedItems[0].Text);
+                Launcher L = new Launcher(Offline);
                 // Clear dropdown
                 cmb_packversions.Items.Clear();
-                cmb_packversions.Items.Add("Recommended (" + APack.recommended_version + ")");
-                // Load Versions in Dropdown
-                foreach (string sPackVersion in APack.versions)
-                    cmb_packversions.Items.Add(sPackVersion);
-
-                // select version in combo depend on if pack is installed and version number
-                if (L.IsPackInstalled(APack.name) == true)
+                if (Offline == false)
                 {
-                    MCPacksInstalledPack IPack = L.GetInstalledPack(APack.name);
-                    if(IPack.selected_version == "recommended") cmb_packversions.SelectedIndex = 0;
-                    else cmb_packversions.SelectedIndex = cmb_packversions.FindStringExact(IPack.current_version);
+                    MCPacksAvailablePack APack = L.GetAvailablePack(lst_packs.SelectedItems[0].Text);
+                    
+                    
+                    cmb_packversions.Items.Add("Recommended (" + APack.recommended_version + ")");
+                    // Load Versions in Dropdown
+                    foreach (string sPackVersion in APack.versions)
+                        cmb_packversions.Items.Add(sPackVersion);
+
+                    // select version in combo depend on if pack is installed and version number
+                    if (L.IsPackInstalled(APack.name) == true)
+                    {
+                        MCPacksInstalledPack IPack = L.GetInstalledPack(APack.name);
+                        if (IPack.selected_version == "recommended") cmb_packversions.SelectedIndex = 0;
+                        else cmb_packversions.SelectedIndex = cmb_packversions.FindStringExact(IPack.current_version);
+                    }
+                    else cmb_packversions.SelectedIndex = 0;
+                    web_packdetails.Navigate(L.sPackServer + @"/packs/" + APack.name + @"/" + APack.name + @".html");
+                    downloadToolStripMenuItem.Enabled = true;
                 }
-                else cmb_packversions.SelectedIndex = 0;
-                web_packdetails.Navigate(L.sPackServer + @"/packs/" + APack.name + @"/" + APack.name + @".html");
+                else
+                {
+                    MCPacksInstalledPack IPack = L.GetInstalledPack(lst_packs.SelectedItems[0].Text);
+                    cmb_packversions.Items.Add(IPack.current_version);
+                    cmb_packversions.SelectedIndex = 0;
+                }
+                downloadToolStripMenuItem.Enabled = false;
                 btn_start.Enabled = true;
                 mnu_edit_Pack.Enabled = true;
                 cmb_packversions.Enabled = true;
@@ -218,6 +272,7 @@ namespace UglyLauncher
                 btn_start.Enabled = false;
                 mnu_edit_Pack.Enabled = false;
                 cmb_packversions.Enabled = false;
+                downloadToolStripMenuItem.Enabled = false;
             }
         }
 
@@ -245,7 +300,7 @@ namespace UglyLauncher
             string sSelectedVersion = null;
             if (cmb_packversions.SelectedIndex == 0) sSelectedVersion = "recommended";
             else sSelectedVersion = cmb_packversions.Text;
-            Launcher L = new Launcher();
+            Launcher L = new Launcher(Offline);
             // get event
             L.restoreWindow += new EventHandler<Launcher.FormWindowStateEventArgs>(L_restoreWindow);
             // disable Startbutton
@@ -275,7 +330,7 @@ namespace UglyLauncher
             string sSelectedVersion = null;
             if (cmb_packversions.SelectedIndex == 0) sSelectedVersion = "recommended";
             else sSelectedVersion = cmb_packversions.Text;
-            Launcher L = new Launcher();
+            Launcher L = new Launcher(Offline);
             // download minecraft
             L.StartPack(sSelectedPack, sSelectedVersion);
         }
@@ -327,7 +382,7 @@ namespace UglyLauncher
             string sSelectedVersion = null;
             if (cmb_packversions.SelectedIndex == 0) sSelectedVersion = "recommended";
             else sSelectedVersion = cmb_packversions.Text;
-            Launcher L = new Launcher();
+            Launcher L = new Launcher(Offline);
             if (L.IsPackInstalled(sSelectedPack, sSelectedVersion) == false)
             {
                 MessageBox.Show(this, "Dieses Pack ist nicht installiert oder liegt in einer anderen Version vor.\r\nBitte dieses Pack starten und danach bearbeiten.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -356,9 +411,14 @@ namespace UglyLauncher
         private void öffneVerzeichnissToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string sSelectedPack = lst_packs.SelectedItems[0].Text;
-            Launcher L = new Launcher();
+            Launcher L = new Launcher(Offline);
             L.OpenPackFolder(sSelectedPack);
 
+        }
+
+        private void mnu_refreshPacketList_Click(object sender, EventArgs e)
+        {
+            DoInit(false);
         }
     }
 }

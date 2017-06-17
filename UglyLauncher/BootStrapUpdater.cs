@@ -14,7 +14,7 @@ namespace UglyLauncher
     class BootStrapUpdater
     {
         private appinfo AppInfo = new appinfo();
-        private string sAppServer = "http://www.minestar.de/wiki/updates/";
+        private string sAppServer = "http://launcher.outi-networks.de/updates/";
         private string sRegPath = "Software\\Minestar\\UglyLauncher";
         private string sBootStrapVersion = null;
         private string sBootStrapPath = null;
@@ -24,7 +24,7 @@ namespace UglyLauncher
             try
             {
                 // Get XML
-                this.LoadXML(sAppServer + "bootstrap.xml");
+                LoadXML(sAppServer + "bootstrap.xml");
                 // Get Installed
                 this.GetBootStrapVersion();
                 // Compare

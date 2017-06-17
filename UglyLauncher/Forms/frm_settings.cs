@@ -46,8 +46,8 @@ namespace UglyLauncher
             }
 
 
-            if (C.UseGC == 1) this.chk_use_gc.Checked = false;
-            else this.chk_use_gc.Checked = true;
+            if (C.UseGC == 1) this.chk_use_gc.Checked = true;
+            else this.chk_use_gc.Checked = false;
 
             if (C.CloseLauncher == 1) this.chk_keep_launcher.Checked = false;
             else this.chk_keep_launcher.Checked = true;
@@ -89,7 +89,7 @@ namespace UglyLauncher
             if (this.comboBox1.SelectedItem.ToString() == "Automatisch") C.JavaVersion = "auto";
             else C.JavaVersion = this.comboBox1.SelectedItem.ToString();
 
-            if (this.chk_use_gc.Checked == false) C.UseGC = 1;
+            if (this.chk_use_gc.Checked == true) C.UseGC = 1;
             else C.UseGC = 0;
 
             this.Close();

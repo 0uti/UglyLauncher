@@ -191,7 +191,7 @@ namespace UglyLauncher
             this.java_max_mem.Location = new System.Drawing.Point(258, 111);
             this.java_max_mem.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.java_max_mem.Maximum = new decimal(new int[] {
-            8192,
+            16384,
             0,
             0,
             0});

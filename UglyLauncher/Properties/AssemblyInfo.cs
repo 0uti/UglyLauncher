@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die mit einer Assembly verknüpft sind.
 [assembly: AssemblyTitle("UglyLauncher")]
-[assembly: AssemblyDescription("Minestar related launcher for Minecraft")]
+[assembly: AssemblyDescription("Yet another Minecraft Launcher.")]
 [assembly: AssemblyConfiguration("Retail")]
-[assembly: AssemblyCompany("Minestar (FidelCastor)")]
+[assembly: AssemblyCompany("Outi-Networks (FidelCastor)")]
 [assembly: AssemblyProduct("UglyLauncher")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
-[assembly: AssemblyTrademark("Minestar")]
+[assembly: AssemblyCopyright("Copyright ©  2014-2016")]
+[assembly: AssemblyTrademark("Outi-Networks")]
 [assembly: AssemblyCulture("")]
 
 // Durch Festlegen von ComVisible auf "false" werden die Typen in dieser Assembly unsichtbar 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.46")]
-[assembly: AssemblyFileVersion("1.0.0.46")]
+[assembly: AssemblyVersion("1.0.1.52")]
+[assembly: AssemblyFileVersion("1.0.1.52")]

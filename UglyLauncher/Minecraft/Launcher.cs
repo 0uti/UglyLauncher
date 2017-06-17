@@ -39,22 +39,24 @@ namespace UglyLauncher.Minecraft
         public static string sNativesDir = appData + @"\.UglyLauncher\natives";
 
         // Strings
-        public string sPackServer = "http://www.minestar.de/wiki";
+        public string sPackServer = "http://uglylauncher.de";
         public string sVersionServer = "http://s3.amazonaws.com/Minecraft.Download/versions";
         public string sLibraryServer = "https://libraries.minecraft.net";
         public string sAssetsIndexServer = "https://s3.amazonaws.com/Minecraft.Download/indexes";
         public string sAssetsFileServer = "http://resources.download.minecraft.net";
 
         private bool downloadfinished = false;
+        private bool Offline = false;
 
         // Lists
         private List<string> lLibraries = new List<string>();           // Library list for startup
 
         // constructor
-        public Launcher()
+        public Launcher(bool OfflineMode)
         {
-            this.Downloader.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressCallback);
-            this.Downloader.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(Downloader_DownloadFileCompleted);
+            Downloader.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressCallback);
+            Downloader.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(Downloader_DownloadFileCompleted);
+            Offline = OfflineMode;
         }
 
         void Downloader_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
@@ -156,8 +158,32 @@ namespace UglyLauncher.Minecraft
         {
             MemoryStream ms = new MemoryStream();
             ms = Http.DownloadToStream(this.sPackServer + @"/packs/" + Pack.name + @"/" + Pack.name + @".png");
+
+            if(Directory.Exists(sPacksDir + @"\" + Pack.name))
+            {
+                FileStream file = new FileStream(sPacksDir + @"\" + Pack.name + @"\" + Pack.name + ".png", FileMode.Create, FileAccess.Write);
+                ms.WriteTo(file);
+            }
+
             return Image.FromStream(ms);
         }
+
+        // get pack icon
+        public Image GetPackIconOffline(MCPacksInstalledPack Pack)
+        {
+            if (!File.Exists(sPacksDir + @"\" + Pack.name + @"\" + Pack.name + ".png")) return null;
+
+            MemoryStream ms = new MemoryStream();
+
+            FileStream fileStream = File.OpenRead(sPacksDir + @"\" + Pack.name + @"\" + Pack.name + ".png");
+            ms.SetLength(fileStream.Length);
+            //read file to MemoryStream
+            fileStream.Read(ms.GetBuffer(), 0, (int)fileStream.Length);
+            
+            return Image.FromStream(ms);
+        }
+
+
 
         // Get installes packages
         public void LoadInstalledPacks()
@@ -255,8 +281,18 @@ namespace UglyLauncher.Minecraft
 
         public string GetRecommendedVersion(string sPackName)
         {
-            MCPacksAvailablePack Pack = this.GetAvailablePack(sPackName);
-            return Pack.recommended_version;
+            if (Offline == false)
+            {
+                MCPacksAvailablePack Pack = this.GetAvailablePack(sPackName);
+                return Pack.recommended_version;
+            }
+
+            else
+            {
+                MCPacksInstalledPack Pack = this.GetInstalledPack(sPackName);
+                return Pack.current_version;
+            }
+            
         }
 
         public void SetSelectedVersion(string sPackName, string sVersion)

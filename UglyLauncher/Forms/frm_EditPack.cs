@@ -14,7 +14,7 @@ namespace UglyLauncher
     public partial class frm_EditPack : Form
     {
         private string sPackName;
-        private Minecraft.Launcher L = new Minecraft.Launcher();
+        private Minecraft.Launcher L = new Minecraft.Launcher(false);
 
         public frm_EditPack(string sPackName)
         {
