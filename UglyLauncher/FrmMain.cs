@@ -5,7 +5,6 @@ using System.Drawing;
 using UglyLauncher.Minecraft;
 using UglyLauncher.AccountManager;
 using UglyLauncher.Settings;
-using System.Collections.Generic;
 using UglyLauncher.Minecraft.Json.AvailablePacks;
 
 namespace UglyLauncher
@@ -23,13 +22,13 @@ namespace UglyLauncher
         }
 
         // close the launcher
-        private void mnu_exit_program_Click(object sender, EventArgs e)
+        private void MnuExitProgram_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
         
         // show useraccounts
-        private void accountsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MnuAccounts_Click(object sender, EventArgs e)
         {
             new FrmUserAccounts().ShowDialog();
             DoInit();
@@ -39,18 +38,18 @@ namespace UglyLauncher
         private void FrmMain_Load(object sender, EventArgs e)
         {
             Text += " " + Application.ProductVersion;
-            cmb_packversions.Items.Clear();
-            cmb_packversions.Items.Add("Kein Pack gewählt");
-            cmb_packversions.SelectedIndex = 0;
+            CmbPackVersions.Items.Clear();
+            CmbPackVersions.Items.Add("Kein Pack gewählt");
+            CmbPackVersions.SelectedIndex = 0;
 
             //Versions test = new Versions();
             //List<string> test2 = test.GetVersions(true,true,true);
 
             //test.GetVersion("1.13.1");
 
-            btn_start.Enabled = false;
-            mnu_edit_Pack.Enabled = false;
-            cmb_packversions.Enabled = false;
+            BtnStart.Enabled = false;
+            MnuEditPack.Enabled = false;
+            CmbPackVersions.Enabled = false;
         }
 
         //form_shown event
@@ -139,7 +138,7 @@ namespace UglyLauncher
                             Offline = true;
                             Invoke(new Action(() =>
                             {
-                                mnu_accounts.Enabled = false;
+                                MnuAccounts.Enabled = false;
                             }));
                         }
                         else U.SetDefault(Guid.Empty);
@@ -156,8 +155,8 @@ namespace UglyLauncher
             // set statusbar
             Invoke(new Action(() =>
             {
-                lbl_default_account.Text = UserAccount;
-                lst_packs.Clear();
+                LblDefaultAccount.Text = UserAccount;
+                LstPacks.Clear();
                 lst_packs_images.Images.Clear();
             }));
 
@@ -181,7 +180,7 @@ namespace UglyLauncher
                             Invoke(new Action(() =>
                             {
                                 lst_packs_images.Images.Add(Pack.Name, L.GetPackIcon(Pack));
-                                lst_packs.Items.Add(LvItem);
+                                LstPacks.Items.Add(LvItem);
                             }));
                         }
                     }
@@ -204,7 +203,7 @@ namespace UglyLauncher
                                 {
                                     lst_packs_images.Images.Add(Pack.Name, L.GetPackIconOffline(Pack));
                                 }
-                                lst_packs.Items.Add(LvItem);
+                                LstPacks.Items.Add(LvItem);
                             }));
                         }
                     }
@@ -227,55 +226,55 @@ namespace UglyLauncher
             System.Threading.Thread.Sleep(500);
         }
 
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        private void LstPacks_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lst_packs.SelectedItems.Count == 1)
+            if (LstPacks.SelectedItems.Count == 1)
             {
                 Launcher L = new Launcher(Offline);
                 // Clear dropdown
-                cmb_packversions.Items.Clear();
+                CmbPackVersions.Items.Clear();
                 if (Offline == false)
                 {
-                    MCAvailablePack APack = L.GetAvailablePack(lst_packs.SelectedItems[0].Text);
+                    MCAvailablePack APack = L.GetAvailablePack(LstPacks.SelectedItems[0].Text);
                     
                     
-                    cmb_packversions.Items.Add("Recommended (" + APack.RecommendedVersion + ")");
+                    CmbPackVersions.Items.Add("Recommended (" + APack.RecommendedVersion + ")");
                     // Load Versions in Dropdown
                     foreach (string sPackVersion in APack.Versions)
-                        cmb_packversions.Items.Add(sPackVersion);
+                        CmbPackVersions.Items.Add(sPackVersion);
 
                     // select version in combo depend on if pack is installed and version number
                     if (L.IsPackInstalled(APack.Name) == true)
                     {
                         MCPacksInstalledPack IPack = L.GetInstalledPack(APack.Name);
-                        if (IPack.SelectedVersion == "recommended") cmb_packversions.SelectedIndex = 0;
-                        else cmb_packversions.SelectedIndex = cmb_packversions.FindStringExact(IPack.CurrentVersion);
+                        if (IPack.SelectedVersion == "recommended") CmbPackVersions.SelectedIndex = 0;
+                        else CmbPackVersions.SelectedIndex = CmbPackVersions.FindStringExact(IPack.CurrentVersion);
                     }
-                    else cmb_packversions.SelectedIndex = 0;
-                    web_packdetails.Navigate(L._sPackServer + @"/packs/" + APack.Name + @"/" + APack.Name + @".html");
-                    downloadToolStripMenuItem.Enabled = true;
+                    else CmbPackVersions.SelectedIndex = 0;
+                    WebPackDetails.Navigate(L._sPackServer + @"/packs/" + APack.Name + @"/" + APack.Name + @".html");
+                    MnuDownloadPack.Enabled = true;
                 }
                 else
                 {
-                    MCPacksInstalledPack IPack = L.GetInstalledPack(lst_packs.SelectedItems[0].Text);
-                    cmb_packversions.Items.Add(IPack.CurrentVersion);
-                    cmb_packversions.SelectedIndex = 0;
-                    downloadToolStripMenuItem.Enabled = false;
+                    MCPacksInstalledPack IPack = L.GetInstalledPack(LstPacks.SelectedItems[0].Text);
+                    CmbPackVersions.Items.Add(IPack.CurrentVersion);
+                    CmbPackVersions.SelectedIndex = 0;
+                    MnuDownloadPack.Enabled = false;
                 }
-                btn_start.Enabled = true;
-                mnu_edit_Pack.Enabled = true;
-                cmb_packversions.Enabled = true;
+                BtnStart.Enabled = true;
+                MnuEditPack.Enabled = true;
+                CmbPackVersions.Enabled = true;
             }
             else
             {
-                cmb_packversions.Items.Clear();
-                cmb_packversions.Items.Add("Kein Pack gewählt");
-                cmb_packversions.SelectedIndex = 0;
-                web_packdetails.Navigate("about:blank");
-                btn_start.Enabled = false;
-                mnu_edit_Pack.Enabled = false;
-                cmb_packversions.Enabled = false;
-                downloadToolStripMenuItem.Enabled = false;
+                CmbPackVersions.Items.Clear();
+                CmbPackVersions.Items.Add("Kein Pack gewählt");
+                CmbPackVersions.SelectedIndex = 0;
+                WebPackDetails.Navigate("about:blank");
+                BtnStart.Enabled = false;
+                MnuEditPack.Enabled = false;
+                CmbPackVersions.Enabled = false;
+                MnuDownloadPack.Enabled = false;
             }
         }
 
@@ -286,29 +285,29 @@ namespace UglyLauncher
 
         private void Startpack()
         {
-            if (lbl_default_account.Text == "none")
+            if (LblDefaultAccount.Text == "none")
             {
                 MessageBox.Show(this, "Nicht eingeloggt.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (lst_packs.SelectedItems.Count != 1)
+            if (LstPacks.SelectedItems.Count != 1)
             {
                 MessageBox.Show(this, "Kein Pack gewählt.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             
             // gather vars from Gui
-            string sSelectedPack = lst_packs.SelectedItems[0].Text;
+            string sSelectedPack = LstPacks.SelectedItems[0].Text;
             string sSelectedVersion = null;
-            if (cmb_packversions.SelectedIndex == 0) sSelectedVersion = "recommended";
-            else sSelectedVersion = cmb_packversions.Text;
+            if (CmbPackVersions.SelectedIndex == 0) sSelectedVersion = "recommended";
+            else sSelectedVersion = CmbPackVersions.Text;
             Launcher L = new Launcher(Offline);
             // get event
             L.RestoreWindow += new EventHandler<Launcher.FormWindowStateEventArgs>(L_restoreWindow);
             // disable Startbutton
-            btn_start.Enabled = false;
-            lst_packs.Enabled = false;
+            BtnStart.Enabled = false;
+            LstPacks.Enabled = false;
             // start minecraft
             L.StartPack(sSelectedPack, sSelectedVersion);
         }
@@ -316,23 +315,23 @@ namespace UglyLauncher
 
         private void Downloadpack()
         {
-            if (lbl_default_account.Text == "none")
+            if (LblDefaultAccount.Text == "none")
             {
                 MessageBox.Show(this, "Nicht eingeloggt.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (lst_packs.SelectedItems.Count != 1)
+            if (LstPacks.SelectedItems.Count != 1)
             {
                 MessageBox.Show(this, "Kein Pack gewählt.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             // gather vars from Gui
-            string sSelectedPack = lst_packs.SelectedItems[0].Text;
+            string sSelectedPack = LstPacks.SelectedItems[0].Text;
             string sSelectedVersion = null;
-            if (cmb_packversions.SelectedIndex == 0) sSelectedVersion = "recommended";
-            else sSelectedVersion = cmb_packversions.Text;
+            if (CmbPackVersions.SelectedIndex == 0) sSelectedVersion = "recommended";
+            else sSelectedVersion = CmbPackVersions.Text;
             Launcher L = new Launcher(Offline);
             // download minecraft
             L.StartPack(sSelectedPack, sSelectedVersion);
@@ -356,35 +355,35 @@ namespace UglyLauncher
                     WindowState = e.WindowState;
                     if (e.WindowState == FormWindowState.Minimized) ShowInTaskbar = false;
                     else ShowInTaskbar = true;
-                    btn_start.Enabled = true;
-                    lst_packs.Enabled = true;
+                    BtnStart.Enabled = true;
+                    LstPacks.Enabled = true;
                 }
             ));
         }
 
-        private void einstellungenToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MnuSettings_Click(object sender, EventArgs e)
         {
             new Settings.Settings().ShowDialog();
         }
 
-        private void infoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MnuInfo_Click(object sender, EventArgs e)
         {
             new FrmAbout().ShowDialog();
         }
 
-        private void packBearbeitenToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MnuEditPack_Click(object sender, EventArgs e)
         {
-            if (lst_packs.SelectedItems.Count != 1)
+            if (LstPacks.SelectedItems.Count != 1)
             {
                 MessageBox.Show(this, "Kein Pack gewählt.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             // gather vars from Gui
-            string sSelectedPack = lst_packs.SelectedItems[0].Text;
+            string sSelectedPack = LstPacks.SelectedItems[0].Text;
             string sSelectedVersion = null;
-            if (cmb_packversions.SelectedIndex == 0) sSelectedVersion = "recommended";
-            else sSelectedVersion = cmb_packversions.Text;
+            if (CmbPackVersions.SelectedIndex == 0) sSelectedVersion = "recommended";
+            else sSelectedVersion = CmbPackVersions.Text;
             Launcher L = new Launcher(Offline);
             if (L.IsPackInstalled(sSelectedPack, sSelectedVersion) == false)
             {
@@ -395,33 +394,38 @@ namespace UglyLauncher
             new FrmEditPack(sSelectedPack).ShowDialog();
         }
 
-        private void lst_packs_MouseDown(object sender, MouseEventArgs e)
+        private void LstPacks_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button != System.Windows.Forms.MouseButtons.Left) return;
             if (e.Clicks == 2) Startpack();
         }
 
-        private void btn_start_Click(object sender, EventArgs e)
+        private void BtnStart_Click(object sender, EventArgs e)
         {
             Startpack();
         }
 
-        private void startToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MnuStartPack_Click(object sender, EventArgs e)
         {
             Startpack();
         }
 
-        private void öffneVerzeichnissToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MnuOpenPackFolder_Click(object sender, EventArgs e)
         {
-            string sSelectedPack = lst_packs.SelectedItems[0].Text;
+            string sSelectedPack = LstPacks.SelectedItems[0].Text;
             Launcher L = new Launcher(Offline);
             L.OpenPackFolder(sSelectedPack);
 
         }
 
-        private void mnu_refreshPacketList_Click(object sender, EventArgs e)
+        private void MnuRefreshPacketList_Click(object sender, EventArgs e)
         {
             DoInit(false);
+        }
+
+        private void MnuDownloadPack_Click(object sender, EventArgs e)
+        {
+            // ToDo: Download Pack
         }
     }
 }

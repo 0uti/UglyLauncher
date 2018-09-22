@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Net;
 
 using UglyLauncher.Minecraft;
 using UglyLauncher.Minecraft.Json.MCAuthenticateResponse;
@@ -22,18 +15,18 @@ namespace UglyLauncher.AccountManager
         {
             InitializeComponent();
             oUser = user;
-            txt_user.Text = user.username;
-            txt_user.Enabled = false;
+            TxtUser.Text = user.username;
+            TxtUser.Enabled = false;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void BtnCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void BtnConfirm_Click(object sender, EventArgs e)
         {
-            if (txt_user.Text == "" || txt_pass.Text == "")
+            if (TxtUser.Text == "" || TxtPass.Text == "")
             {
                 MessageBox.Show(this, "Eines der Felder ist leer.", "Fehlerhafte Eingabe!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -44,13 +37,13 @@ namespace UglyLauncher.AccountManager
                 MCAuthenticateResponse AuthData = new MCAuthenticateResponse();
                 try
                 {
-                    AuthData = Auth.Authenticate(txt_user.Text.ToString().Trim(), txt_pass.Text.ToString().Trim());
+                    AuthData = Auth.Authenticate(TxtUser.Text.ToString().Trim(), TxtPass.Text.ToString().Trim());
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(this, ex.Message.ToString(),"Fehlermeldung von Minecraft.net",MessageBoxButtons.OK,MessageBoxIcon.Error);
-                    txt_pass.Focus();
-                    txt_pass.SelectAll();
+                    TxtPass.Focus();
+                    TxtPass.SelectAll();
                     return;
                 }
 
@@ -65,10 +58,10 @@ namespace UglyLauncher.AccountManager
             }
         }
 
-        private void txt_pass_KeyDown(object sender, KeyEventArgs e)
+        private void TxtPass_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
-                button2_Click(sender,e);
+                BtnConfirm_Click(sender,e);
         }
     }
 }

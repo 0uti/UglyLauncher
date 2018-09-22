@@ -15,12 +15,12 @@ namespace UglyLauncher
         {
             try
             {
-                txt_console.BeginInvoke(
+                TxtConsole.BeginInvoke(
                     new Action(() =>
                     {
-                        txt_console.SelectionColor = color;
-                        txt_console.AppendText(line + "\n");
-                        txt_console.ScrollToCaret();
+                        TxtConsole.SelectionColor = color;
+                        TxtConsole.AppendText(line + "\n");
+                        TxtConsole.ScrollToCaret();
                     }
                 ));
             }
@@ -32,19 +32,19 @@ namespace UglyLauncher
 
         public void Clear()
         {
-            txt_console.Clear();
+            TxtConsole.Clear();
         }
 
-        private void btn_close_Click(object sender, EventArgs e)
+        private void BtnClose_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void txt_console_TextChanged(object sender, EventArgs e)
+        private void TxtConsole_TextChanged(object sender, EventArgs e)
         {
-            if (txt_console.Lines.Length > 500)
+            if (TxtConsole.Lines.Length > 500)
             {
-                
+                // ToDo: delete old lines
             }
         }
     }

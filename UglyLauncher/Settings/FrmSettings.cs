@@ -18,91 +18,91 @@ namespace UglyLauncher.Settings
             InitializeComponent();
         }
 
-        private void btn_cancel_click(object sender, EventArgs e)
+        private void BtnCancel_click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void frm_settings_Load(object sender, EventArgs e)
+        private void FrmSettings_Load(object sender, EventArgs e)
         {
-            java_min_mem.Value = C.MinimumMemory;
-            java_max_mem.Minimum = C.MinimumMemory;
+            NumJavaMinMemory.Value = C.MinimumMemory;
+            NumJavaMaxMemory.Minimum = C.MinimumMemory;
 
-            java_max_mem.Value = C.MaximumMemory;
-            java_min_mem.Maximum = C.MaximumMemory;
+            NumJavaMaxMemory.Value = C.MaximumMemory;
+            NumJavaMinMemory.Maximum = C.MaximumMemory;
 
-            if (C.KeepConsole == 1) chk_keep_console.Checked = true;
-            else chk_keep_console.Checked = false;
+            if (C.KeepConsole == 1) ChkKeepConsole.Checked = true;
+            else ChkKeepConsole.Checked = false;
           
             if (C.ShowConsole == 1)
             {
-                chk_console.Checked = true;
-                chk_keep_console.Enabled = true;
+                ChkShowConsole.Checked = true;
+                ChkKeepConsole.Enabled = true;
             }
             else
             {
-                chk_console.Checked = false;
-                chk_keep_console.Enabled = false;
+                ChkShowConsole.Checked = false;
+                ChkKeepConsole.Enabled = false;
             }
 
 
-            if (C.UseGC == 1) chk_use_gc.Checked = true;
-            else chk_use_gc.Checked = false;
+            if (C.UseGC == 1) ChkUseGC.Checked = true;
+            else ChkUseGC.Checked = false;
 
-            if (C.CloseLauncher == 1) chk_keep_launcher.Checked = false;
-            else chk_keep_launcher.Checked = true;
+            if (C.CloseLauncher == 1) ChkKeepLauncher.Checked = false;
+            else ChkKeepLauncher.Checked = true;
 
 
-            comboBox1.Items.Clear();
-            comboBox1.Items.Add("Automatisch");
+            CmbJavaVersion.Items.Clear();
+            CmbJavaVersion.Items.Add("Automatisch");
 
             List<String> lVersions = C.GetJavaVersions();
             foreach (string version in lVersions)
             {
-                comboBox1.Items.Add(version);
+                CmbJavaVersion.Items.Add(version);
             }
             if (C.JavaVersion == "auto")
             {
-                comboBox1.SelectedIndex = comboBox1.FindStringExact("Automatisch");
+                CmbJavaVersion.SelectedIndex = CmbJavaVersion.FindStringExact("Automatisch");
             }
             else
             {
-                comboBox1.SelectedIndex = comboBox1.FindStringExact(C.JavaVersion);
+                CmbJavaVersion.SelectedIndex = CmbJavaVersion.FindStringExact(C.JavaVersion);
             }
         }
 
-        private void btn_save_click(object sender, EventArgs e)
+        private void BtnSave_click(object sender, EventArgs e)
         {
-            C.MinimumMemory = (int)java_min_mem.Value;
+            C.MinimumMemory = (int)NumJavaMinMemory.Value;
 
-            C.MaximumMemory = (int)java_max_mem.Value;
+            C.MaximumMemory = (int)NumJavaMaxMemory.Value;
 
-            if (chk_console.Checked == true) C.ShowConsole = 1;
+            if (ChkShowConsole.Checked == true) C.ShowConsole = 1;
             else C.ShowConsole = 0;
 
-            if (chk_keep_console.Checked == true) C.KeepConsole = 1;
+            if (ChkKeepConsole.Checked == true) C.KeepConsole = 1;
             else C.KeepConsole = 0;
 
-            if (chk_keep_launcher.Checked == false) C.CloseLauncher = 1;
+            if (ChkKeepLauncher.Checked == false) C.CloseLauncher = 1;
             else C.CloseLauncher = 0;
 
-            if (comboBox1.SelectedItem.ToString() == "Automatisch") C.JavaVersion = "auto";
-            else C.JavaVersion = comboBox1.SelectedItem.ToString();
+            if (CmbJavaVersion.SelectedItem.ToString() == "Automatisch") C.JavaVersion = "auto";
+            else C.JavaVersion = CmbJavaVersion.SelectedItem.ToString();
 
-            if (chk_use_gc.Checked == true) C.UseGC = 1;
+            if (ChkUseGC.Checked == true) C.UseGC = 1;
             else C.UseGC = 0;
 
             Close();
         }
 
-        private void java_min_mem_ValueChanged(object sender, EventArgs e)
+        private void NumJavaMinMemory_ValueChanged(object sender, EventArgs e)
         {
-            java_max_mem.Minimum = java_min_mem.Value;
+            NumJavaMaxMemory.Minimum = NumJavaMinMemory.Value;
         }
 
-        private void chk_console_CheckedChanged(object sender, EventArgs e)
+        private void ChkShowConsole_CheckedChanged(object sender, EventArgs e)
         {
-            chk_keep_console.Enabled = chk_console.Checked;
+            ChkKeepConsole.Enabled = ChkShowConsole.Checked;
         }
     }
 }

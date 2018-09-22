@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 
@@ -31,8 +26,8 @@ namespace UglyLauncher
         {
             // InitializeComponent();
 
-            MouseMove += listBox_MouseMove;
-            MouseLeave += listBox_MouseLeave;
+            MouseMove += ListBox_MouseMove;
+            MouseLeave += ListBox_MouseLeave;
 
             _currentItemSet = false;
             _toolTipDisplayed = false;
@@ -44,7 +39,7 @@ namespace UglyLauncher
             _toolTipDisplayTimer.Tick += _toolTipDisplayTimer_Tick;
         }
 
-        private void listBox_MouseMove(object sender, MouseEventArgs e)
+        private void ListBox_MouseMove(object sender, MouseEventArgs e)
         {
             // Get the item that the mouse is currently over
             Point cursorPoint = Cursor.Position;
@@ -78,7 +73,7 @@ namespace UglyLauncher
         }
 
 
-        private void listBox_MouseLeave(object sender, EventArgs e)
+        private void ListBox_MouseLeave(object sender, EventArgs e)
         {
             // Mouse has left listbox so stop timer (tooltip is automatically hidden)
             _currentItemSet = false;
@@ -92,8 +87,7 @@ namespace UglyLauncher
             if (!_toolTipDisplayed && _currentItem != ListBox.NoMatches &&
                         _currentItem < Items.Count)
             {
-                IToolTipDisplayer toolTipDisplayer = Items[_currentItem] as IToolTipDisplayer;
-                if (toolTipDisplayer != null)
+                if (Items[_currentItem] is IToolTipDisplayer toolTipDisplayer)
                 {
                     _toolTip.SetToolTip(this, toolTipDisplayer.GetToolTipText());
                     _toolTipDisplayed = true;

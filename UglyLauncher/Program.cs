@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 
-
-
 namespace UglyLauncher
 {
     static class Program

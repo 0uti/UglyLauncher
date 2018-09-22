@@ -31,22 +31,23 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmEditPack));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.btn_enable_selected = new System.Windows.Forms.Button();
-            this.btn_enable_all = new System.Windows.Forms.Button();
-            this.btn_disable_all = new System.Windows.Forms.Button();
-            this.btn_disable_selected = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
-            this.lst_availble = new UglyLauncher.ToolTipListBox();
-            this.lst_enabled = new UglyLauncher.ToolTipListBox();
+            this.BtnEnableSelected = new System.Windows.Forms.Button();
+            this.BtnEnableAll = new System.Windows.Forms.Button();
+            this.BtnDisableAll = new System.Windows.Forms.Button();
+            this.BtnDisableSelected = new System.Windows.Forms.Button();
+            this.BtnClose = new System.Windows.Forms.Button();
+            this.LstAvailbleMods = new UglyLauncher.ToolTipListBox();
+            this.LstEnabledMods = new UglyLauncher.ToolTipListBox();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(105, 9);
+            this.label1.Location = new System.Drawing.Point(158, 14);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(143, 20);
+            this.label1.Size = new System.Drawing.Size(209, 29);
             this.label1.TabIndex = 1;
             this.label1.Text = "verfügbare Mods";
             // 
@@ -54,103 +55,114 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(533, 9);
+            this.label2.Location = new System.Drawing.Point(800, 14);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(132, 20);
+            this.label2.Size = new System.Drawing.Size(192, 29);
             this.label2.TabIndex = 3;
             this.label2.Text = "Aktivierte Mods";
             // 
-            // btn_enable_selected
+            // BtnEnableSelected
             // 
-            this.btn_enable_selected.Location = new System.Drawing.Point(351, 117);
-            this.btn_enable_selected.Name = "btn_enable_selected";
-            this.btn_enable_selected.Size = new System.Drawing.Size(75, 23);
-            this.btn_enable_selected.TabIndex = 4;
-            this.btn_enable_selected.Text = ">";
-            this.btn_enable_selected.UseVisualStyleBackColor = true;
-            this.btn_enable_selected.Click += new System.EventHandler(this.btn_enable_selected_Click);
+            this.BtnEnableSelected.Location = new System.Drawing.Point(526, 180);
+            this.BtnEnableSelected.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.BtnEnableSelected.Name = "BtnEnableSelected";
+            this.BtnEnableSelected.Size = new System.Drawing.Size(112, 35);
+            this.BtnEnableSelected.TabIndex = 4;
+            this.BtnEnableSelected.Text = ">";
+            this.BtnEnableSelected.UseVisualStyleBackColor = true;
+            this.BtnEnableSelected.Click += new System.EventHandler(this.BtnEnableSelected_Click);
             // 
-            // btn_enable_all
+            // BtnEnableAll
             // 
-            this.btn_enable_all.Enabled = false;
-            this.btn_enable_all.Location = new System.Drawing.Point(351, 146);
-            this.btn_enable_all.Name = "btn_enable_all";
-            this.btn_enable_all.Size = new System.Drawing.Size(75, 23);
-            this.btn_enable_all.TabIndex = 5;
-            this.btn_enable_all.Text = ">>";
-            this.btn_enable_all.UseVisualStyleBackColor = true;
-            this.btn_enable_all.Click += new System.EventHandler(this.btn_enable_all_Click);
+            this.BtnEnableAll.Enabled = false;
+            this.BtnEnableAll.Location = new System.Drawing.Point(526, 225);
+            this.BtnEnableAll.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.BtnEnableAll.Name = "BtnEnableAll";
+            this.BtnEnableAll.Size = new System.Drawing.Size(112, 35);
+            this.BtnEnableAll.TabIndex = 5;
+            this.BtnEnableAll.Text = ">>";
+            this.BtnEnableAll.UseVisualStyleBackColor = true;
+            this.BtnEnableAll.Click += new System.EventHandler(this.BtnEnableAll_Click);
             // 
-            // btn_disable_all
+            // BtnDisableAll
             // 
-            this.btn_disable_all.Enabled = false;
-            this.btn_disable_all.Location = new System.Drawing.Point(351, 197);
-            this.btn_disable_all.Name = "btn_disable_all";
-            this.btn_disable_all.Size = new System.Drawing.Size(75, 23);
-            this.btn_disable_all.TabIndex = 6;
-            this.btn_disable_all.Text = "<<";
-            this.btn_disable_all.UseVisualStyleBackColor = true;
-            this.btn_disable_all.Click += new System.EventHandler(this.btn_disable_all_Click);
+            this.BtnDisableAll.Enabled = false;
+            this.BtnDisableAll.Location = new System.Drawing.Point(526, 303);
+            this.BtnDisableAll.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.BtnDisableAll.Name = "BtnDisableAll";
+            this.BtnDisableAll.Size = new System.Drawing.Size(112, 35);
+            this.BtnDisableAll.TabIndex = 6;
+            this.BtnDisableAll.Text = "<<";
+            this.BtnDisableAll.UseVisualStyleBackColor = true;
+            this.BtnDisableAll.Click += new System.EventHandler(this.BtnDisableAll_Click);
             // 
-            // btn_disable_selected
+            // BtnDisableSelected
             // 
-            this.btn_disable_selected.Location = new System.Drawing.Point(351, 226);
-            this.btn_disable_selected.Name = "btn_disable_selected";
-            this.btn_disable_selected.Size = new System.Drawing.Size(75, 23);
-            this.btn_disable_selected.TabIndex = 7;
-            this.btn_disable_selected.Text = "<";
-            this.btn_disable_selected.UseVisualStyleBackColor = true;
-            this.btn_disable_selected.Click += new System.EventHandler(this.btn_disable_selected_Click);
+            this.BtnDisableSelected.Location = new System.Drawing.Point(526, 348);
+            this.BtnDisableSelected.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.BtnDisableSelected.Name = "BtnDisableSelected";
+            this.BtnDisableSelected.Size = new System.Drawing.Size(112, 35);
+            this.BtnDisableSelected.TabIndex = 7;
+            this.BtnDisableSelected.Text = "<";
+            this.BtnDisableSelected.UseVisualStyleBackColor = true;
+            this.BtnDisableSelected.Click += new System.EventHandler(this.BtnDisableSelected_Click);
             // 
-            // button6
+            // BtnClose
             // 
-            this.button6.Location = new System.Drawing.Point(351, 351);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 23);
-            this.button6.TabIndex = 10;
-            this.button6.Text = "Schließen";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.BtnClose.Location = new System.Drawing.Point(526, 540);
+            this.BtnClose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.BtnClose.Name = "BtnClose";
+            this.BtnClose.Size = new System.Drawing.Size(112, 35);
+            this.BtnClose.TabIndex = 10;
+            this.BtnClose.Text = "Schließen";
+            this.BtnClose.UseVisualStyleBackColor = true;
+            this.BtnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
-            // lst_availble
+            // LstAvailbleMods
             // 
-            this.lst_availble.DisplayMember = "DisplayText";
-            this.lst_availble.FormattingEnabled = true;
-            this.lst_availble.Location = new System.Drawing.Point(12, 32);
-            this.lst_availble.Name = "lst_availble";
-            this.lst_availble.Size = new System.Drawing.Size(333, 342);
-            this.lst_availble.TabIndex = 11;
+            this.LstAvailbleMods.DisplayMember = "DisplayText";
+            this.LstAvailbleMods.FormattingEnabled = true;
+            this.LstAvailbleMods.ItemHeight = 20;
+            this.LstAvailbleMods.Location = new System.Drawing.Point(18, 49);
+            this.LstAvailbleMods.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.LstAvailbleMods.Name = "LstAvailbleMods";
+            this.LstAvailbleMods.Size = new System.Drawing.Size(498, 524);
+            this.LstAvailbleMods.TabIndex = 11;
             // 
-            // lst_enabled
+            // LstEnabledMods
             // 
-            this.lst_enabled.DisplayMember = "DisplayText";
-            this.lst_enabled.FormattingEnabled = true;
-            this.lst_enabled.Location = new System.Drawing.Point(432, 32);
-            this.lst_enabled.Name = "lst_enabled";
-            this.lst_enabled.Size = new System.Drawing.Size(333, 342);
-            this.lst_enabled.TabIndex = 8;
+            this.LstEnabledMods.DisplayMember = "DisplayText";
+            this.LstEnabledMods.FormattingEnabled = true;
+            this.LstEnabledMods.ItemHeight = 20;
+            this.LstEnabledMods.Location = new System.Drawing.Point(648, 49);
+            this.LstEnabledMods.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.LstEnabledMods.Name = "LstEnabledMods";
+            this.LstEnabledMods.Size = new System.Drawing.Size(498, 524);
+            this.LstEnabledMods.TabIndex = 8;
             // 
-            // frm_EditPack
+            // FrmEditPack
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(778, 383);
-            this.Controls.Add(this.lst_availble);
-            this.Controls.Add(this.button6);
-            this.Controls.Add(this.lst_enabled);
-            this.Controls.Add(this.btn_disable_selected);
-            this.Controls.Add(this.btn_disable_all);
-            this.Controls.Add(this.btn_enable_all);
-            this.Controls.Add(this.btn_enable_selected);
+            this.ClientSize = new System.Drawing.Size(1167, 589);
+            this.Controls.Add(this.LstAvailbleMods);
+            this.Controls.Add(this.BtnClose);
+            this.Controls.Add(this.LstEnabledMods);
+            this.Controls.Add(this.BtnDisableSelected);
+            this.Controls.Add(this.BtnDisableAll);
+            this.Controls.Add(this.BtnEnableAll);
+            this.Controls.Add(this.BtnEnableSelected);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frm_EditPack";
+            this.Name = "FrmEditPack";
             this.Text = "Pack bearbeiten";
-            this.Shown += new System.EventHandler(this.frm_EditPack_Shown);
+            this.Shown += new System.EventHandler(this.FrmEditPack_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -160,12 +172,12 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btn_enable_selected;
-        private System.Windows.Forms.Button btn_enable_all;
-        private System.Windows.Forms.Button btn_disable_all;
-        private System.Windows.Forms.Button btn_disable_selected;
-        private ToolTipListBox lst_enabled;
-        private System.Windows.Forms.Button button6;
-        private ToolTipListBox lst_availble;
+        private System.Windows.Forms.Button BtnEnableSelected;
+        private System.Windows.Forms.Button BtnEnableAll;
+        private System.Windows.Forms.Button BtnDisableAll;
+        private System.Windows.Forms.Button BtnDisableSelected;
+        private ToolTipListBox LstEnabledMods;
+        private System.Windows.Forms.Button BtnClose;
+        private ToolTipListBox LstAvailbleMods;
     }
 }

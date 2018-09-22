@@ -89,8 +89,6 @@ namespace UglyLauncher.Minecraft
             }
         }
 
-
-
         // download file if needed
         private void DownloadFileTo(McVersionJsonDownload mcdownload, bool bShowBar = true, string sBarDisplayText = null)
         {
@@ -133,8 +131,6 @@ namespace UglyLauncher.Minecraft
             }
         }
 
-
-
         // Check Directories
         public void CheckDirectories()
         {
@@ -155,7 +151,7 @@ namespace UglyLauncher.Minecraft
             try
             {
                 string sPackListJson = Http.GET(_sPackServer + @"/packs.php?player=" + sPlayerName + @"&uid=" + sMCUID);
-                PacksAvailable = Json.AvailablePacks.MCAvailablePacks.FromJson(sPackListJson);
+                PacksAvailable = MCAvailablePacks.FromJson(sPackListJson);
             }
             catch (WebException ex)
             {
@@ -166,10 +162,7 @@ namespace UglyLauncher.Minecraft
                 throw ex;
             }
         }
-
-
-
-
+        
         // Get packe liste
         public MCAvailablePacks GetAvailablePacks()
         {
@@ -185,10 +178,8 @@ namespace UglyLauncher.Minecraft
                     return Pack;
                 }
             }
-
             return null;
         }
-
 
         // get pack icon
         public Image GetPackIcon(MCAvailablePack Pack)
@@ -219,10 +210,6 @@ namespace UglyLauncher.Minecraft
             
             return Image.FromStream(ms);
         }
-
-
-
-
 
         // Get installes packages
         public void LoadInstalledPacks()
@@ -260,7 +247,6 @@ namespace UglyLauncher.Minecraft
             return null;
         }
 
-
         // Check if Pack is Installed (and the right version)
         public bool IsPackInstalled(string sPackName, string sPackVersion = null)
         {
@@ -278,7 +264,6 @@ namespace UglyLauncher.Minecraft
             // Pack is fine :)
             return true;
         }
-
 
         // Get ModFolderContents
         public List<string> GetModFolderContents(string sPackname, IEnumerable<string> sFileExtensions)
@@ -350,10 +335,6 @@ namespace UglyLauncher.Minecraft
             return Pack.CurrentVersion;
         }
 
-
-
-
-
         public void StartPack(string sPackName, string sPackVersion)
         {
             // check if pack is installed with given version is installed
@@ -404,31 +385,7 @@ namespace UglyLauncher.Minecraft
             
             */
         }
-        /*
-        public void DownloadPack(string sPackName, string sPackVersion)
-        {
-            
-            // check if pack is installed with given version is installed
-            if (!IsPackInstalled(sPackName, sPackVersion)) InstallPack(sPackName, sPackVersion);
-            // getting pack version json file
-            MCGameStructure MCLocal = JsonHelper.JsonDeserializer<MCGameStructure>(File.ReadAllText(sPacksDir + @"\" + sPackName + @"\pack.json").Trim());
-            // download gameversion and json file if needed
-            DownloadGameJar(MCLocal);
-            // getting mojang version json file
-            MCGameStructure MCMojang = JsonHelper.JsonDeserializer<MCGameStructure>(File.ReadAllText(sVersionDir + @"\" + MCLocal.id + @"\" + MCLocal.id + ".json").Trim());
-            // fix assets
-            if (MCMojang.assets == null) MCMojang.assets = "legacy";
-            // merging both json objects
-            MCGameStructure MC = MergeObjects(MCLocal, MCMojang);
-            // download libraries if needed
-            DownloadLibraries(MC);
-            // download assets if needed
-            DownloadAssets(MC);
-            
-        }
-    */
-
-
+        
         private void Start(string args,string sPackName)
         {
             
@@ -591,19 +548,14 @@ namespace UglyLauncher.Minecraft
                                             string text = Environment.OSVersion.Version.ToString();
                                             Regex r = new Regex(Rule.Os.Version, RegexOptions.IgnoreCase);
                                             Match m = r.Match(text);
-                                            if (!m.Success)
-                                            {
-                                                bWindows = false;
-                                            }
+                                            if (!m.Success) bWindows = false;
                                         }
                                         
                                         //check Arch
                                         if (Rule.Os.Arch != null)
                                         {
-                                            if (Rule.Os.Arch == "x86") bWindows = false;
+                                            if (Rule.Os.Arch == "x86" && C.GetJavaArch() == "64") bWindows = false;
                                         }
-
-
                                     }
                                 }
                                 if (Rule.Action == "disallow" && Rule.Os.Name == "windows") bWindows = false;
@@ -623,12 +575,17 @@ namespace UglyLauncher.Minecraft
                         {
                             foreach(string value in jvme.JvmClass.Value.StringArray)
                             {
-                                //args += " " + value;
-                                // Bug in Json file
+                                // fix spaces in Json path
+                                if(value.Split('=').Last().Contains(" "))
+                                {
+                                    args += " " + value.Split('=').First() + "=\"" + value.Split('=').Last() + "\"";
+                                }
+                                else
+                                {
+                                    args += " " + value;
+                                }
                             }
                         }
-
-
                     }
                     else
                     {
@@ -651,8 +608,6 @@ namespace UglyLauncher.Minecraft
                         args += " " + ge.String;
                     }
                 }
-
-
             }
             else
             {
@@ -693,7 +648,9 @@ namespace UglyLauncher.Minecraft
             args = args.Replace("${version_type}", MC.Type);
             args = args.Replace("${natives_directory}", "\""+_sNativesDir + @"\" + MC.Id +"\"");
             args = args.Replace("${classpath}", classpath);
-
+            args = args.Replace("${launcher_name}", Application.ProductName);
+            args = args.Replace("${launcher_version}", Application.ProductVersion);
+            
             return args;
         }
 
@@ -886,6 +843,7 @@ namespace UglyLauncher.Minecraft
             return VersionMojang;
         }
         */
+
         private void InstallPack(string sPackName, string sPackVersion)
         {
             // delete pack if installed
@@ -1014,8 +972,6 @@ namespace UglyLauncher.Minecraft
             public int MCExitCode { get; set; }
         }
     }
-
-
 
     /*
      * Structures

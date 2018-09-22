@@ -9,11 +9,10 @@ namespace UglyLauncher.Settings
 {
     class Configuration
     {
-        private string sJavaExecutable = @"\bin\javaw";
-        private string sRegPath = "Software\\Minestar\\UglyLauncher";
+        private readonly string sJavaExecutable = @"\bin\javaw";
+        private readonly string sRegPath = "Software\\Minestar\\UglyLauncher";
         private string sJavaPath = null;
         private string sJavaArch = null;
-        private double dJava_version = 0;
 
         private int iMinMemory = -1;
         private int iMaxMemory = -1;
@@ -38,13 +37,7 @@ namespace UglyLauncher.Settings
         }
 
         // java version double
-        public double dJavaVesion
-        {
-            get
-            {
-                return dJava_version;
-            }
-        }
+        public double JavaVesion { get; private set; } = 0;
 
         // Java search methode
         public string JavaVersion
@@ -240,7 +233,7 @@ namespace UglyLauncher.Settings
             // append executable
             sJavaPath += sJavaExecutable;
             sJavaArch = "64";
-            dJava_version = Double.Parse(sVersion, CultureInfo.InvariantCulture);
+            JavaVesion = Double.Parse(sVersion, CultureInfo.InvariantCulture);
         }
 
         private void GetJavaPath32(string sVersion)
@@ -261,7 +254,7 @@ namespace UglyLauncher.Settings
             // append executable
             sJavaPath += sJavaExecutable;
             sJavaArch = "32";
-            dJava_version = Double.Parse(sVersion, CultureInfo.InvariantCulture);
+            JavaVesion = Double.Parse(sVersion, CultureInfo.InvariantCulture);
         }
 
         // Registry Handler

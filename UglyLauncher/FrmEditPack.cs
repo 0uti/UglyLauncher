@@ -41,7 +41,7 @@ namespace UglyLauncher
                     sModDescription = "";
                 }
                 ListBoxItem mItem = new ListBoxItem(sModName, sModDescription, mod);
-                lst_enabled.Items.Add(mItem);
+                LstEnabledMods.Items.Add(mItem);
 
             }
         }
@@ -71,7 +71,7 @@ namespace UglyLauncher
                     sModDescription = "";
                 }
                 ListBoxItem mItem = new ListBoxItem(sModName, sModDescription, mod);
-                lst_availble.Items.Add(mItem);
+                LstAvailbleMods.Items.Add(mItem);
             }
             
         }
@@ -129,12 +129,12 @@ namespace UglyLauncher
             return null;
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void BtnClose_Click(object sender, EventArgs e)
         {
             Dispose();
         }
 
-        private void frm_EditPack_Shown(object sender, EventArgs e)
+        private void FrmEditPack_Shown(object sender, EventArgs e)
         {
             Init();
             
@@ -142,8 +142,8 @@ namespace UglyLauncher
 
         private void Init()
         {
-            lst_availble.Items.Clear();
-            lst_enabled.Items.Clear();
+            LstAvailbleMods.Items.Clear();
+            LstEnabledMods.Items.Clear();
             // Fill Gui
             try
             {
@@ -155,15 +155,15 @@ namespace UglyLauncher
                 Dispose();
             }
             // disable Buttons
-            //btn_disable_selected.Enabled = false;
-            //btn_enable_selected.Enabled = false;
+            //BtnDisableSelected.Enabled = false;
+            //BtnEnableSelected.Enabled = false;
         }
 
 
-        private void btn_enable_selected_Click(object sender, EventArgs e)
+        private void BtnEnableSelected_Click(object sender, EventArgs e)
         {
-            if (lst_availble.SelectedIndex == -1) return;
-            ListBoxItem selected = (lst_availble.SelectedItem as ListBoxItem);
+            if (LstAvailbleMods.SelectedIndex == -1) return;
+            ListBoxItem selected = (LstAvailbleMods.SelectedItem as ListBoxItem);
 
             if (File.Exists(selected.FileName))
             {
@@ -174,20 +174,20 @@ namespace UglyLauncher
 
         }
 
-        private void btn_enable_all_Click(object sender, EventArgs e)
+        private void BtnEnableAll_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void btn_disable_all_Click(object sender, EventArgs e)
+        private void BtnDisableAll_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void btn_disable_selected_Click(object sender, EventArgs e)
+        private void BtnDisableSelected_Click(object sender, EventArgs e)
         {
-            if (lst_enabled.SelectedIndex == -1) return;
-            ListBoxItem selected = (lst_enabled.SelectedItem as ListBoxItem);
+            if (LstEnabledMods.SelectedIndex == -1) return;
+            ListBoxItem selected = (LstEnabledMods.SelectedItem as ListBoxItem);
 
             if (File.Exists(selected.FileName))
             {
@@ -223,7 +223,6 @@ namespace UglyLauncher
             return ToolTipText;
         }
     }
-
 
     internal interface IToolTipDisplayer
     {

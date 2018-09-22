@@ -29,45 +29,48 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmConsole));
-            this.btn_close = new System.Windows.Forms.Button();
-            this.txt_console = new System.Windows.Forms.RichTextBox();
+            this.BtnClose = new System.Windows.Forms.Button();
+            this.TxtConsole = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
-            // btn_close
+            // BtnClose
             // 
-            this.btn_close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_close.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_close.Location = new System.Drawing.Point(791, 501);
-            this.btn_close.Name = "btn_close";
-            this.btn_close.Size = new System.Drawing.Size(75, 23);
-            this.btn_close.TabIndex = 0;
-            this.btn_close.Text = "Schließen";
-            this.btn_close.UseVisualStyleBackColor = true;
-            this.btn_close.Click += new System.EventHandler(this.btn_close_Click);
+            this.BtnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.BtnClose.Location = new System.Drawing.Point(1186, 771);
+            this.BtnClose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.BtnClose.Name = "BtnClose";
+            this.BtnClose.Size = new System.Drawing.Size(112, 35);
+            this.BtnClose.TabIndex = 0;
+            this.BtnClose.Text = "Schließen";
+            this.BtnClose.UseVisualStyleBackColor = true;
+            this.BtnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
-            // txt_console
+            // TxtConsole
             // 
-            this.txt_console.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.TxtConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txt_console.Location = new System.Drawing.Point(0, 0);
-            this.txt_console.Name = "txt_console";
-            this.txt_console.ReadOnly = true;
-            this.txt_console.Size = new System.Drawing.Size(866, 495);
-            this.txt_console.TabIndex = 1;
-            this.txt_console.Text = "";
-            this.txt_console.WordWrap = false;
-            this.txt_console.TextChanged += new System.EventHandler(this.txt_console_TextChanged);
+            this.TxtConsole.Location = new System.Drawing.Point(0, 0);
+            this.TxtConsole.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.TxtConsole.Name = "TxtConsole";
+            this.TxtConsole.ReadOnly = true;
+            this.TxtConsole.Size = new System.Drawing.Size(1297, 759);
+            this.TxtConsole.TabIndex = 1;
+            this.TxtConsole.Text = "";
+            this.TxtConsole.WordWrap = false;
+            this.TxtConsole.TextChanged += new System.EventHandler(this.TxtConsole_TextChanged);
             // 
-            // frm_console
+            // FrmConsole
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(868, 524);
-            this.Controls.Add(this.txt_console);
-            this.Controls.Add(this.btn_close);
+            this.ClientSize = new System.Drawing.Size(1302, 806);
+            this.Controls.Add(this.TxtConsole);
+            this.Controls.Add(this.BtnClose);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "frm_console";
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.Name = "FrmConsole";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Console";
             this.ResumeLayout(false);
@@ -76,7 +79,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btn_close;
-        private System.Windows.Forms.RichTextBox txt_console;
+        private System.Windows.Forms.Button BtnClose;
+        private System.Windows.Forms.RichTextBox TxtConsole;
     }
 }

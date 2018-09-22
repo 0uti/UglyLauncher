@@ -31,84 +31,91 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmAddUser));
             this.lbl_username = new System.Windows.Forms.Label();
             this.lbl_password = new System.Windows.Forms.Label();
-            this.txt_user = new System.Windows.Forms.TextBox();
-            this.txt_pass = new System.Windows.Forms.TextBox();
-            this.btn_cancel = new System.Windows.Forms.Button();
-            this.btn_save = new System.Windows.Forms.Button();
+            this.TxtUser = new System.Windows.Forms.TextBox();
+            this.TxtPass = new System.Windows.Forms.TextBox();
+            this.BtnCancel = new System.Windows.Forms.Button();
+            this.BtnSave = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lbl_username
             // 
             this.lbl_username.AutoSize = true;
-            this.lbl_username.Location = new System.Drawing.Point(12, 15);
+            this.lbl_username.Location = new System.Drawing.Point(18, 23);
+            this.lbl_username.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_username.Name = "lbl_username";
-            this.lbl_username.Size = new System.Drawing.Size(58, 13);
+            this.lbl_username.Size = new System.Drawing.Size(87, 20);
             this.lbl_username.TabIndex = 0;
             this.lbl_username.Text = "Username:";
             // 
             // lbl_password
             // 
             this.lbl_password.AutoSize = true;
-            this.lbl_password.Location = new System.Drawing.Point(12, 41);
+            this.lbl_password.Location = new System.Drawing.Point(18, 63);
+            this.lbl_password.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_password.Name = "lbl_password";
-            this.lbl_password.Size = new System.Drawing.Size(53, 13);
+            this.lbl_password.Size = new System.Drawing.Size(78, 20);
             this.lbl_password.TabIndex = 1;
             this.lbl_password.Text = "Passwort:";
             // 
-            // txt_user
+            // TxtUser
             // 
-            this.txt_user.Location = new System.Drawing.Point(81, 12);
-            this.txt_user.Name = "txt_user";
-            this.txt_user.Size = new System.Drawing.Size(216, 20);
-            this.txt_user.TabIndex = 2;
-            this.txt_user.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txt_user_KeyDown);
+            this.TxtUser.Location = new System.Drawing.Point(122, 18);
+            this.TxtUser.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.TxtUser.Name = "TxtUser";
+            this.TxtUser.Size = new System.Drawing.Size(322, 26);
+            this.TxtUser.TabIndex = 2;
+            this.TxtUser.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtUser_KeyDown);
             // 
-            // txt_pass
+            // TxtPass
             // 
-            this.txt_pass.Location = new System.Drawing.Point(81, 38);
-            this.txt_pass.Name = "txt_pass";
-            this.txt_pass.PasswordChar = '*';
-            this.txt_pass.Size = new System.Drawing.Size(216, 20);
-            this.txt_pass.TabIndex = 3;
-            this.txt_pass.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txt_pass_KeyDown);
+            this.TxtPass.Location = new System.Drawing.Point(122, 58);
+            this.TxtPass.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.TxtPass.Name = "TxtPass";
+            this.TxtPass.PasswordChar = '*';
+            this.TxtPass.Size = new System.Drawing.Size(322, 26);
+            this.TxtPass.TabIndex = 3;
+            this.TxtPass.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtPass_KeyDown);
             // 
-            // btn_cancel
+            // BtnCancel
             // 
-            this.btn_cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_cancel.Location = new System.Drawing.Point(140, 64);
-            this.btn_cancel.Name = "btn_cancel";
-            this.btn_cancel.Size = new System.Drawing.Size(75, 23);
-            this.btn_cancel.TabIndex = 4;
-            this.btn_cancel.Text = "Abbrechen";
-            this.btn_cancel.UseVisualStyleBackColor = true;
-            this.btn_cancel.Click += new System.EventHandler(this.button1_Click);
+            this.BtnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.BtnCancel.Location = new System.Drawing.Point(210, 98);
+            this.BtnCancel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.BtnCancel.Name = "BtnCancel";
+            this.BtnCancel.Size = new System.Drawing.Size(112, 35);
+            this.BtnCancel.TabIndex = 4;
+            this.BtnCancel.Text = "Abbrechen";
+            this.BtnCancel.UseVisualStyleBackColor = true;
+            this.BtnCancel.Click += new System.EventHandler(this.BtnCancel_Click);
             // 
-            // btn_save
+            // BtnSave
             // 
-            this.btn_save.Location = new System.Drawing.Point(221, 64);
-            this.btn_save.Name = "btn_save";
-            this.btn_save.Size = new System.Drawing.Size(75, 23);
-            this.btn_save.TabIndex = 5;
-            this.btn_save.Text = "Speichern";
-            this.btn_save.UseVisualStyleBackColor = true;
-            this.btn_save.Click += new System.EventHandler(this.button2_Click);
+            this.BtnSave.Location = new System.Drawing.Point(332, 98);
+            this.BtnSave.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.BtnSave.Name = "BtnSave";
+            this.BtnSave.Size = new System.Drawing.Size(112, 35);
+            this.BtnSave.TabIndex = 5;
+            this.BtnSave.Text = "Speichern";
+            this.BtnSave.UseVisualStyleBackColor = true;
+            this.BtnSave.Click += new System.EventHandler(this.BtnSave_Click);
             // 
-            // frm_AddUser
+            // FrmAddUser
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(308, 97);
-            this.Controls.Add(this.btn_save);
-            this.Controls.Add(this.btn_cancel);
-            this.Controls.Add(this.txt_pass);
-            this.Controls.Add(this.txt_user);
+            this.ClientSize = new System.Drawing.Size(462, 149);
+            this.Controls.Add(this.BtnSave);
+            this.Controls.Add(this.BtnCancel);
+            this.Controls.Add(this.TxtPass);
+            this.Controls.Add(this.TxtUser);
             this.Controls.Add(this.lbl_password);
             this.Controls.Add(this.lbl_username);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frm_AddUser";
+            this.Name = "FrmAddUser";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Account hinzufügen";
             this.ResumeLayout(false);
@@ -120,9 +127,9 @@
 
         private System.Windows.Forms.Label lbl_username;
         private System.Windows.Forms.Label lbl_password;
-        private System.Windows.Forms.TextBox txt_user;
-        private System.Windows.Forms.TextBox txt_pass;
-        private System.Windows.Forms.Button btn_cancel;
-        private System.Windows.Forms.Button btn_save;
+        private System.Windows.Forms.TextBox TxtUser;
+        private System.Windows.Forms.TextBox TxtPass;
+        private System.Windows.Forms.Button BtnCancel;
+        private System.Windows.Forms.Button BtnSave;
     }
 }

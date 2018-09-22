@@ -28,38 +28,41 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pbar_progress = new System.Windows.Forms.ProgressBar();
-            this.lbl_FileName = new System.Windows.Forms.Label();
+            this.ProgressBar = new System.Windows.Forms.ProgressBar();
+            this.LblFileName = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // pbar_progress
+            // ProgressBar
             // 
-            this.pbar_progress.Location = new System.Drawing.Point(12, 45);
-            this.pbar_progress.Name = "pbar_progress";
-            this.pbar_progress.Size = new System.Drawing.Size(326, 23);
-            this.pbar_progress.TabIndex = 0;
+            this.ProgressBar.Location = new System.Drawing.Point(18, 69);
+            this.ProgressBar.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.ProgressBar.Name = "ProgressBar";
+            this.ProgressBar.Size = new System.Drawing.Size(489, 35);
+            this.ProgressBar.TabIndex = 0;
             // 
-            // lbl_FileName
+            // LblFileName
             // 
-            this.lbl_FileName.Location = new System.Drawing.Point(12, 9);
-            this.lbl_FileName.Name = "lbl_FileName";
-            this.lbl_FileName.Size = new System.Drawing.Size(318, 23);
-            this.lbl_FileName.TabIndex = 1;
-            this.lbl_FileName.Text = "Initialisierung (Account/Packlist)";
-            this.lbl_FileName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LblFileName.Location = new System.Drawing.Point(18, 14);
+            this.LblFileName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LblFileName.Name = "LblFileName";
+            this.LblFileName.Size = new System.Drawing.Size(477, 35);
+            this.LblFileName.TabIndex = 1;
+            this.LblFileName.Text = "Initialisierung (Account/Packlist)";
+            this.LblFileName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // frm_progressbar
+            // FrmProgressbar
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(354, 80);
+            this.ClientSize = new System.Drawing.Size(531, 123);
             this.ControlBox = false;
-            this.Controls.Add(this.lbl_FileName);
-            this.Controls.Add(this.pbar_progress);
+            this.Controls.Add(this.LblFileName);
+            this.Controls.Add(this.ProgressBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frm_progressbar";
+            this.Name = "FrmProgressbar";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Bitte Warten";
             this.ResumeLayout(false);
@@ -68,7 +71,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ProgressBar pbar_progress;
-        private System.Windows.Forms.Label lbl_FileName;
+        private System.Windows.Forms.ProgressBar ProgressBar;
+        private System.Windows.Forms.Label LblFileName;
     }
 }

@@ -11,7 +11,7 @@ namespace UglyLauncher.AccountManager
 {
     public class Manager
     {
-        private string xmlfile = @"\users.xml";
+        private readonly string xmlfile = @"\users.xml";
         private MCUser Users = new MCUser();
 
         // contructor
@@ -154,6 +154,7 @@ namespace UglyLauncher.AccountManager
         }
     }
 
+#pragma warning disable IDE1006 // Benennungsstile
     [DataContract]
     public class MCUser
     {
@@ -190,4 +191,6 @@ namespace UglyLauncher.AccountManager
         [DataMember]
         public bool legacy { get; set; }
     }
+
+#pragma warning restore IDE1006 // Benennungsstile
 }

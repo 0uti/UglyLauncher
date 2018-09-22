@@ -13,14 +13,14 @@ namespace UglyLauncher.AccountManager
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void BtnCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void BtnSave_Click(object sender, EventArgs e)
         {
-            if (txt_user.Text == "" || txt_pass.Text == "")
+            if (TxtUser.Text == "" || TxtPass.Text == "")
             {
                 MessageBox.Show(this, "Eines der Felder ist leer.", "Fehlerhafte Eingabe!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -31,41 +31,43 @@ namespace UglyLauncher.AccountManager
                 MCAuthenticateResponse AuthData = new MCAuthenticateResponse();
                 try
                 {
-                    AuthData = Auth.Authenticate(txt_user.Text.ToString().Trim(), txt_pass.Text.ToString().Trim());
+                    AuthData = Auth.Authenticate(TxtUser.Text.ToString().Trim(), TxtPass.Text.ToString().Trim());
                 }
                 catch (MCInvalidCredentialsException ex)
                 {
                     MessageBox.Show(this, ex.Message.ToString(), "Fehlermeldung von Minecraft.net", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    txt_pass.Focus();
-                    txt_pass.SelectAll();
+                    TxtPass.Focus();
+                    TxtPass.SelectAll();
 
                     return;
                 }
                 catch (MCUserMigratedException ex)
                 {
                     MessageBox.Show(this, ex.Message.ToString(), "Fehlermeldung von Minecraft.net", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    txt_pass.Focus();
-                    txt_pass.SelectAll();
+                    TxtPass.Focus();
+                    TxtPass.SelectAll();
 
                     return;
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(this, ex.Message.ToString(), "Verbindungsfehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    txt_pass.Focus();
-                    txt_pass.SelectAll();
+                    TxtPass.Focus();
+                    TxtPass.SelectAll();
 
                     return;
                 }
 
-                MCUserAccount newAcc = new MCUserAccount();
-                newAcc.guid = Guid.NewGuid();
-                newAcc.profiles = new List<MCUserAccountProfile>();
+                MCUserAccount newAcc = new MCUserAccount
+                {
+                    guid = Guid.NewGuid(),
+                    profiles = new List<MCUserAccountProfile>(),
 
-                newAcc.accessToken = AuthData.AccessToken;
-                newAcc.clientToken = AuthData.ClientToken;
-                newAcc.username = txt_user.Text.ToString().Trim();
-                newAcc.activeProfile = AuthData.SelectedProfile.Id;
+                    accessToken = AuthData.AccessToken,
+                    clientToken = AuthData.ClientToken,
+                    username = TxtUser.Text.ToString().Trim(),
+                    activeProfile = AuthData.SelectedProfile.Id
+                };
 
                 for (int i = 0; i < AuthData.AvailableProfiles.Length; i++)
                 {
@@ -90,16 +92,16 @@ namespace UglyLauncher.AccountManager
             }
         }
 
-        private void txt_user_KeyDown(object sender, KeyEventArgs e)
+        private void TxtUser_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
-                txt_pass.Focus();
+                TxtPass.Focus();
         }
 
-        private void txt_pass_KeyDown(object sender, KeyEventArgs e)
+        private void TxtPass_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
-                button2_Click(sender, e);
+                BtnSave_Click(sender, e);
         }
     }
 }

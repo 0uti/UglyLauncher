@@ -34,93 +34,99 @@
             System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("acc 2");
             System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("acc 3");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmUserAccounts));
-            this.lst_accounts = new System.Windows.Forms.ListView();
+            this.LstAccounts = new System.Windows.Forms.ListView();
             this.lst_account_items = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btn_add = new System.Windows.Forms.Button();
-            this.btn_delete = new System.Windows.Forms.Button();
-            this.btn_default = new System.Windows.Forms.Button();
-            this.btn_close = new System.Windows.Forms.Button();
+            this.BtnAdd = new System.Windows.Forms.Button();
+            this.BtnDelete = new System.Windows.Forms.Button();
+            this.BtnSetDefault = new System.Windows.Forms.Button();
+            this.BtnClose = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // lst_accounts
+            // LstAccounts
             // 
-            this.lst_accounts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.LstAccounts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.lst_account_items});
-            this.lst_accounts.FullRowSelect = true;
-            this.lst_accounts.GridLines = true;
+            this.LstAccounts.FullRowSelect = true;
+            this.LstAccounts.GridLines = true;
             listViewItem1.StateImageIndex = 0;
-            this.lst_accounts.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            this.LstAccounts.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             listViewItem1,
             listViewItem2,
             listViewItem3});
-            this.lst_accounts.Location = new System.Drawing.Point(12, 12);
-            this.lst_accounts.MultiSelect = false;
-            this.lst_accounts.Name = "lst_accounts";
-            this.lst_accounts.Size = new System.Drawing.Size(322, 177);
-            this.lst_accounts.TabIndex = 0;
-            this.lst_accounts.UseCompatibleStateImageBehavior = false;
-            this.lst_accounts.View = System.Windows.Forms.View.Details;
+            this.LstAccounts.Location = new System.Drawing.Point(18, 18);
+            this.LstAccounts.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.LstAccounts.MultiSelect = false;
+            this.LstAccounts.Name = "LstAccounts";
+            this.LstAccounts.Size = new System.Drawing.Size(481, 270);
+            this.LstAccounts.TabIndex = 0;
+            this.LstAccounts.UseCompatibleStateImageBehavior = false;
+            this.LstAccounts.View = System.Windows.Forms.View.Details;
             // 
             // lst_account_items
             // 
             this.lst_account_items.Text = "Account";
             this.lst_account_items.Width = 310;
             // 
-            // btn_add
+            // BtnAdd
             // 
-            this.btn_add.Location = new System.Drawing.Point(340, 12);
-            this.btn_add.Name = "btn_add";
-            this.btn_add.Size = new System.Drawing.Size(75, 23);
-            this.btn_add.TabIndex = 1;
-            this.btn_add.Text = "Hinzufügen";
-            this.btn_add.UseVisualStyleBackColor = true;
-            this.btn_add.Click += new System.EventHandler(this.btn_add_Click);
+            this.BtnAdd.Location = new System.Drawing.Point(510, 18);
+            this.BtnAdd.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.BtnAdd.Name = "BtnAdd";
+            this.BtnAdd.Size = new System.Drawing.Size(112, 35);
+            this.BtnAdd.TabIndex = 1;
+            this.BtnAdd.Text = "Hinzufügen";
+            this.BtnAdd.UseVisualStyleBackColor = true;
+            this.BtnAdd.Click += new System.EventHandler(this.BtnAdd_Click);
             // 
-            // btn_delete
+            // BtnDelete
             // 
-            this.btn_delete.Location = new System.Drawing.Point(340, 41);
-            this.btn_delete.Name = "btn_delete";
-            this.btn_delete.Size = new System.Drawing.Size(75, 23);
-            this.btn_delete.TabIndex = 2;
-            this.btn_delete.Text = "Löschen";
-            this.btn_delete.UseVisualStyleBackColor = true;
-            this.btn_delete.Click += new System.EventHandler(this.btn_delete_Click);
+            this.BtnDelete.Location = new System.Drawing.Point(510, 63);
+            this.BtnDelete.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.BtnDelete.Name = "BtnDelete";
+            this.BtnDelete.Size = new System.Drawing.Size(112, 35);
+            this.BtnDelete.TabIndex = 2;
+            this.BtnDelete.Text = "Löschen";
+            this.BtnDelete.UseVisualStyleBackColor = true;
+            this.BtnDelete.Click += new System.EventHandler(this.BtnDelete_Click);
             // 
-            // btn_default
+            // BtnSetDefault
             // 
-            this.btn_default.Location = new System.Drawing.Point(340, 166);
-            this.btn_default.Name = "btn_default";
-            this.btn_default.Size = new System.Drawing.Size(75, 23);
-            this.btn_default.TabIndex = 3;
-            this.btn_default.Text = "Standard";
-            this.btn_default.UseVisualStyleBackColor = true;
-            this.btn_default.Click += new System.EventHandler(this.btn_default_Click);
+            this.BtnSetDefault.Location = new System.Drawing.Point(510, 255);
+            this.BtnSetDefault.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.BtnSetDefault.Name = "BtnSetDefault";
+            this.BtnSetDefault.Size = new System.Drawing.Size(112, 35);
+            this.BtnSetDefault.TabIndex = 3;
+            this.BtnSetDefault.Text = "Standard";
+            this.BtnSetDefault.UseVisualStyleBackColor = true;
+            this.BtnSetDefault.Click += new System.EventHandler(this.BtnSetDefault_Click);
             // 
-            // btn_close
+            // BtnClose
             // 
-            this.btn_close.Location = new System.Drawing.Point(340, 195);
-            this.btn_close.Name = "btn_close";
-            this.btn_close.Size = new System.Drawing.Size(75, 23);
-            this.btn_close.TabIndex = 4;
-            this.btn_close.Text = "Schließen";
-            this.btn_close.UseVisualStyleBackColor = true;
-            this.btn_close.Click += new System.EventHandler(this.btn_close_Click);
+            this.BtnClose.Location = new System.Drawing.Point(510, 300);
+            this.BtnClose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.BtnClose.Name = "BtnClose";
+            this.BtnClose.Size = new System.Drawing.Size(112, 35);
+            this.BtnClose.TabIndex = 4;
+            this.BtnClose.Text = "Schließen";
+            this.BtnClose.UseVisualStyleBackColor = true;
+            this.BtnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
-            // frm_UserAccounts
+            // FrmUserAccounts
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(427, 226);
-            this.Controls.Add(this.btn_close);
-            this.Controls.Add(this.btn_default);
-            this.Controls.Add(this.btn_delete);
-            this.Controls.Add(this.btn_add);
-            this.Controls.Add(this.lst_accounts);
+            this.ClientSize = new System.Drawing.Size(640, 348);
+            this.Controls.Add(this.BtnClose);
+            this.Controls.Add(this.BtnSetDefault);
+            this.Controls.Add(this.BtnDelete);
+            this.Controls.Add(this.BtnAdd);
+            this.Controls.Add(this.LstAccounts);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frm_UserAccounts";
+            this.Name = "FrmUserAccounts";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Accountverwaltung";
@@ -130,11 +136,11 @@
 
         #endregion
 
-        private System.Windows.Forms.ListView lst_accounts;
-        private System.Windows.Forms.Button btn_add;
-        private System.Windows.Forms.Button btn_delete;
-        private System.Windows.Forms.Button btn_default;
-        private System.Windows.Forms.Button btn_close;
+        private System.Windows.Forms.ListView LstAccounts;
+        private System.Windows.Forms.Button BtnAdd;
+        private System.Windows.Forms.Button BtnDelete;
+        private System.Windows.Forms.Button BtnSetDefault;
+        private System.Windows.Forms.Button BtnClose;
         private System.Windows.Forms.ColumnHeader lst_account_items;
     }
 }
