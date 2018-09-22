@@ -2,16 +2,19 @@
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Runtime.Serialization;
-using System.Collections.Generic;
+using UglyLauncher.Minecraft.Json.MCAuthenticateRequest;
+using UglyLauncher.Minecraft.Json.MCAuthenticateError;
+using UglyLauncher.Minecraft.Json.MCAuthenticateResponse;
+using UglyLauncher.Minecraft.Json.MCRefreshRequest;
+using UglyLauncher.Minecraft.Json.MCRefreshResponse;
 
 namespace UglyLauncher.Minecraft
 {
     class Authentication
     {
-        private string sAuthServer = "https://authserver.mojang.com";
+        private readonly string sAuthServer = "https://authserver.mojang.com";
 
-        public MCAuthenticate_Response Authenticate(string sUser, string sPassword)
+        public MCAuthenticateResponse Authenticate(string sUser, string sPassword)
         {
             // declare needed objects
             string sJsonResponse = null;
@@ -21,20 +24,22 @@ namespace UglyLauncher.Minecraft
             Stream dataStream = null;
 
             // create and fill JSON object
-            MCAuthenticate_Request jsonObject = new MCAuthenticate_Request();
-            jsonObject.username = sUser;
-            jsonObject.password = sPassword;
-            jsonObject.agent.name = "Minecraft";
-            jsonObject.agent.version = "1";
+            MCAuthenticateRequest jsonObject = new MCAuthenticateRequest
+            {
+                Username = sUser,
+                Password = sPassword
+            };
+            jsonObject.Agent.Name = "Minecraft";
+            jsonObject.Agent.Version = 1;
 
             // Serialize JSON
-            string sJsonRequest = UglyLauncher.JsonHelper.JsonSerializer<MCAuthenticate_Request>(jsonObject);
-            
+            string sJsonRequest = Json.MCAuthenticateRequest.Serialize.ToJson(jsonObject);
+
             // Do POST request
             try
             {
                 // Create request
-                request = WebRequest.Create(this.sAuthServer + "/authenticate");
+                request = WebRequest.Create(sAuthServer + "/authenticate");
                 // set Method
                 request.Method = "POST";
                 // set TimeOut
@@ -66,10 +71,11 @@ namespace UglyLauncher.Minecraft
                             // Get Json Answer
                             sJsonResponse = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd().Trim();
                             // deserialize JSON
-                            MCError ErrorMessage = UglyLauncher.JsonHelper.JsonDeserializer<MCError>(sJsonResponse);
-                            if (ErrorMessage.errorMessage == "Invalid credentials. Invalid username or password.") throw new MCInvalidCredentialsException(ErrorMessage.errorMessage);
-                            if (ErrorMessage.errorMessage == "Invalid credentials. Account migrated, use e-mail as username.") throw new MCUserMigratedException(ErrorMessage.errorMessage);
-                            throw new Exception(ErrorMessage.errorMessage);
+
+                            MCAuthenticatieError ErrorMessage = MCAuthenticatieError.FromJson(sJsonResponse);
+                            if (ErrorMessage.ErrorMessage == "Invalid credentials. Invalid username or password.") throw new MCInvalidCredentialsException(ErrorMessage.ErrorMessage);
+                            if (ErrorMessage.ErrorMessage == "Invalid credentials. Account migrated, use e-mail as username.") throw new MCUserMigratedException(ErrorMessage.ErrorMessage);
+                            throw new Exception(ErrorMessage.ErrorMessage);
                         }
                         throw new Exception(ex.Message);
                     default:
@@ -85,7 +91,7 @@ namespace UglyLauncher.Minecraft
             }
 
             // Deserialize JSON into object
-            MCAuthenticate_Response MCResponse = UglyLauncher.JsonHelper.JsonDeserializer<MCAuthenticate_Response>(sJsonResponse);
+            MCAuthenticateResponse MCResponse = MCAuthenticateResponse.FromJson(sJsonResponse);
 
             //return
             return MCResponse;
@@ -101,20 +107,21 @@ namespace UglyLauncher.Minecraft
             Stream dataStream = null;
 
             // create and fill JSON object
-            MCRefresh_Request jsonObject = new MCRefresh_Request();
-            jsonObject.accessToken = sAccessToken;
-            jsonObject.clientToken = sClientToken;
-            //jsonObject.selectedProfile.id = sProfileId;
-            //jsonObject.selectedProfile.name = sProfileName;
+            MCRefreshRequest jsonObject = new MCRefreshRequest
+            {
+                AccessToken = sAccessToken,
+                ClientToken = sClientToken
+            };
+
 
             // Serialize JSON
-            string sJsonRequest = UglyLauncher.JsonHelper.JsonSerializer<MCRefresh_Request>(jsonObject);
+            string sJsonRequest = Json.MCRefreshRequest.Serialize.ToJson(jsonObject);
 
             // send HTTP POST request
             try
             {
                 // Create request
-                request = WebRequest.Create(this.sAuthServer + "/refresh");
+                request = WebRequest.Create(sAuthServer + "/refresh");
                 // set Method
                 request.Method = "POST";
                 // set TimeOut
@@ -146,9 +153,9 @@ namespace UglyLauncher.Minecraft
                             // Get Json Answer
                             sJsonResponse = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd().Trim();
                             // deserialize JSON
-                            MCError ErrorMessage = UglyLauncher.JsonHelper.JsonDeserializer<MCError>(sJsonResponse);
-                            if (ErrorMessage.errorMessage == "Invalid token.") throw new MCInvalidTokenException(ErrorMessage.errorMessage);
-                            throw new Exception(ErrorMessage.errorMessage);
+                            MCAuthenticatieError ErrorMessage = MCAuthenticatieError.FromJson(sJsonResponse);
+                            if (ErrorMessage.ErrorMessage == "Invalid token.") throw new MCInvalidTokenException(ErrorMessage.ErrorMessage);
+                            throw new Exception(ErrorMessage.ErrorMessage);
                         }
                         throw new Exception(ex.Message);
                     default:
@@ -163,107 +170,10 @@ namespace UglyLauncher.Minecraft
                 if (response != null) response.Close();
             }
             // Deserialize JSON into object
-            MCRefresh_Response MCResponse = UglyLauncher.JsonHelper.JsonDeserializer<MCRefresh_Response>(sJsonResponse);
+            MCRefreshResponse MCResponse = MCRefreshResponse.FromJson(sJsonResponse);
 
             //return
-            return MCResponse.accessToken;
+            return MCResponse.AccessToken;
         }
-    }
-
-    /// <summary>
-    /// The JSON authenticate request construct.
-    /// </summary>
-    [DataContract]
-    public class MCAuthenticate_Request
-    {
-        [DataMember]
-        public MCAuthenticate_RequestAgent agent = new MCAuthenticate_RequestAgent();
-        [DataMember]
-        public string username { get; set; }
-        [DataMember]
-        public string password { get; set; }
-        [DataMember]
-        public string clientToken { get; set; }
-    }
-
-    [DataContract]
-    public class MCAuthenticate_RequestAgent
-    {
-        [DataMember]
-        public string name { get; set; }
-        [DataMember]
-        public string version { get; set; }
-    }
-
-
-
-    /// <summary>
-    /// The JSON authenticate response construct.
-    /// </summary>
-    [DataContract]
-    public class MCAuthenticate_Response
-    {
-        [DataMember]
-        public string accessToken { get; set; }
-        [DataMember]
-        public string clientToken { get; set; }
-        [DataMember]
-        public List<MCProfile> availableProfiles = new List<MCProfile>();
-        [DataMember]
-        public MCProfile selectedProfile = new MCProfile();
-    }
-
-    [DataContract]
-    public class MCProfile
-    {
-        [DataMember]
-        public string id { get; set; }
-        [DataMember]
-        public string name { get; set; }
-        [DataMember]
-        public bool legacy { get; set; }
-    }
-
-
-    /// <summary>
-    /// The JSON refresh request construct.
-    /// </summary>
-    [DataContract]
-    public class MCRefresh_Request
-    {
-        [DataMember]
-        public string accessToken { get; set; }
-        [DataMember]
-        public string clientToken { get; set; }
-        //public cls_selectedprofile selectedProfile { get; set; }
-    }
-
-    /// <summary>
-    /// The JSON refresh response construct.
-    /// </summary>
-    [DataContract]
-    public class MCRefresh_Response
-    {
-        [DataMember]
-        public string accessToken { get; set; }
-        [DataMember]
-        public string clientToken { get; set; }
-        [DataMember]
-        public MCProfile selectedProfile = new MCProfile();
-    }
-
-
-    /// <summary>
-    /// The JSON Error response construct.
-    /// </summary>
-    [DataContract]
-    public class MCError
-    {
-        [DataMember]
-        public string error { get; set; }
-        [DataMember]
-        public string errorMessage { get; set; }
-        [DataMember]
-        public string cause { get; set; }
     }
 }

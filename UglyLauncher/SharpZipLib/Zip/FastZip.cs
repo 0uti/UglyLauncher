@@ -377,7 +377,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 				outputStream_.UseZip64 = UseZip64;
 				FileSystemScanner scanner = new FileSystemScanner(fileFilter, directoryFilter);
 				scanner.ProcessFile += new ProcessFileHandler(ProcessFile);
-				if ( this.CreateEmptyDirectories ) {
+				if (CreateEmptyDirectories) {
 					scanner.ProcessDirectory += new ProcessDirectoryHandler(ProcessDirectory);
 				}
 				

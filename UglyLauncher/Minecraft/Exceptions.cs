@@ -7,8 +7,8 @@ namespace UglyLauncher.Minecraft
     {
         public MCInvalidCredentialsException() : base("mööp.") { }
         public MCInvalidCredentialsException(Exception e) : base("mööp.", e) { }
-        public MCInvalidCredentialsException(String message, Exception e) : base(message, e) { }
-        public MCInvalidCredentialsException(String message) : base(message) { }
+        public MCInvalidCredentialsException(string message, Exception e) : base(message, e) { }
+        public MCInvalidCredentialsException(string message) : base(message) { }
     }
 
     [Serializable]
@@ -16,8 +16,8 @@ namespace UglyLauncher.Minecraft
     {
         public MCUserMigratedException() : base("mööp.") { }
         public MCUserMigratedException(Exception e) : base("mööp.", e) { }
-        public MCUserMigratedException(String message, Exception e) : base(message, e) { }
-        public MCUserMigratedException(String message) : base(message) { }
+        public MCUserMigratedException(string message, Exception e) : base(message, e) { }
+        public MCUserMigratedException(string message) : base(message) { }
     }
 
     [Serializable]
@@ -25,7 +25,7 @@ namespace UglyLauncher.Minecraft
     {
         public MCInvalidTokenException() : base("mööp.") { }
         public MCInvalidTokenException(Exception e) : base("mööp.", e) { }
-        public MCInvalidTokenException(String message, Exception e) : base(message, e) { }
-        public MCInvalidTokenException(String message) : base(message) { }
+        public MCInvalidTokenException(string message, Exception e) : base(message, e) { }
+        public MCInvalidTokenException(string message) : base(message) { }
     }
 }

@@ -913,7 +913,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 
                         Crc32 crc = new Crc32();
 
-                        using (Stream entryStream = this.GetInputStream(this[entryIndex]))
+                        using (Stream entryStream = GetInputStream(this[entryIndex]))
                         {
 
                             byte[] buffer = new byte[4096];
@@ -2465,7 +2465,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 			// TODO: This is slow if the changes don't effect the data!!
 			if ( update.Entry.IsFile && (update.Filename != null) ) {
 				using ( Stream output = workFile.GetOutputStream(update.OutEntry) ) {
-					using ( Stream source = this.GetInputStream(update.Entry) ) {
+					using ( Stream source = GetInputStream(update.Entry) ) {
 						CopyBytes(update, output, source, source.Length, true);
 					}
 				}

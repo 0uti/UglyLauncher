@@ -31,8 +31,8 @@ namespace UglyLauncher
         {
             // InitializeComponent();
 
-            this.MouseMove += listBox_MouseMove;
-            this.MouseLeave += listBox_MouseLeave;
+            MouseMove += listBox_MouseMove;
+            MouseLeave += listBox_MouseLeave;
 
             _currentItemSet = false;
             _toolTipDisplayed = false;
@@ -48,8 +48,8 @@ namespace UglyLauncher
         {
             // Get the item that the mouse is currently over
             Point cursorPoint = Cursor.Position;
-            cursorPoint = this.PointToClient(cursorPoint);
-            int itemIndex = this.IndexFromPoint(cursorPoint);
+            cursorPoint = PointToClient(cursorPoint);
+            int itemIndex = IndexFromPoint(cursorPoint);
 
             if (itemIndex == ListBox.NoMatches)
             {
@@ -90,9 +90,9 @@ namespace UglyLauncher
         {
             // Display tooltip text since the mouse has hovered over an item
             if (!_toolTipDisplayed && _currentItem != ListBox.NoMatches &&
-                        _currentItem < this.Items.Count)
+                        _currentItem < Items.Count)
             {
-                IToolTipDisplayer toolTipDisplayer = this.Items[_currentItem] as IToolTipDisplayer;
+                IToolTipDisplayer toolTipDisplayer = Items[_currentItem] as IToolTipDisplayer;
                 if (toolTipDisplayer != null)
                 {
                     _toolTip.SetToolTip(this, toolTipDisplayer.GetToolTipText());

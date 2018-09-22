@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
@@ -10,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("Retail")]
 [assembly: AssemblyCompany("Outi-Networks (FidelCastor)")]
 [assembly: AssemblyProduct("UglyLauncher")]
-[assembly: AssemblyCopyright("Copyright ©  2014-2016")]
+[assembly: AssemblyCopyright("Copyright ©  2014-2018")]
 [assembly: AssemblyTrademark("Outi-Networks")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +31,5 @@ using System.Runtime.InteropServices;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.1.52")]
-[assembly: AssemblyFileVersion("1.0.1.52")]
+[assembly: AssemblyVersion("1.0.2.55")]
+[assembly: AssemblyFileVersion("1.0.2.55")]
