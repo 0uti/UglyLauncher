@@ -31,7 +31,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>4</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>1.0.0.4</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -128,6 +128,8 @@
     <Compile Include="Minecraft\Json\MCAuthenticateError.cs" />
     <Compile Include="Minecraft\Json\MCAuthenticateResponse.cs" />
     <Compile Include="Minecraft\Json\MCAvailablePacks.cs" />
+    <Compile Include="Minecraft\Json\MCForgeInstaller.cs" />
+    <Compile Include="Minecraft\Json\MCForgeVersion.cs" />
     <Compile Include="Minecraft\Json\MCPack.cs" />
     <Compile Include="Minecraft\Json\MCRefreshRequest.cs" />
     <Compile Include="Minecraft\Json\MCRefreshResponse.cs" />
@@ -560,6 +562,11 @@
     <Folder Include="Newtonsoft.Json\Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties BuildVersion_StartDate="2018/1/1" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_AssemblyInfoFilename="Properties\AssemblyInfo.cs" BuildVersion_UseGlobalSettings="True" BuildVersion_UseUniversalClock="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_DetectChanges="False" />
+    </VisualStudio>
+  </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

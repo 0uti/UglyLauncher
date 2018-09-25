@@ -15,6 +15,8 @@ using UglyLauncher.AccountManager;
 using UglyLauncher.Internet;
 using UglyLauncher.Minecraft.Json.Assets;
 using UglyLauncher.Minecraft.Json.AvailablePacks;
+using UglyLauncher.Minecraft.Json.MCForgeInstaller;
+using UglyLauncher.Minecraft.Json.MCForgeVersion;
 using UglyLauncher.Minecraft.Json.MCVersions;
 using UglyLauncher.Minecraft.Json.Pack;
 using UglyLauncher.Minecraft.Json.Version;
@@ -24,34 +26,32 @@ namespace UglyLauncher.Minecraft
 {
     class Launcher
     {
-       
         // events
         public event EventHandler<FormWindowStateEventArgs> RestoreWindow;
         // objects
         private FrmProgressbar _bar = new FrmProgressbar();
         private FrmConsole _console;
         private WebClient _downloader = new WebClient();
-
         // Statics
         private static MCAvailablePacks PacksAvailable = new MCAvailablePacks();
         private static MCPacksInstalled PacksInstalled = new MCPacksInstalled();
         public static string _sDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.UglyLauncher";
-
         public readonly string _sLibraryDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.minecraft\libraries";
         public readonly string _sAssetsDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.minecraft\assets";
         public readonly string _sVersionDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.minecraft\versions";
         public readonly string _sPacksDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.UglyLauncher\packs";
         public readonly string _sNativesDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.UglyLauncher\natives";
-
         // Strings
         public readonly string _sPackServer = "http://uglylauncher.de";
-        public readonly string _sAssetsFileServer = "http://resources.download.minecraft.net";
-
+        public readonly string _sAssetsFileServer = "https://resources.download.minecraft.net";
+        public readonly string _sForgeMaven = "https://files.minecraftforge.net/maven";
+        public readonly string _sForgeTree = "/net/minecraftforge/forge/";
+        // bool
         private bool downloadfinished = false;
         private readonly bool Offline = false;
-
         // Lists
-        private readonly List<string> lLibraries = new List<string>();           // Library list for startup
+        private readonly Dictionary<string, string> ClassPath = new Dictionary<string, string>(); // Library list for startup
+
 
         // constructor
         public Launcher(bool OfflineMode)
@@ -343,49 +343,87 @@ namespace UglyLauncher.Minecraft
                 InstallPack(sPackName, sPackVersion);
             }
 
+            // clear ClassPath
+            ClassPath.Clear();
+
             // getting pack json file
             MCPack pack = MCPack.FromJson(File.ReadAllText(_sPacksDir + @"\" + sPackName + @"\pack.json").Trim());
 
             // vanilla Minecraft
             DownloadVersionJson(pack.MCVersion);
-            MCVersion MC = MCVersion.FromJson(File.ReadAllText(_sVersionDir + @"\" + pack.MCVersion + @"\" + pack.MCVersion + ".json").Trim());
+            MCVersion MCMojang = MCVersion.FromJson(File.ReadAllText(_sVersionDir + @"\" + pack.MCVersion + @"\" + pack.MCVersion + ".json").Trim());
             // download game jar
-            DownloadGameJar(MC);
+            DownloadGameJar(MCMojang);
             // download libraries if needed
-            DownloadLibraries(MC);
+            DownloadMCLibraries(MCMojang);
             // download assets if needed
-            DownloadAssets(MC);
-
-
-
-
+            DownloadAssets(MCMojang);
+            
             // additional things for forge
             if (pack.Type.Equals("forge"))
             {
+                // Install Forge
+                InstallForge(pack.ForgeVersion);
 
+                // pre 1.13 files
+                if (File.Exists(_sLibraryDir + _sForgeTree.Replace('/', '\\') + pack.ForgeVersion + @"\install_profile.json"))
+                {
+                    MCForgeInstaller MCForge = MCForgeInstaller.FromJson(File.ReadAllText(_sLibraryDir + _sForgeTree.Replace('/', '\\') + pack.ForgeVersion + @"\install_profile.json").Trim());
+                    // download Forge libraries
+                    DownloadForgeLibraries(MCForge);
+
+                    // replace vanilla settings
+                    MCMojang.MainClass = MCForge.VersionInfo.MainClass;
+                    MCMojang.MinecraftArguments = MCForge.VersionInfo.MinecraftArguments;
+                }
+
+                // post 1.13 files
+                if (File.Exists(_sLibraryDir + _sForgeTree.Replace('/', '\\') + pack.ForgeVersion + @"\version.json"))
+                {
+                    MCForgeVersion MCForge = MCForgeVersion.FromJson(File.ReadAllText(_sLibraryDir + _sForgeTree.Replace('/', '\\') + pack.ForgeVersion + @"\version.json").Trim());
+                    //Download Libraries
+                    DownloadForgeLibraries(MCForge);
+                    // replace vanilla values
+                    MCMojang.MainClass = MCForge.MainClass;
+                    MCMojang.Arguments.Game = MCForge.Arguments.Game;
+                }
             }
 
+            // set selected version
             SetSelectedVersion(sPackName, sPackVersion);
-
             // start the pack
-            Start(BuildArgs(MC, sPackName), sPackName);
+            Start(BuildArgs(MCMojang, sPackName), sPackName);
             // close bar if open
             if (_bar.Visible == true) _bar.Hide();
-
-
-
-            /*
-            // download gameversion and json file if needed
-           
-            // fix assets
-            if (MCMojang.assets == null) MCMojang.assets = "legacy";
-            
-            // merging both json objects
-            MCGameStructure MC = MergeObjects(MCLocal, MCMojang);
-            
-            */
         }
         
+        private void InstallForge(string ForgeVersion)
+        {
+            string localPath = _sLibraryDir + _sForgeTree.Replace('/', '\\') + ForgeVersion;
+            string localFile = localPath + @"\forge-" + ForgeVersion + "-installer.jar";
+            string remoteFile = _sForgeMaven + _sForgeTree + ForgeVersion + "/forge-" + ForgeVersion + "-installer.jar";
+
+            // https://files.minecraftforge.net/maven/net/minecraftforge/forge/1.12.2-14.23.4.2705/forge-1.12.2-14.23.4.2705-installer.jar
+
+            //check if file exists
+            if (!File.Exists(localFile))
+            {
+                DownloadFileTo(remoteFile, localFile, true, null);
+            }
+
+            // always extract files
+            List<string> extractList = new List<string>
+            {
+                "install_profile.json",
+                "version.json",
+                "forge-" + ForgeVersion + "-universal.jar"
+            };
+            ExtractZipFiles(localFile, localPath, extractList);
+            
+            // append Forge to classpath
+            ClassPath.Add("net.minecraftforge:forge", localPath + @"\forge-" + ForgeVersion + "-universal.jar");
+        }
+
         private void Start(string args,string sPackName)
         {
             
@@ -440,7 +478,7 @@ namespace UglyLauncher.Minecraft
 
             foreach (Form frm in fc)
             {
-                if (frm.Name == "frm_console")
+                if (frm.Name == "FrmConsole")
                 {
                     frm.Close();
                     return;
@@ -509,6 +547,7 @@ namespace UglyLauncher.Minecraft
         private string BuildArgs(MCVersion MC,string sPackName)
         {
             string args = null;
+            string classpath = null;
             Configuration C = new Configuration();
             Manager U = new Manager();
             MCUserAccount Acc = U.GetAccount(U.GetDefault());
@@ -611,10 +650,9 @@ namespace UglyLauncher.Minecraft
             }
             else
             {
-
                 // fucking Mojang drivers Hack
                 args += " -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump";
-                // Tweaks
+                // Tweaks (forge)
                 args += " -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true";
                 // Path to natives
                 args += " -Djava.library.path=${natives_directory}";
@@ -626,14 +664,16 @@ namespace UglyLauncher.Minecraft
                 args += " " + MC.MinecraftArguments;
             }
 
-            string classpath = null;
             // libraries
-            foreach (string Lib in lLibraries)
-                classpath += string.Format("\"{0}\";", Lib);
+            foreach (KeyValuePair<string, string> entry in ClassPath)
+            {
+                classpath += string.Format("\"{0}\";", entry.Value);
+            }
+
             // version .jar
             classpath += string.Format("\"{0}\\{1}\\{1}.jar\" ", _sVersionDir, MC.Id);
 
-
+            // fill placeholders
             args = args.Replace("${auth_player_name}", Profile.name);
             args = args.Replace("${version_name}", MC.Id);
             args = args.Replace("${game_directory}", string.Format("\"{0}\\{1}\\minecraft\"", _sPacksDir, sPackName));
@@ -654,14 +694,12 @@ namespace UglyLauncher.Minecraft
             return args;
         }
 
-        private void DownloadLibraries(MCVersion MC)
+        private void DownloadMCLibraries(MCVersion MC)
         {
             Configuration c = new Configuration();
             string sJavaArch = c.GetJavaArch();
-            lLibraries.Clear();
 
-
-            foreach (Library lib in MC.Libraries)
+            foreach (Json.Version.Library lib in MC.Libraries)
             {
                 McVersionJsonDownload download;
 
@@ -698,9 +736,89 @@ namespace UglyLauncher.Minecraft
                 if (lib.Extract != null)
                 {
                     if (!Directory.Exists(_sNativesDir + @"\" + MC.Id)) Directory.CreateDirectory(_sNativesDir + @"\" + MC.Id);
-                    ExtractZipFile(download.Path, _sNativesDir + @"\" + MC.Id);
+                    ExtractZipFiles(download.Path, _sNativesDir + @"\" + MC.Id);
                 }
-                else lLibraries.Add(download.Path); // files needed for startup
+                else
+                {
+                    //lLibraries.Add(download.Path); // files needed for startup
+                    string[] libname = lib.Name.Split(':');
+                    
+                    //natives could lead to already exists keys
+                    if(lib.Natives != null)
+                    {
+                        libname[1] += "-native";
+                    }
+                    ClassPath.Add(libname[0] + ":" + libname[1], download.Path);
+                }
+            }
+        }
+
+        private void DownloadForgeLibraries(MCForgeInstaller Forge)
+        {
+            foreach(Json.MCForgeInstaller.Library Lib in Forge.VersionInfo.Libraries)
+            {
+                string sLocalPath = _sLibraryDir;
+                string sRemotePath = "https://libraries.minecraft.net/";
+                string sLibPath = null;
+                string[] sLibName = Lib.Name.Split(':');
+
+                // use download url from Forge
+                if (Lib.Url != null) sRemotePath = Lib.Url.ToString();
+
+                // fix for typesafe libraries
+                if(sLibName[0].Contains("com.typesafe"))
+                {
+                    sRemotePath = "http://central.maven.org/maven2/";
+                }
+
+                sLibPath = string.Format("{0}/{1}/{2}/{1}-{2}.jar",sLibName[0].Replace('.','/'), sLibName[1], sLibName[2]);
+                sLocalPath += @"\" + sLibPath.Replace('/', '\\');
+                sRemotePath += sLibPath;
+
+                // dont download Forge itself
+                if (!sLibName[0].Equals("net.minecraftforge") || !sLibName[1].Equals("forge"))
+                {
+                    DownloadFileTo(sRemotePath,sLocalPath,true);
+
+                    // add to classpath (replace)
+                    if(ClassPath.ContainsKey(sLibName[0] + ":" + sLibName[1]))
+                    {
+                        ClassPath.Remove(sLibName[0] + ":" + sLibName[1]);
+                    }
+                    ClassPath.Add(sLibName[0] + ":" + sLibName[1], sLocalPath);
+                }
+            }
+        }
+
+        private void DownloadForgeLibraries(MCForgeVersion forge)
+        {
+            foreach (ForgeLibrary lib in forge.Libraries)
+            {
+                string[] sLibName = lib.Name.Split(':');
+
+                McVersionJsonDownload download;
+                download = lib.Downloads;
+
+                // dont download Forge itself
+                if (!sLibName[0].Equals("net.minecraftforge") || !sLibName[1].Equals("forge"))
+                {
+                    download.Path = _sLibraryDir + @"\" + download.Path.Replace("/", @"\");
+                    DownloadFileTo(download);
+
+                    // add to classpath (replace)
+
+                    // fix for modlauncher (api)
+                    if(sLibName.Length == 4 && sLibName[0].Equals("cpw.mods") && sLibName[1].Equals("modlauncher") && sLibName[3].Equals("api"))
+                    {
+                        sLibName[1] += "-api";
+                    }
+
+                    if (ClassPath.ContainsKey(sLibName[0] + ":" + sLibName[1]))
+                    {
+                        ClassPath.Remove(sLibName[0] + ":" + sLibName[1]);
+                    }
+                    ClassPath.Add(sLibName[0] + ":" + sLibName[1], download.Path);
+                }
             }
         }
 
@@ -805,45 +923,7 @@ namespace UglyLauncher.Minecraft
                 }
             }
         }
-
-        /*
-        private MCGameStructure MergeObjects(MCGameStructure VersionPack, MCGameStructure VersionMojang)
-        {
-            if (VersionPack.libraries != null)
-            {
-                // Backup Mojang lib list
-                List<MCGameStructureLib> MJLibs = new List<MCGameStructureLib>();
-                foreach (MCGameStructureLib Lib in VersionMojang.libraries)
-                    MJLibs.Add(Lib);
-                VersionMojang.libraries.Clear();
-
-                // Build Pack lib list (with helper)
-                foreach (MCGameStructureLib Lib in VersionPack.libraries)
-                {
-                    string[] LibName = Lib.name.Split(':');
-                    Lib.name2 = LibName[0] + ":" + LibName[1];
-                    VersionMojang.libraries.Add(Lib);
-                }
-
-                // Merge 
-                foreach (MCGameStructureLib Lib in MJLibs)
-                {
-                    Boolean bFoundLib = false;
-                    foreach (MCGameStructureLib Lib2 in VersionMojang.libraries)
-                    {
-                        string[] LibName = Lib.name.Split(':');
-                        if (Lib2.name2 == LibName[0] + ":" + LibName[1])
-                            bFoundLib = true;
-                    }
-                    if (bFoundLib == false) VersionMojang.libraries.Add(Lib);
-                }
-            }
-            if (VersionPack.mainClass != null) VersionMojang.mainClass = VersionPack.mainClass;
-            if (VersionPack.minecraftArguments != null) VersionMojang.minecraftArguments = VersionPack.minecraftArguments;
-            return VersionMojang;
-        }
-        */
-
+        
         private void InstallPack(string sPackName, string sPackVersion)
         {
             // delete pack if installed
@@ -871,7 +951,7 @@ namespace UglyLauncher.Minecraft
             _bar.Hide();
 
             // unzip pack
-            ExtractZipFile(_sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip", _sPacksDir);
+            ExtractZipFiles(_sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip", _sPacksDir);
 
             // delete zip file
             File.Delete(_sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip");
@@ -891,6 +971,7 @@ namespace UglyLauncher.Minecraft
             // Delete Directories
             if (Directory.Exists(PackDir + @"\minecraft\logs")) Directory.Delete(PackDir + @"\minecraft\logs", true);
             if (Directory.Exists(PackDir + @"\minecraft\mods")) Directory.Delete(PackDir + @"\minecraft\mods", true);
+            if (Directory.Exists(PackDir + @"\minecraft\modclasses")) Directory.Delete(PackDir + @"\minecraft\\modclasses", true);
             if (Directory.Exists(PackDir + @"\minecraft\config")) Directory.Delete(PackDir + @"\minecraft\config", true);
             if (Directory.Exists(PackDir + @"\minecraft\stats")) Directory.Delete(PackDir + @"\minecraft\stats", true);
             if (Directory.Exists(PackDir + @"\minecraft\crash-reports")) Directory.Delete(PackDir + @"\minecraft\crash-reports", true);
@@ -909,7 +990,7 @@ namespace UglyLauncher.Minecraft
             if (File.Exists(PackDir + @"\version")) File.Delete(PackDir + @"\version");
         }
 
-        private void ExtractZipFile(string archiveFilenameIn, string outFolder, string exclude = null)
+        private void ExtractZipFiles(string archiveFilenameIn, string outFolder)
         {
             ZipFile zf = null;
             try
@@ -925,7 +1006,7 @@ namespace UglyLauncher.Minecraft
                     {
                         continue;           // Ignore directories
                     }
-                    String entryFileName = zipEntry.Name;
+                    string entryFileName = zipEntry.Name;
                     // to remove the folder from the entry:- entryFileName = Path.GetFileName(entryFileName);
                     // Optionally match entrynames against a selection list here to skip as desired.
                     // The unpacked length is available in the zipEntry.Size property.
@@ -934,7 +1015,7 @@ namespace UglyLauncher.Minecraft
                     Stream zipStream = zf.GetInputStream(zipEntry);
 
                     // Manipulate the output filename here as desired.
-                    String fullZipToPath = Path.Combine(outFolder, entryFileName);
+                    string fullZipToPath = Path.Combine(outFolder, entryFileName);
                     string directoryName = Path.GetDirectoryName(fullZipToPath);
                     if (directoryName.Length > 0)
                         Directory.CreateDirectory(directoryName);
@@ -947,6 +1028,56 @@ namespace UglyLauncher.Minecraft
                         using (FileStream streamWriter = File.Create(fullZipToPath))
                         {
                             StreamUtils.Copy(zipStream, streamWriter, buffer);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                if (zf != null)
+                {
+                    zf.IsStreamOwner = true; // Makes close also shut the underlying stream
+                    zf.Close(); // Ensure we release resources
+                }
+            }
+        }
+
+        private void ExtractZipFiles(string archiveFilenameIn, string outFolder, List<string> filesToExtract)
+        {
+            ZipFile zf = null;
+            try
+            {
+                FileStream fs = File.OpenRead(archiveFilenameIn);
+                zf = new ZipFile(fs);
+                foreach (ZipEntry zipEntry in zf)
+                {
+                    if (!zipEntry.IsFile)
+                    {
+                        continue;           // Ignore directories
+                    }
+
+                    string entryFileName = zipEntry.Name;
+                    if (filesToExtract.Contains(entryFileName))
+                    {
+
+                        byte[] buffer = new byte[4096];     // 4K is optimum
+                        Stream zipStream = zf.GetInputStream(zipEntry);
+
+                        // Manipulate the output filename here as desired.
+                        string fullZipToPath = Path.Combine(outFolder, entryFileName);
+                        string directoryName = Path.GetDirectoryName(fullZipToPath);
+                        if (directoryName.Length > 0)
+                            Directory.CreateDirectory(directoryName);
+
+                        if (!zipEntry.IsDirectory)
+                        {
+                            // Unzip file in buffered chunks. This is just as fast as unpacking to a buffer the full size
+                            // of the file, but does not waste memory.
+                            // The "using" will close the stream even if an exception occurs.
+                            using (FileStream streamWriter = File.Create(fullZipToPath))
+                            {
+                                StreamUtils.Copy(zipStream, streamWriter, buffer);
+                            }
                         }
                     }
                 }

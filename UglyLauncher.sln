@@ -1,9 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2036
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UglyLauncher", "UglyLauncher\UglyLauncher.csproj", "{B1E91F4C-C501-4281-94C9-7477A9202AFA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UglyBootstrap", "UglyBootstrap\UglyBootstrap.csproj", "{64FEEAFF-CC91-4745-90A4-377E37558155}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,18 +25,17 @@ Global
 		{B1E91F4C-C501-4281-94C9-7477A9202AFA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{B1E91F4C-C501-4281-94C9-7477A9202AFA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B1E91F4C-C501-4281-94C9-7477A9202AFA}.Release|x86.ActiveCfg = Release|Any CPU
-		{64FEEAFF-CC91-4745-90A4-377E37558155}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{64FEEAFF-CC91-4745-90A4-377E37558155}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{64FEEAFF-CC91-4745-90A4-377E37558155}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{64FEEAFF-CC91-4745-90A4-377E37558155}.Debug|x86.ActiveCfg = Debug|x86
-		{64FEEAFF-CC91-4745-90A4-377E37558155}.Debug|x86.Build.0 = Debug|x86
-		{64FEEAFF-CC91-4745-90A4-377E37558155}.Release|Any CPU.ActiveCfg = Release|x86
-		{64FEEAFF-CC91-4745-90A4-377E37558155}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{64FEEAFF-CC91-4745-90A4-377E37558155}.Release|Mixed Platforms.Build.0 = Release|x86
-		{64FEEAFF-CC91-4745-90A4-377E37558155}.Release|x86.ActiveCfg = Release|x86
-		{64FEEAFF-CC91-4745-90A4-377E37558155}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		BuildVersion_DetectChanges = True
+		BuildVersion_UpdateFileVersion = False
+		BuildVersion_UpdateAssemblyVersion = False
+		BuildVersion_BuildVersioningStyle = None.None.None.None
+		BuildVersion_UseGlobalSettings = False
+		BuildVersion_StartDate = 2000/1/1
+		SolutionGuid = {9B8E28E6-7FFB-4BF7-9030-EDEF152D7F7E}
 	EndGlobalSection
 EndGlobal

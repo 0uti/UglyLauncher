@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -23,7 +24,7 @@ namespace UglyLauncher.Minecraft.Json.Version
         public string Id { get; set; }
 
         [JsonProperty("libraries")]
-        public Library[] Libraries { get; set; }
+        public List<Library> Libraries { get; set; }
 
         [JsonProperty("logging")]
         public Logging Logging { get; set; }
