@@ -21,6 +21,11 @@ namespace UglyLauncher.Minecraft.Json.Pack
         public static MCPack FromJson(string json) => JsonConvert.DeserializeObject<MCPack>(json, Converter.Settings);
     }
 
+    public static class Serialize
+    {
+        public static string ToJson(this MCPack self) => JsonConvert.SerializeObject(self, Converter.Settings);
+    }
+
     internal static class Converter
     {
         public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings

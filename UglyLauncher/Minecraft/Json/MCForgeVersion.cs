@@ -3,9 +3,6 @@ using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UglyLauncher.Minecraft.Json.Version;
 
 namespace UglyLauncher.Minecraft.Json.MCForgeVersion
@@ -19,7 +16,7 @@ namespace UglyLauncher.Minecraft.Json.MCForgeVersion
         public string Id { get; set; }
 
         [JsonProperty("libraries")]
-        public List<ForgeLibrary> Libraries { get; set; }
+        public List<Library> Libraries { get; set; }
 
         /*
         [JsonProperty("logging")]
@@ -43,16 +40,6 @@ namespace UglyLauncher.Minecraft.Json.MCForgeVersion
     {
         [JsonProperty("game")]
         public GameElement[] Game { get; set; }
-
-    }
-
-    public partial class ForgeLibrary
-    {
-        [JsonProperty("downloads")]
-        public McVersionJsonDownload Downloads { get; set; }
-
-        [JsonProperty("name")]
-        public string Name { get; set; }
 
     }
 

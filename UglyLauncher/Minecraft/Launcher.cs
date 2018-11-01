@@ -102,14 +102,27 @@ namespace UglyLauncher.Minecraft
         }
 
         // download file if needed
-        private void DownloadFileTo(Uri Url, string sLocalPath, bool bShowBar = true, string sBarDisplayText = null)
+        private void DownloadFileTo(Uri Url, string sLocalPath, bool bShowBar = true, string sBarDisplayText = null, string sha1 = null)
         {
             Boolean _download = false;
             if (!File.Exists(sLocalPath)) _download = true;
             else
             {
                 FileInfo f = new FileInfo(sLocalPath);
-                if (f.Length == 0) _download = true;
+                if (f.Length == 0)
+                {
+                    _download = true;
+                }
+
+                // check SHA1
+                if (sha1 != null)  
+                {
+                    string file_sha = ComputeHashSHA(sLocalPath);
+                    if (!file_sha.Equals(sha1))
+                    {
+                        _download = true;
+                    }
+                }
             }
 
             if (_download)
@@ -162,12 +175,9 @@ namespace UglyLauncher.Minecraft
                 throw ex;
             }
         }
-        
+
         // Get packe liste
-        public MCAvailablePacks GetAvailablePacks()
-        {
-            return PacksAvailable;
-        }
+        public MCAvailablePacks GetAvailablePacks() => PacksAvailable;
 
         public MCAvailablePack GetAvailablePack(string sPackName)
         {
@@ -365,17 +375,7 @@ namespace UglyLauncher.Minecraft
                 // Install Forge
                 InstallForge(pack.ForgeVersion);
 
-                // pre 1.13 files
-                if (File.Exists(_sLibraryDir + _sForgeTree.Replace('/', '\\') + pack.ForgeVersion + @"\install_profile.json"))
-                {
-                    MCForgeInstaller MCForge = MCForgeInstaller.FromJson(File.ReadAllText(_sLibraryDir + _sForgeTree.Replace('/', '\\') + pack.ForgeVersion + @"\install_profile.json").Trim());
-                    // download Forge libraries
-                    DownloadForgeLibraries(MCForge);
-
-                    // replace vanilla settings
-                    MCMojang.MainClass = MCForge.VersionInfo.MainClass;
-                    MCMojang.MinecraftArguments = MCForge.VersionInfo.MinecraftArguments;
-                }
+                
 
                 // post 1.13 files
                 if (File.Exists(_sLibraryDir + _sForgeTree.Replace('/', '\\') + pack.ForgeVersion + @"\version.json"))
@@ -385,7 +385,27 @@ namespace UglyLauncher.Minecraft
                     DownloadForgeLibraries(MCForge);
                     // replace vanilla values
                     MCMojang.MainClass = MCForge.MainClass;
-                    MCMojang.Arguments.Game = MCForge.Arguments.Game;
+                    // append forge arguments
+
+                    List<GameElement> itemList = MCMojang.Arguments.Game.ToList<GameElement>();
+                    List<GameElement> moreItems = MCForge.Arguments.Game.ToList<GameElement>();
+
+                    itemList.AddRange(moreItems);
+
+                    MCMojang.Arguments.Game = itemList.ToArray();
+
+                    //MCMojang.Arguments.Game = MCForge.Arguments.Game;
+                }
+                // pre 1.13 files
+                else if (File.Exists(_sLibraryDir + _sForgeTree.Replace('/', '\\') + pack.ForgeVersion + @"\install_profile.json"))
+                {
+                    MCForgeInstaller MCForge = MCForgeInstaller.FromJson(File.ReadAllText(_sLibraryDir + _sForgeTree.Replace('/', '\\') + pack.ForgeVersion + @"\install_profile.json").Trim());
+                    // download Forge libraries
+                    DownloadForgeLibraries(MCForge);
+
+                    // replace vanilla settings
+                    MCMojang.MainClass = MCForge.VersionInfo.MainClass;
+                    MCMojang.MinecraftArguments = MCForge.VersionInfo.MinecraftArguments;
                 }
             }
 
@@ -792,33 +812,38 @@ namespace UglyLauncher.Minecraft
 
         private void DownloadForgeLibraries(MCForgeVersion forge)
         {
-            foreach (ForgeLibrary lib in forge.Libraries)
+            foreach (Json.Version.Library lib in forge.Libraries)
             {
                 string[] sLibName = lib.Name.Split(':');
-
                 McVersionJsonDownload download;
-                download = lib.Downloads;
 
                 // dont download Forge itself
-                if (!sLibName[0].Equals("net.minecraftforge") || !sLibName[1].Equals("forge"))
+                if (sLibName[0].Equals("net.minecraftforge") && sLibName[1].Equals("forge")) continue;
+
+                download = lib.Downloads.Artifact;
+                download.Path = _sLibraryDir + @"\" + download.Path.Replace("/", @"\");
+                
+                // fix for typesafe libraries
+                if (sLibName[0].Contains("org.apache.logging.log4j"))
                 {
-                    download.Path = _sLibraryDir + @"\" + download.Path.Replace("/", @"\");
-                    DownloadFileTo(download);
-
-                    // add to classpath (replace)
-
-                    // fix for modlauncher (api)
-                    if(sLibName.Length == 4 && sLibName[0].Equals("cpw.mods") && sLibName[1].Equals("modlauncher") && sLibName[3].Equals("api"))
-                    {
-                        sLibName[1] += "-api";
-                    }
-
-                    if (ClassPath.ContainsKey(sLibName[0] + ":" + sLibName[1]))
-                    {
-                        ClassPath.Remove(sLibName[0] + ":" + sLibName[1]);
-                    }
-                    ClassPath.Add(sLibName[0] + ":" + sLibName[1], download.Path);
+                    download.Url = new Uri("http://central.maven.org/maven2/" + sLibName[0].Replace('.','/') + "/" + sLibName[1] + "/" + sLibName[2] + "/" + sLibName[1] + "-" + sLibName[2] + ".jar");
                 }
+
+                DownloadFileTo(download);
+
+                // fix for modlauncher (api)
+                if (sLibName.Length == 4 && sLibName[0].Equals("cpw.mods") && sLibName[1].Equals("modlauncher") && sLibName[3].Equals("api"))
+                {
+                    sLibName[1] += "-api";
+                    continue;
+                }
+
+                // add to classpath (replace)
+                if (ClassPath.ContainsKey(sLibName[0] + ":" + sLibName[1]))
+                {
+                    ClassPath.Remove(sLibName[0] + ":" + sLibName[1]);
+                }
+                ClassPath.Add(sLibName[0] + ":" + sLibName[1], download.Path);
             }
         }
 
@@ -900,7 +925,7 @@ namespace UglyLauncher.Minecraft
         private void DownloadAssets(MCVersion MC)
         {
             // get assetIndex Json
-            DownloadFileTo(MC.AssetIndex.Url, _sAssetsDir + @"\indexes\" + MC.AssetIndex.Id + ".json");
+            DownloadFileTo(MC.AssetIndex.Url, _sAssetsDir + @"\indexes\" + MC.AssetIndex.Id + ".json",true,null,MC.AssetIndex.Sha1);
 
             // load assetIndex Json File
             MCAssets assets = MCAssets.FromJson(File.ReadAllText(_sAssetsDir + @"\indexes\" + MC.AssetIndex.Id + ".json").Trim());
@@ -924,6 +949,21 @@ namespace UglyLauncher.Minecraft
             }
         }
         
+        private MCAvailablePackVersion GetAvailablePackVersion(string sPackName, string sPackVersion)
+        {
+            MCAvailablePack pack = GetAvailablePack(sPackName);
+            
+            foreach (MCAvailablePackVersion version in pack.Versions)
+            {
+                if (version.Version.Equals(sPackVersion))
+                {
+                    return version;
+                }
+            }
+
+            return new MCAvailablePackVersion();
+        }
+
         private void InstallPack(string sPackName, string sPackVersion)
         {
             // delete pack if installed
@@ -944,17 +984,35 @@ namespace UglyLauncher.Minecraft
                 File.Delete(_sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip");
             }
 
-            // download pack
-            DownloadFileTo(_sPackServer + "/packs/" + sPackName + "/" + sPackName + "-" + sPackVersion + ".zip", _sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip", true, "Downloading Pack " + sPackName);
+            MCAvailablePackVersion version = GetAvailablePackVersion(sPackName, sPackVersion);
+            if (version.DownloadZip == true)
+            {
+                // download pack
+                DownloadFileTo(_sPackServer + "/packs/" + sPackName + "/" + sPackName + "-" + sPackVersion + ".zip", _sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip", true, "Downloading Pack " + sPackName);
 
-            // Hide Bar
-            _bar.Hide();
+                // Hide Bar
+                _bar.Hide();
 
-            // unzip pack
-            ExtractZipFiles(_sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip", _sPacksDir);
+                // unzip pack
+                ExtractZipFiles(_sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip", _sPacksDir);
 
-            // delete zip file
-            File.Delete(_sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip");
+                // delete zip file
+                File.Delete(_sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip");
+            }
+            else
+            {
+                // write pack.json file
+                MCPack pack = new MCPack
+                {
+                    Type = "vanilla",
+                    MCVersion = version.Version
+                };
+
+                File.WriteAllText(_sPacksDir + @"\" + sPackName +  @"\pack.json", pack.ToJson());
+
+                // write version file
+                File.WriteAllText(_sPacksDir + @"\" + sPackName + @"\version", version.Version);
+            }
 
             // check for "minecraft" folder
             if (!Directory.Exists(_sPacksDir + @"\" + sPackName + @"\minecraft"))

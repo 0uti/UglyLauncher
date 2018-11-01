@@ -237,12 +237,13 @@ namespace UglyLauncher
                 {
                     MCAvailablePack APack = L.GetAvailablePack(LstPacks.SelectedItems[0].Text);
                     
-                    
                     CmbPackVersions.Items.Add("Recommended (" + APack.RecommendedVersion + ")");
                     // Load Versions in Dropdown
-                    foreach (string sPackVersion in APack.Versions)
-                        CmbPackVersions.Items.Add(sPackVersion);
-
+                    foreach (MCAvailablePackVersion version in APack.Versions)
+                    {
+                        CmbPackVersions.Items.Add(version.Version);
+                    }
+                        
                     // select version in combo depend on if pack is installed and version number
                     if (L.IsPackInstalled(APack.Name) == true)
                     {

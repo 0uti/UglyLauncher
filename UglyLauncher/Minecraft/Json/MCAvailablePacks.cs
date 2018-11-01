@@ -1,15 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Converters;// To parse this JSON data, add NuGet 'Newtonsoft.Json' then do:
+//
+//    using QuickType;
+//
+//    var mcAvailablePacks = McAvailablePacks.FromJson(jsonString);
 
 namespace UglyLauncher.Minecraft.Json.AvailablePacks
 {
-
     public partial class MCAvailablePacks
     {
         [JsonProperty("packs")]
-        public IList<MCAvailablePack> Packs { get; set; }
+        public MCAvailablePack[] Packs { get; set; }
     }
 
     public partial class MCAvailablePack
@@ -21,12 +23,26 @@ namespace UglyLauncher.Minecraft.Json.AvailablePacks
         public string RecommendedVersion { get; set; }
 
         [JsonProperty("versions")]
-        public IList<string> Versions { get; set; }
+        public MCAvailablePackVersion[] Versions { get; set; }
+    }
+
+    public partial class MCAvailablePackVersion
+    {
+        [JsonProperty("version")]
+        public string Version { get; set; }
+
+        [JsonProperty("downloadZip")]
+        public bool DownloadZip { get; set; }
     }
 
     public partial class MCAvailablePacks
     {
         public static MCAvailablePacks FromJson(string json) => JsonConvert.DeserializeObject<MCAvailablePacks>(json, Converter.Settings);
+    }
+
+    public static class Serialize
+    {
+        public static string ToJson(this MCAvailablePacks self) => JsonConvert.SerializeObject(self, Converter.Settings);
     }
 
     internal static class Converter
@@ -41,5 +57,3 @@ namespace UglyLauncher.Minecraft.Json.AvailablePacks
         };
     }
 }
-
-
