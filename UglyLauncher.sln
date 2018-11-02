@@ -1,41 +1,26 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.28010.2036
+VisualStudioVersion = 15.0.28010.2048
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UglyLauncher", "UglyLauncher\UglyLauncher.csproj", "{B1E91F4C-C501-4281-94C9-7477A9202AFA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UglyLauncher", "UglyLauncher\UglyLauncher.csproj", "{F418B0AE-F667-451C-A15D-9F2FAA765808}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Debug|Mixed Platforms = Debug|Mixed Platforms
-		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
-		Release|Mixed Platforms = Release|Mixed Platforms
-		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B1E91F4C-C501-4281-94C9-7477A9202AFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1E91F4C-C501-4281-94C9-7477A9202AFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B1E91F4C-C501-4281-94C9-7477A9202AFA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{B1E91F4C-C501-4281-94C9-7477A9202AFA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{B1E91F4C-C501-4281-94C9-7477A9202AFA}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B1E91F4C-C501-4281-94C9-7477A9202AFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B1E91F4C-C501-4281-94C9-7477A9202AFA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B1E91F4C-C501-4281-94C9-7477A9202AFA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{B1E91F4C-C501-4281-94C9-7477A9202AFA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{B1E91F4C-C501-4281-94C9-7477A9202AFA}.Release|x86.ActiveCfg = Release|Any CPU
+		{F418B0AE-F667-451C-A15D-9F2FAA765808}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F418B0AE-F667-451C-A15D-9F2FAA765808}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F418B0AE-F667-451C-A15D-9F2FAA765808}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F418B0AE-F667-451C-A15D-9F2FAA765808}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_DetectChanges = True
-		BuildVersion_UpdateFileVersion = False
-		BuildVersion_UpdateAssemblyVersion = False
-		BuildVersion_BuildVersioningStyle = None.None.None.None
-		BuildVersion_UseGlobalSettings = False
 		BuildVersion_StartDate = 2000/1/1
-		SolutionGuid = {9B8E28E6-7FFB-4BF7-9030-EDEF152D7F7E}
+		SolutionGuid = {CA2BFA1F-180B-4CB4-B3BD-E0F0436DFFED}
 	EndGlobalSection
 EndGlobal
