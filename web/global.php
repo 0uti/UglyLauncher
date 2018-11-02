@@ -22,9 +22,9 @@ set_error_handler("exception_error_handler");
 // load config file
 include_once(dirname(__FILE__)."/config.php");
 
-
 // load classes
 include_once($global['include_path']."class.uglylauncher.php");
+include_once($global['include_path']."class.minecraft.php");
 
 
 // init classes
@@ -32,6 +32,7 @@ try
 {
   $DB = new UglyLauncherDB;
   $U = new UglyLauncher;
+  $M = new Minecraft;
 }
 catch(ErrorException $e)
 {
