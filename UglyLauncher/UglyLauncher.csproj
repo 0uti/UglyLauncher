@@ -81,6 +81,7 @@
       <DependentUpon>FrmUserAccounts.cs</DependentUpon>
     </Compile>
     <Compile Include="AccountManager\Manager.cs" />
+    <Compile Include="Minecraft\Forge\Forge.cs" />
     <Compile Include="FrmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -111,23 +112,24 @@
     <Compile Include="FrmProgressbar.designer.cs">
       <DependentUpon>FrmProgressbar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Internet\DownloadHelper.cs" />
     <Compile Include="Internet\HTTP.cs" />
-    <Compile Include="Minecraft\Authentication.cs" />
+    <Compile Include="Minecraft\Authentication\Authentication.cs" />
     <Compile Include="Minecraft\Exceptions.cs" />
-    <Compile Include="Minecraft\Json\MCAssets.cs" />
-    <Compile Include="Minecraft\Json\MCAuthenticateError.cs" />
-    <Compile Include="Minecraft\Json\MCAuthenticateRequest.cs" />
-    <Compile Include="Minecraft\Json\MCAuthenticateResponse.cs" />
+    <Compile Include="Minecraft\Files\FileStorage.cs" />
+    <Compile Include="Minecraft\Files\Json\Assets.cs" />
+    <Compile Include="Minecraft\Authentication\Json\AuthenticateError.cs" />
+    <Compile Include="Minecraft\Authentication\Json\AuthenticateRequest.cs" />
+    <Compile Include="Minecraft\Authentication\Json\AuthenticateResponse.cs" />
     <Compile Include="Minecraft\Json\MCAvailablePacks.cs" />
-    <Compile Include="Minecraft\Json\MCForgeInstaller.cs" />
-    <Compile Include="Minecraft\Json\MCForgeVersion.cs" />
+    <Compile Include="Minecraft\Forge\Json\MCForgeInstaller.cs" />
+    <Compile Include="Minecraft\Forge\Json\MCForgeVersion.cs" />
     <Compile Include="Minecraft\Json\MCPack.cs" />
-    <Compile Include="Minecraft\Json\MCRefreshRequest.cs" />
-    <Compile Include="Minecraft\Json\MCRefreshResponse.cs" />
-    <Compile Include="Minecraft\Json\MCVersion.cs" />
-    <Compile Include="Minecraft\Json\MCVersions.cs" />
+    <Compile Include="Minecraft\Authentication\Json\RefreshRequest.cs" />
+    <Compile Include="Minecraft\Authentication\Json\RefreshResponse.cs" />
+    <Compile Include="Minecraft\Files\Json\GameVersion.cs" />
+    <Compile Include="Minecraft\Files\Json\GameVersionList.cs" />
     <Compile Include="Minecraft\Launcher.cs" />
-    <Compile Include="Minecraft\Versions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\configuration.cs" />

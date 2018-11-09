@@ -3,14 +3,14 @@ using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using UglyLauncher.Minecraft.Json.Version;
+using UglyLauncher.Minecraft.Files.Json.GameVersion;
 
-namespace UglyLauncher.Minecraft.Json.MCForgeVersion
+namespace UglyLauncher.Minecraft.Forge.Json.ForgeVersion
 {
-    public partial class MCForgeVersion
+    public partial class ForgeVersion
     {
         [JsonProperty("arguments")]
-        public MCForgeArguments Arguments { get; set; }
+        public ForgeArguments Arguments { get; set; }
 
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -36,16 +36,16 @@ namespace UglyLauncher.Minecraft.Json.MCForgeVersion
 
     }
 
-    public partial class MCForgeArguments
+    public partial class ForgeArguments
     {
         [JsonProperty("game")]
         public GameElement[] Game { get; set; }
 
     }
 
-    public partial class MCForgeVersion
+    public partial class ForgeVersion
     {
-        public static MCForgeVersion FromJson(string json) => JsonConvert.DeserializeObject<MCForgeVersion>(json, Converter.Settings);
+        public static ForgeVersion FromJson(string json) => JsonConvert.DeserializeObject<ForgeVersion>(json, Converter.Settings);
     }
 
     internal static class Converter
@@ -103,7 +103,7 @@ namespace UglyLauncher.Minecraft.Json.MCForgeVersion
 
     internal class ValueConverter : JsonConverter
     {
-        public override bool CanConvert(Type t) => t == typeof(MCVersionValue) || t == typeof(MCVersionValue?);
+        public override bool CanConvert(Type t) => t == typeof(VersionValue) || t == typeof(VersionValue?);
 
         public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
         {
@@ -112,17 +112,17 @@ namespace UglyLauncher.Minecraft.Json.MCForgeVersion
                 case JsonToken.String:
                 case JsonToken.Date:
                     var stringValue = serializer.Deserialize<string>(reader);
-                    return new MCVersionValue { String = stringValue };
+                    return new VersionValue { String = stringValue };
                 case JsonToken.StartArray:
                     var arrayValue = serializer.Deserialize<string[]>(reader);
-                    return new MCVersionValue { StringArray = arrayValue };
+                    return new VersionValue { StringArray = arrayValue };
             }
             throw new Exception("Cannot unmarshal type Value");
         }
 
         public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
         {
-            var value = (MCVersionValue)untypedValue;
+            var value = (VersionValue)untypedValue;
             if (value.String != null)
             {
                 serializer.Serialize(writer, value.String);

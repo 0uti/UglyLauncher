@@ -1,14 +1,13 @@
 ﻿using System;
-
 using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace UglyLauncher.Minecraft.Json.MCForgeInstaller
+namespace UglyLauncher.Minecraft.Forge.Json.ForgeInstaller
 {
 
 
-    public partial class MCForgeInstaller
+    public partial class ForgeInstaller
     {
         [JsonProperty("install")]
         public Install Install { get; set; }
@@ -108,14 +107,14 @@ namespace UglyLauncher.Minecraft.Json.MCForgeInstaller
     {
     }
 
-    public partial class MCForgeInstaller
+    public partial class ForgeInstaller
     {
-        public static MCForgeInstaller FromJson(string json) => JsonConvert.DeserializeObject<MCForgeInstaller>(json, Converter.Settings);
+        public static ForgeInstaller FromJson(string json) => JsonConvert.DeserializeObject<ForgeInstaller>(json, Converter.Settings);
     }
 
     public static class Serialize
     {
-        public static string ToJson(this MCForgeInstaller self) => JsonConvert.SerializeObject(self, Converter.Settings);
+        public static string ToJson(this ForgeInstaller self) => JsonConvert.SerializeObject(self, Converter.Settings);
     }
 
     internal static class Converter

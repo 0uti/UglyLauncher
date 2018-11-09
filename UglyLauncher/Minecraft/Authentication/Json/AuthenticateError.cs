@@ -2,9 +2,9 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace UglyLauncher.Minecraft.Json.MCAuthenticateError
+namespace UglyLauncher.Minecraft.Authentication.Json.AuthenticatieError
 {
-    public partial class MCAuthenticatieError
+    public partial class AuthenticatieError
     {
         [JsonProperty("error")]
         public string Error { get; set; }
@@ -16,14 +16,14 @@ namespace UglyLauncher.Minecraft.Json.MCAuthenticateError
         public string Cause { get; set; }
     }
 
-    public partial class MCAuthenticatieError
+    public partial class AuthenticatieError
     {
-        public static MCAuthenticatieError FromJson(string json) => JsonConvert.DeserializeObject<MCAuthenticatieError>(json, Converter.Settings);
+        public static AuthenticatieError FromJson(string json) => JsonConvert.DeserializeObject<AuthenticatieError>(json, Converter.Settings);
     }
 
     public static class Serialize
     {
-        public static string ToJson(this MCAuthenticatieError self) => JsonConvert.SerializeObject(self, Converter.Settings);
+        public static string ToJson(this AuthenticatieError self) => JsonConvert.SerializeObject(self, Converter.Settings);
     }
 
     internal static class Converter

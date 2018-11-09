@@ -6,6 +6,7 @@ using UglyLauncher.Minecraft;
 using UglyLauncher.AccountManager;
 using UglyLauncher.Settings;
 using UglyLauncher.Minecraft.Json.AvailablePacks;
+using UglyLauncher.Minecraft.Authentication;
 
 namespace UglyLauncher
 {
@@ -252,7 +253,7 @@ namespace UglyLauncher
                         else CmbPackVersions.SelectedIndex = CmbPackVersions.FindStringExact(IPack.CurrentVersion);
                     }
                     else CmbPackVersions.SelectedIndex = 0;
-                    WebPackDetails.Navigate(L._sPackServer + @"/packs/" + APack.Name + @"/" + APack.Name + @".html");
+                    WebPackDetails.Navigate(Launcher._sPackServer + @"/packs/" + APack.Name + @"/" + APack.Name + @".html");
                     MnuDownloadPack.Enabled = true;
                 }
                 else

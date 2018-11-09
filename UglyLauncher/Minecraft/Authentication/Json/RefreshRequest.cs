@@ -3,11 +3,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 
-namespace UglyLauncher.Minecraft.Json.MCRefreshRequest
-{
-
-
-    public partial class MCRefreshRequest
+namespace UglyLauncher.Minecraft.Authentication.Json.RefreshRequest
+{ 
+    public partial class RefreshRequest
     {
         [JsonProperty("accessToken")]
         public string AccessToken { get; set; }
@@ -28,14 +26,14 @@ namespace UglyLauncher.Minecraft.Json.MCRefreshRequest
         public string Name { get; set; }
     }
 
-    public partial class MCRefreshRequest
+    public partial class RefreshRequest
     {
-        public static MCRefreshRequest FromJson(string json) => JsonConvert.DeserializeObject<MCRefreshRequest>(json, Converter.Settings);
+        public static RefreshRequest FromJson(string json) => JsonConvert.DeserializeObject<RefreshRequest>(json, Converter.Settings);
     }
 
     public static class Serialize
     {
-        public static string ToJson(this MCRefreshRequest self) => JsonConvert.SerializeObject(self, Converter.Settings);
+        public static string ToJson(this RefreshRequest self) => JsonConvert.SerializeObject(self, Converter.Settings);
     }
 
     internal static class Converter

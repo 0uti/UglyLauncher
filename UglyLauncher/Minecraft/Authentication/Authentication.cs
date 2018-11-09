@@ -2,19 +2,19 @@
 using System.IO;
 using System.Net;
 using System.Text;
-using UglyLauncher.Minecraft.Json.MCAuthenticateRequest;
-using UglyLauncher.Minecraft.Json.MCAuthenticateError;
-using UglyLauncher.Minecraft.Json.MCAuthenticateResponse;
-using UglyLauncher.Minecraft.Json.MCRefreshRequest;
-using UglyLauncher.Minecraft.Json.MCRefreshResponse;
+using UglyLauncher.Minecraft.Authentication.Json.AuthenticateRequest;
+using UglyLauncher.Minecraft.Authentication.Json.AuthenticateResponse;
+using UglyLauncher.Minecraft.Authentication.Json.AuthenticatieError;
+using UglyLauncher.Minecraft.Authentication.Json.RefreshRequest;
+using UglyLauncher.Minecraft.Authentication.Json.RefreshResponse;
 
-namespace UglyLauncher.Minecraft
+namespace UglyLauncher.Minecraft.Authentication
 {
     class Authentication
     {
         private readonly string sAuthServer = "https://authserver.mojang.com";
 
-        public MCAuthenticateResponse Authenticate(string sUser, string sPassword)
+        public AuthenticateResponse Authenticate(string sUser, string sPassword)
         {
             // declare needed objects
             string sJsonResponse = null;
@@ -24,7 +24,7 @@ namespace UglyLauncher.Minecraft
             Stream dataStream = null;
 
             // create and fill JSON object
-            MCAuthenticateRequest jsonObject = new MCAuthenticateRequest
+            AuthenticateRequest jsonObject = new AuthenticateRequest
             {
                 Username = sUser,
                 Password = sPassword
@@ -33,7 +33,7 @@ namespace UglyLauncher.Minecraft
             jsonObject.Agent.Version = 1;
 
             // Serialize JSON
-            string sJsonRequest = Json.MCAuthenticateRequest.Serialize.ToJson(jsonObject);
+            string sJsonRequest = Json.AuthenticateRequest.Serialize.ToJson(jsonObject);
 
             // Do POST request
             try
@@ -72,7 +72,7 @@ namespace UglyLauncher.Minecraft
                             sJsonResponse = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd().Trim();
                             // deserialize JSON
 
-                            MCAuthenticatieError ErrorMessage = MCAuthenticatieError.FromJson(sJsonResponse);
+                            AuthenticatieError ErrorMessage = AuthenticatieError.FromJson(sJsonResponse);
                             if (ErrorMessage.ErrorMessage == "Invalid credentials. Invalid username or password.") throw new MCInvalidCredentialsException(ErrorMessage.ErrorMessage);
                             if (ErrorMessage.ErrorMessage == "Invalid credentials. Account migrated, use e-mail as username.") throw new MCUserMigratedException(ErrorMessage.ErrorMessage);
                             throw new Exception(ErrorMessage.ErrorMessage);
@@ -91,7 +91,7 @@ namespace UglyLauncher.Minecraft
             }
 
             // Deserialize JSON into object
-            MCAuthenticateResponse MCResponse = MCAuthenticateResponse.FromJson(sJsonResponse);
+            AuthenticateResponse MCResponse = AuthenticateResponse.FromJson(sJsonResponse);
 
             //return
             return MCResponse;
@@ -107,7 +107,7 @@ namespace UglyLauncher.Minecraft
             Stream dataStream = null;
 
             // create and fill JSON object
-            MCRefreshRequest jsonObject = new MCRefreshRequest
+            RefreshRequest jsonObject = new RefreshRequest
             {
                 AccessToken = sAccessToken,
                 ClientToken = sClientToken
@@ -115,7 +115,8 @@ namespace UglyLauncher.Minecraft
 
 
             // Serialize JSON
-            string sJsonRequest = Json.MCRefreshRequest.Serialize.ToJson(jsonObject);
+            string sJsonRequest = Json.RefreshRequest.Serialize.ToJson(jsonObject);
+
 
             // send HTTP POST request
             try
@@ -153,7 +154,7 @@ namespace UglyLauncher.Minecraft
                             // Get Json Answer
                             sJsonResponse = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd().Trim();
                             // deserialize JSON
-                            MCAuthenticatieError ErrorMessage = MCAuthenticatieError.FromJson(sJsonResponse);
+                            AuthenticatieError ErrorMessage = AuthenticatieError.FromJson(sJsonResponse);
                             if (ErrorMessage.ErrorMessage == "Invalid token.") throw new MCInvalidTokenException(ErrorMessage.ErrorMessage);
                             throw new Exception(ErrorMessage.ErrorMessage);
                         }
@@ -170,7 +171,7 @@ namespace UglyLauncher.Minecraft
                 if (response != null) response.Close();
             }
             // Deserialize JSON into object
-            MCRefreshResponse MCResponse = MCRefreshResponse.FromJson(sJsonResponse);
+            RefreshResponse MCResponse = RefreshResponse.FromJson(sJsonResponse);
 
             //return
             return MCResponse.AccessToken;

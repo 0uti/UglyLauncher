@@ -3,18 +3,18 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace UglyLauncher.Minecraft.Json.MCVersions
+namespace UglyLauncher.Minecraft.Files.Json.GameVersionList
 {
-    public partial class MCVersions
+    public partial class GameVersionList
     {
         [JsonProperty("latest")]
-        public MCVersionsLatest Latest { get; set; }
+        public VersionsLatest Latest { get; set; }
 
         [JsonProperty("versions")]
-        public MCVersionsVersion[] Versions { get; set; }
+        public VersionsVersion[] Versions { get; set; }
     }
 
-    public partial class MCVersionsLatest
+    public partial class VersionsLatest
     {
         [JsonProperty("release")]
         public string Release { get; set; }
@@ -23,7 +23,7 @@ namespace UglyLauncher.Minecraft.Json.MCVersions
         public string Snapshot { get; set; }
     }
 
-    public partial class MCVersionsVersion
+    public partial class VersionsVersion
     {
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -43,9 +43,9 @@ namespace UglyLauncher.Minecraft.Json.MCVersions
 
     public enum TypeEnum { OldAlpha, OldBeta, Release, Snapshot };
 
-    public partial class MCVersions
+    public partial class GameVersionList
     {
-        public static MCVersions FromJson(string json) => JsonConvert.DeserializeObject<MCVersions>(json, Converter.Settings);
+        public static GameVersionList FromJson(string json) => JsonConvert.DeserializeObject<GameVersionList>(json, Converter.Settings);
     }
 
     internal static class Converter

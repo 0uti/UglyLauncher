@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using UglyLauncher.Minecraft;
-using UglyLauncher.Minecraft.Json.MCAuthenticateResponse;
+using UglyLauncher.Minecraft.Authentication;
+using UglyLauncher.Minecraft.Authentication.Json.AuthenticateResponse;
 
 namespace UglyLauncher.AccountManager
 {
@@ -28,7 +29,7 @@ namespace UglyLauncher.AccountManager
             {
                 // Check LoginData
                 Authentication Auth = new Authentication();
-                MCAuthenticateResponse AuthData = new MCAuthenticateResponse();
+                AuthenticateResponse AuthData = new AuthenticateResponse();
                 try
                 {
                     AuthData = Auth.Authenticate(TxtUser.Text.ToString().Trim(), TxtPass.Text.ToString().Trim());

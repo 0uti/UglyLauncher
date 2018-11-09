@@ -2,9 +2,9 @@
 using Newtonsoft.Json.Converters;
 using System.Globalization;
 
-namespace UglyLauncher.Minecraft.Json.MCAuthenticateRequest
+namespace UglyLauncher.Minecraft.Authentication.Json.AuthenticateRequest
 {
-    public partial class MCAuthenticateRequest
+    public partial class AuthenticateRequest
     {
         [JsonProperty("agent")]
         public Agent Agent = new Agent();
@@ -31,14 +31,14 @@ namespace UglyLauncher.Minecraft.Json.MCAuthenticateRequest
         public long Version { get; set; }
     }
 
-    public partial class MCAuthenticateRequest
+    public partial class AuthenticateRequest
     {
-        public static MCAuthenticateRequest FromJson(string json) => JsonConvert.DeserializeObject<MCAuthenticateRequest>(json, Converter.Settings);
+        public static AuthenticateRequest FromJson(string json) => JsonConvert.DeserializeObject<AuthenticateRequest>(json, Converter.Settings);
     }
 
     public static class Serialize
     {
-        public static string ToJson(this MCAuthenticateRequest self) => JsonConvert.SerializeObject(self, Converter.Settings);
+        public static string ToJson(this AuthenticateRequest self) => JsonConvert.SerializeObject(self, Converter.Settings);
     }
 
     internal static class Converter

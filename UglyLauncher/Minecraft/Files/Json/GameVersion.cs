@@ -4,21 +4,21 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace UglyLauncher.Minecraft.Json.Version
+namespace UglyLauncher.Minecraft.Files.Json.GameVersion
 {
-    public partial class MCVersion
+    public partial class GameVersion
     {
         [JsonProperty("arguments")]
-        public MCVersionArguments Arguments { get; set; }
+        public VersionArguments Arguments { get; set; }
 
         [JsonProperty("assetIndex")]
-        public MCVersionAssetIndex AssetIndex { get; set; }
+        public VersionAssetIndex AssetIndex { get; set; }
 
         [JsonProperty("assets")]
         public string Assets { get; set; }
 
         [JsonProperty("downloads")]
-        public McVersionJsonDownloads Downloads { get; set; }
+        public VersionJsonDownloads Downloads { get; set; }
 
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -48,7 +48,7 @@ namespace UglyLauncher.Minecraft.Json.Version
         public string Type { get; set; }
     }
 
-    public partial class MCVersionArguments
+    public partial class VersionArguments
     {
         [JsonProperty("game")]
         public GameElement[] Game { get; set; }
@@ -63,7 +63,7 @@ namespace UglyLauncher.Minecraft.Json.Version
         public GameRule[] Rules { get; set; }
 
         [JsonProperty("value")]
-        public MCVersionValue Value { get; set; }
+        public VersionValue Value { get; set; }
     }
 
     public partial class GameRule
@@ -90,7 +90,7 @@ namespace UglyLauncher.Minecraft.Json.Version
         public JvmRule[] Rules { get; set; }
 
         [JsonProperty("value")]
-        public MCVersionValue Value { get; set; }
+        public VersionValue Value { get; set; }
     }
 
     public partial class JvmRule
@@ -114,7 +114,7 @@ namespace UglyLauncher.Minecraft.Json.Version
         public string Arch { get; set; }
     }
 
-    public partial class MCVersionAssetIndex
+    public partial class VersionAssetIndex
     {
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -132,16 +132,16 @@ namespace UglyLauncher.Minecraft.Json.Version
         public Uri Url { get; set; }
     }
 
-    public partial class McVersionJsonDownloads
+    public partial class VersionJsonDownloads
     {
         [JsonProperty("client")]
-        public McVersionJsonDownload Client { get; set; }
+        public VersionJsonDownload Client { get; set; }
 
         [JsonProperty("server")]
-        public McVersionJsonDownload Server { get; set; }
+        public VersionJsonDownload Server { get; set; }
     }
 
-    public partial class McVersionJsonDownload
+    public partial class VersionJsonDownload
     {
         [JsonProperty("sha1")]
         public string Sha1 { get; set; }
@@ -177,7 +177,7 @@ namespace UglyLauncher.Minecraft.Json.Version
     public partial class LibraryDownloads
     {
         [JsonProperty("artifact")]
-        public McVersionJsonDownload Artifact { get; set; }
+        public VersionJsonDownload Artifact { get; set; }
 
         [JsonProperty("classifiers", NullValueHandling = NullValueHandling.Ignore)]
         public Classifiers Classifiers { get; set; }
@@ -186,28 +186,28 @@ namespace UglyLauncher.Minecraft.Json.Version
     public partial class Classifiers
     {
         [JsonProperty("javadoc", NullValueHandling = NullValueHandling.Ignore)]
-        public McVersionJsonDownload Javadoc { get; set; }
+        public VersionJsonDownload Javadoc { get; set; }
 
         [JsonProperty("natives-linux", NullValueHandling = NullValueHandling.Ignore)]
-        public McVersionJsonDownload nativeslinux { get; set; }
+        public VersionJsonDownload nativeslinux { get; set; }
 
         [JsonProperty("natives-macos", NullValueHandling = NullValueHandling.Ignore)]
-        public McVersionJsonDownload nativesmacos { get; set; }
+        public VersionJsonDownload nativesmacos { get; set; }
 
         [JsonProperty("natives-windows", NullValueHandling = NullValueHandling.Ignore)]
-        public McVersionJsonDownload nativeswindows { get; set; }
+        public VersionJsonDownload nativeswindows { get; set; }
 
         [JsonProperty("natives-windows-32", NullValueHandling = NullValueHandling.Ignore)]
-        public McVersionJsonDownload nativeswindows32 { get; set; }
+        public VersionJsonDownload nativeswindows32 { get; set; }
 
         [JsonProperty("natives-windows-64", NullValueHandling = NullValueHandling.Ignore)]
-        public McVersionJsonDownload nativeswindows64 { get; set; }
+        public VersionJsonDownload nativeswindows64 { get; set; }
 
         [JsonProperty("sources")]
-        public McVersionJsonDownload Sources { get; set; }
+        public VersionJsonDownload Sources { get; set; }
 
         [JsonProperty("natives-osx", NullValueHandling = NullValueHandling.Ignore)]
-        public McVersionJsonDownload NativesOsx { get; set; }
+        public VersionJsonDownload NativesOsx { get; set; }
     }
 
     public partial class Extract
@@ -255,19 +255,19 @@ namespace UglyLauncher.Minecraft.Json.Version
         public string Argument { get; set; }
 
         [JsonProperty("file")]
-        public MCVersionAssetIndex File { get; set; }
+        public VersionAssetIndex File { get; set; }
 
         [JsonProperty("type")]
         public string Type { get; set; }
     }
 
-    public partial struct MCVersionValue
+    public partial struct VersionValue
     {
         public string String;
         public string[] StringArray;
 
-        public static implicit operator MCVersionValue(string String) => new MCVersionValue { String = String };
-        public static implicit operator MCVersionValue(string[] StringArray) => new MCVersionValue { StringArray = StringArray };
+        public static implicit operator VersionValue(string String) => new VersionValue { String = String };
+        public static implicit operator VersionValue(string[] StringArray) => new VersionValue { StringArray = StringArray };
     }
 
 
@@ -291,9 +291,9 @@ namespace UglyLauncher.Minecraft.Json.Version
 
 
 
-    public partial class MCVersion
+    public partial class GameVersion
     {
-        public static MCVersion FromJson(string json) => JsonConvert.DeserializeObject<MCVersion>(json, Converter.Settings);
+        public static GameVersion FromJson(string json) => JsonConvert.DeserializeObject<GameVersion>(json, Converter.Settings);
     }
 
     internal static class Converter
@@ -351,7 +351,7 @@ namespace UglyLauncher.Minecraft.Json.Version
 
     internal class ValueConverter : JsonConverter
     {
-        public override bool CanConvert(Type t) => t == typeof(MCVersionValue) || t == typeof(MCVersionValue?);
+        public override bool CanConvert(Type t) => t == typeof(VersionValue) || t == typeof(VersionValue?);
 
         public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
         {
@@ -360,17 +360,17 @@ namespace UglyLauncher.Minecraft.Json.Version
                 case JsonToken.String:
                 case JsonToken.Date:
                     var stringValue = serializer.Deserialize<string>(reader);
-                    return new MCVersionValue { String = stringValue };
+                    return new VersionValue { String = stringValue };
                 case JsonToken.StartArray:
                     var arrayValue = serializer.Deserialize<string[]>(reader);
-                    return new MCVersionValue { StringArray = arrayValue };
+                    return new VersionValue { StringArray = arrayValue };
             }
             throw new Exception("Cannot unmarshal type Value");
         }
 
         public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
         {
-            var value = (MCVersionValue)untypedValue;
+            var value = (VersionValue)untypedValue;
             if (value.String != null)
             {
                 serializer.Serialize(writer, value.String);

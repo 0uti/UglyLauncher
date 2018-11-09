@@ -5,9 +5,9 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace UglyLauncher.Minecraft.Json.MCRefreshResponse
+namespace UglyLauncher.Minecraft.Authentication.Json.AuthenticateResponse
 {
-    public partial class MCRefreshResponse
+    public partial class AuthenticateResponse
     {
         [JsonProperty("accessToken")]
         public string AccessToken { get; set; }
@@ -15,20 +15,26 @@ namespace UglyLauncher.Minecraft.Json.MCRefreshResponse
         [JsonProperty("clientToken")]
         public string ClientToken { get; set; }
 
+        [JsonProperty("availableProfiles")]
+        public Profile[] AvailableProfiles { get; set; }
+
         [JsonProperty("selectedProfile")]
-        public SelectedProfile SelectedProfile { get; set; }
+        public Profile SelectedProfile { get; set; }
 
         [JsonProperty("user")]
-        public User User { get; set; }
+        public User[] User { get; set; }
     }
 
-    public partial class SelectedProfile
+    public partial class Profile
     {
         [JsonProperty("id")]
         public string Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
+
+        [JsonProperty("legacy")]
+        public bool Legacy { get; set; }
     }
 
     public partial class User
@@ -49,14 +55,14 @@ namespace UglyLauncher.Minecraft.Json.MCRefreshResponse
         public string Value { get; set; }
     }
 
-    public partial class MCRefreshResponse
+    public partial class AuthenticateResponse
     {
-        public static MCRefreshResponse FromJson(string json) => JsonConvert.DeserializeObject<MCRefreshResponse>(json, Converter.Settings);
+        public static AuthenticateResponse FromJson(string json) => JsonConvert.DeserializeObject<AuthenticateResponse>(json, Converter.Settings);
     }
 
     public static class Serialize
     {
-        public static string ToJson(this MCRefreshResponse self) => JsonConvert.SerializeObject(self, Converter.Settings);
+        public static string ToJson(this AuthenticateResponse self) => JsonConvert.SerializeObject(self, Converter.Settings);
     }
 
     internal static class Converter

@@ -3,18 +3,18 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace UglyLauncher.Minecraft.Json.Assets
+namespace UglyLauncher.Minecraft.Files.Json.Assets
 {
    
-    public partial class MCAssets
+    public partial class Assets
     {
         [JsonProperty("objects")]
-        public Dictionary<string, MCAssetObject> Objects { get; set; }
+        public Dictionary<string, AssetObject> Objects { get; set; }
         [JsonProperty("virtual", NullValueHandling = NullValueHandling.Ignore)]
         public bool Virtual { get; set; }
     }
 
-    public partial class MCAssetObject
+    public partial class AssetObject
     {
         [JsonProperty("hash")]
         public string Hash { get; set; }
@@ -23,9 +23,9 @@ namespace UglyLauncher.Minecraft.Json.Assets
         public long Size { get; set; }
     }
 
-    public partial class MCAssets
+    public partial class Assets
     {
-        public static MCAssets FromJson(string json) => JsonConvert.DeserializeObject<MCAssets>(json, Converter.Settings);
+        public static Assets FromJson(string json) => JsonConvert.DeserializeObject<Assets>(json, Converter.Settings);
     }
 
     internal static class Converter
