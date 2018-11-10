@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using UglyLauncher.Minecraft;
 using UglyLauncher.Minecraft.Authentication;
 using UglyLauncher.Minecraft.Authentication.Json.AuthenticateResponse;
 

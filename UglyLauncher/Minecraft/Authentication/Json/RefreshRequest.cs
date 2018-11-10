@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
 namespace UglyLauncher.Minecraft.Authentication.Json.RefreshRequest
 { 
     public partial class RefreshRequest

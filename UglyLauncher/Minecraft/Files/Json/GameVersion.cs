@@ -289,8 +289,6 @@ namespace UglyLauncher.Minecraft.Files.Json.GameVersion
         public static implicit operator JvmElement(string String) => new JvmElement { String = String };
     }
 
-
-
     public partial class GameVersion
     {
         public static GameVersion FromJson(string json) => JsonConvert.DeserializeObject<GameVersion>(json, Converter.Settings);

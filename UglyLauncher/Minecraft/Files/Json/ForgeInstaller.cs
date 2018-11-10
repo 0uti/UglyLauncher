@@ -5,8 +5,6 @@ using Newtonsoft.Json.Converters;
 
 namespace UglyLauncher.Minecraft.Files.Json.ForgeInstaller
 {
-
-
     public partial class ForgeInstaller
     {
         [JsonProperty("install")]
@@ -128,6 +126,4 @@ namespace UglyLauncher.Minecraft.Files.Json.ForgeInstaller
             },
         };
     }
-
-    
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO;
 
-
 namespace UglyLauncher
 {
     public partial class FrmEditPack : Form
@@ -228,5 +227,4 @@ namespace UglyLauncher
     {
         string GetToolTipText();
     }
-
 }

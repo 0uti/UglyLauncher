@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-
 namespace UglyLauncher
 {
     internal partial class ToolTipListBox : ListBox

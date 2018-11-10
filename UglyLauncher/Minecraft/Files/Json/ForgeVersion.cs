@@ -138,7 +138,4 @@ namespace UglyLauncher.Minecraft.Files.Json.ForgeVersion
 
         public static readonly ValueConverter Singleton = new ValueConverter();
     }
-
-
-
 }
