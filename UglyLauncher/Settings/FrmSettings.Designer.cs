@@ -1,5 +1,4 @@
-﻿using UglyLauncher;
-namespace UglyLauncher.Settings
+﻿namespace UglyLauncher.Settings
 {
     partial class Settings
     {
@@ -41,8 +40,8 @@ namespace UglyLauncher.Settings
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.NumJavaMaxMemory = new UglyLauncher.Settings.NumericUpDownEx();
-            this.NumJavaMinMemory = new UglyLauncher.Settings.NumericUpDownEx();
+            this.NumJavaMaxMemory = new NumericUpDownEx();
+            this.NumJavaMinMemory = new NumericUpDownEx();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.ChkKeepLauncher = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();

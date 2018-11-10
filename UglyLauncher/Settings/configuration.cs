@@ -36,9 +36,6 @@ namespace UglyLauncher.Settings
             GetJavaPathAuto(JavaVersion);
         }
 
-        // java version double
-        public double JavaVesion { get; private set; } = 0;
-
         // Java search methode
         public string JavaVersion
         {
@@ -224,16 +221,15 @@ namespace UglyLauncher.Settings
             {
                 key = hklm64.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
                 if (key == null) return;  // no java 64 found
-                sVersion = key.GetValue("CurrentVersion", null) as String;
+                sVersion = key.GetValue("CurrentVersion", null) as string;
             }
 
             key = hklm64.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment\" + sVersion);
             if (key == null) return ;  // no java 64 found
-            sJavaPath = key.GetValue("JavaHome", null) as String;
+            sJavaPath = key.GetValue("JavaHome", null) as string;
             // append executable
             sJavaPath += sJavaExecutable;
             sJavaArch = "64";
-            JavaVesion = Double.Parse(sVersion, CultureInfo.InvariantCulture);
         }
 
         private void GetJavaPath32(string sVersion)
@@ -245,16 +241,15 @@ namespace UglyLauncher.Settings
             {
                 key = hklm32.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
                 if (key == null) return;  // no java 32 found
-                sVersion = key.GetValue("CurrentVersion", null) as String;
+                sVersion = key.GetValue("CurrentVersion", null) as string;
             }
 
             key = hklm32.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment\" + sVersion);
             if (key == null) return;  // no java 32 found
-            sJavaPath = key.GetValue("JavaHome", null) as String;
+            sJavaPath = key.GetValue("JavaHome", null) as string;
             // append executable
             sJavaPath += sJavaExecutable;
             sJavaArch = "32";
-            JavaVesion = Double.Parse(sVersion, CultureInfo.InvariantCulture);
         }
 
         // Registry Handler
@@ -262,7 +257,7 @@ namespace UglyLauncher.Settings
         {
             RegistryKey key = Registry.CurrentUser.OpenSubKey(sRegPath);
             if (key == null) return null;
-            return key.GetValue(sRegKey, null) as String;
+            return key.GetValue(sRegKey, null) as string;
         }
 
         private int GetRegInt(string sRegKey)

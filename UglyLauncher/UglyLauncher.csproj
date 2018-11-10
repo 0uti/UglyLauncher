@@ -129,7 +129,7 @@
     <Compile Include="Minecraft\Authentication\Json\RefreshRequest.cs" />
     <Compile Include="Minecraft\Authentication\Json\RefreshResponse.cs" />
     <Compile Include="Minecraft\Files\Json\GameVersion.cs" />
-    <Compile Include="Minecraft\Files\Json\GameVersionList.cs" />
+    <Compile Include="Minecraft\Files\Json\GameVersionManifest.cs" />
     <Compile Include="Minecraft\Launcher.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -205,7 +205,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" BuildVersion_AssemblyInfoFilename="Properties\AssemblyInfo.cs" />
+      <UserProperties BuildVersion_AssemblyInfoFilename="Properties\AssemblyInfo.cs" BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
     </VisualStudio>
   </ProjectExtensions>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

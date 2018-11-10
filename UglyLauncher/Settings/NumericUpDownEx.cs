@@ -13,7 +13,5 @@ namespace UglyLauncher.Settings
             // Append the units to the end of the numeric value
             Text = Value + " MB";
         }
-
-
     }
 }
