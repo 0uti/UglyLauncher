@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UglyLauncher.Minecraft
+namespace UglyLauncher.Minecraft.Authentication
 {
     [Serializable]
     class MCInvalidCredentialsException : Exception

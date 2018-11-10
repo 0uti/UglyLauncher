@@ -15,6 +15,7 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <HockeyAppResourceId>6545619b1abe45eb82949894f97fa693</HockeyAppResourceId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -81,7 +82,7 @@
       <DependentUpon>FrmUserAccounts.cs</DependentUpon>
     </Compile>
     <Compile Include="AccountManager\Manager.cs" />
-    <Compile Include="Minecraft\Forge\Forge.cs" />
+    <Compile Include="Minecraft\Files\FilesForge.cs" />
     <Compile Include="FrmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,16 +115,16 @@
     </Compile>
     <Compile Include="Internet\DownloadHelper.cs" />
     <Compile Include="Internet\HTTP.cs" />
-    <Compile Include="Minecraft\Authentication\Authentication.cs" />
-    <Compile Include="Minecraft\Exceptions.cs" />
-    <Compile Include="Minecraft\Files\FileStorage.cs" />
+    <Compile Include="Minecraft\Authentication\AuthHandler.cs" />
+    <Compile Include="Minecraft\Authentication\Exceptions.cs" />
+    <Compile Include="Minecraft\Files\FilesMojang.cs" />
     <Compile Include="Minecraft\Files\Json\Assets.cs" />
     <Compile Include="Minecraft\Authentication\Json\AuthenticateError.cs" />
     <Compile Include="Minecraft\Authentication\Json\AuthenticateRequest.cs" />
     <Compile Include="Minecraft\Authentication\Json\AuthenticateResponse.cs" />
     <Compile Include="Minecraft\Json\MCAvailablePacks.cs" />
-    <Compile Include="Minecraft\Forge\Json\MCForgeInstaller.cs" />
-    <Compile Include="Minecraft\Forge\Json\MCForgeVersion.cs" />
+    <Compile Include="Minecraft\Files\Json\ForgeInstaller.cs" />
+    <Compile Include="Minecraft\Files\Json\ForgeVersion.cs" />
     <Compile Include="Minecraft\Json\MCPack.cs" />
     <Compile Include="Minecraft\Authentication\Json\RefreshRequest.cs" />
     <Compile Include="Minecraft\Authentication\Json\RefreshResponse.cs" />

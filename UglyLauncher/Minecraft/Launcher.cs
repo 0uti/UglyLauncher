@@ -25,22 +25,21 @@ namespace UglyLauncher.Minecraft
         public event EventHandler<FormWindowStateEventArgs> RestoreWindow;
         // objects
         private FrmConsole _console;
-        private MCAvailablePacks PacksAvailable = new MCAvailablePacks();
-        private MCPacksInstalled PacksInstalled = new MCPacksInstalled();
+        private static MCAvailablePacks PacksAvailable = new MCAvailablePacks();
+        private static MCPacksInstalled PacksInstalled = new MCPacksInstalled();
         // Strings
         public static readonly string _sPackServer = "http://uglylauncher.de";
         public static readonly string _sDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.UglyLauncher";
         public static readonly string _sPacksDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.UglyLauncher\packs";
-        public static readonly string _sAssetsDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.minecraft\assets";
-        public static readonly string _sLibraryDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.minecraft\libraries";
-        public static readonly string _sVersionDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.minecraft\versions";
-        public static readonly string _sNativesDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.UglyLauncher\natives";
+        public readonly string _sAssetsDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.minecraft\assets";
+        public readonly string _sLibraryDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.minecraft\libraries";
+        public readonly string _sVersionDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.minecraft\versions";
+        public readonly string _sNativesDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.UglyLauncher\natives";
         // bool
         private readonly bool Offline = false;
         // Lists
-        private Dictionary<string, string> ClassPath = new Dictionary<string, string>(); // Library list for startup
+        
 
-        //private FileStorage MCFileStorage;
         private DownloadHelper dhelper;
 
 
@@ -260,38 +259,47 @@ namespace UglyLauncher.Minecraft
 
         public void StartPack(string sPackName, string sPackVersion)
         {
-            FileStorage MCFileStorage = new FileStorage(dhelper);
+            Dictionary<string, string> ClassPath = new Dictionary<string, string>(); // Library list for startup
 
-            // check if pack is installed with given version is installed
+            FilesMojang MCMojangFiles = new FilesMojang(dhelper)
+            {
+                LibraryDir = _sLibraryDir,
+                VersionDir = _sVersionDir,
+                NativesDir = _sNativesDir,
+                AssetsDir = _sAssetsDir,
+                OfflineMode = Offline
+            };
+
+            // check if pack is installed with given version
             if (!IsPackInstalled(sPackName, sPackVersion))
             {
                 InstallPack(sPackName, sPackVersion);
             }
-
-            // clear ClassPath
-            ClassPath.Clear();
-
+            
             // getting pack json file
             MCPack pack = MCPack.FromJson(File.ReadAllText(_sPacksDir + @"\" + sPackName + @"\pack.json").Trim());
-
             // vanilla Minecraft
-            MCFileStorage.DownloadVersionJson(pack.MCVersion);
+            MCMojangFiles.DownloadVersionJson(pack.MCVersion);
             GameVersion MCMojang = GameVersion.FromJson(File.ReadAllText(_sVersionDir + @"\" + pack.MCVersion + @"\" + pack.MCVersion + ".json").Trim());
             // download game jar
-            MCFileStorage.DownloadGameJar(MCMojang);
+            MCMojangFiles.DownloadClientJar(MCMojang);
             // download libraries if needed
-            ClassPath = MCFileStorage.DownloadMCLibraries(MCMojang);
+            ClassPath = MCMojangFiles.DownloadClientLibraries(MCMojang);
             // download assets if needed
-            MCFileStorage.DownloadAssets(MCMojang);
+            MCMojangFiles.DownloadClientAssets(MCMojang);
             
             // additional things for forge
             if (pack.Type.Equals("forge"))
             {
-                Forge.Forge MCForge = new Forge.Forge(dhelper);
                 Dictionary<string, string> ForgeClassPath = new Dictionary<string, string>(); // Library list for startup
+                FilesForge MCForgeFiles = new FilesForge(dhelper)
+                {
+                    LibraryDir = _sLibraryDir,
+                    OfflineMode = Offline
+                };
 
                 // Install Forge
-                ForgeClassPath = MCForge.InstallForge(pack.ForgeVersion);
+                ForgeClassPath = MCForgeFiles.InstallForge(pack.ForgeVersion);
 
                 //Merge Classpath
                 foreach (KeyValuePair<string, string> entry in ForgeClassPath)
@@ -304,13 +312,13 @@ namespace UglyLauncher.Minecraft
                 }
                 
                 // Merge startup parameter
-                MCMojang = MCForge.MergeArguments(MCMojang);
+                MCMojang = MCForgeFiles.MergeArguments(MCMojang);
             }
 
             // set selected version
             SetSelectedVersion(sPackName, sPackVersion);
             // start the pack
-            Start(BuildArgs(MCMojang, sPackName), sPackName);
+            Start(BuildArgs(MCMojang, sPackName, ClassPath), sPackName);
             // close bar if open
             if (dhelper.IsBarVisible() == true) dhelper.HideBar();
             //if (_bar.Visible == true) _bar.Hide();
@@ -436,7 +444,7 @@ namespace UglyLauncher.Minecraft
             }
         }
         
-        private string BuildArgs(GameVersion MC,string sPackName)
+        private string BuildArgs(GameVersion MC,string sPackName, Dictionary<string, string> ClassPath)
         {
             string args = null;
             string classpath = null;

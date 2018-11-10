@@ -28,7 +28,7 @@ namespace UglyLauncher.AccountManager
             else
             {
                 // Check LoginData
-                Authentication Auth = new Authentication();
+                AuthHandler Auth = new AuthHandler();
                 AuthenticateResponse AuthData = new AuthenticateResponse();
                 try
                 {

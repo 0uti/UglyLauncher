@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.Text;
 
@@ -6,7 +7,22 @@ namespace UglyLauncher.Internet
 {
     public static class Http
     {
+        /// <summary>
+        /// HTTP Get Request
+        /// </summary>
+        /// <param name="url">the URL as string</param>
+        /// <returns>respronse from server</returns>
         public static string GET(string url)
+        {
+            return GET(new Uri(url));
+        }
+
+        /// <summary>
+        /// HTTP Get Request
+        /// </summary>
+        /// <param name="url">the URL as Uri</param>
+        /// <returns>respronse from server</returns>
+        public static string GET(Uri url)
         {
             // declare needed objects
             WebRequest request = null;
@@ -28,7 +44,26 @@ namespace UglyLauncher.Internet
             }
         }
 
+        /// <summary>
+        /// HTTP POST Request
+        /// </summary>
+        /// <param name="url">the URL as string</param>
+        /// <param name="postdata">data to post</param>
+        /// <param name="contenttype">content type of data</param>
+        /// <returns>response from server</returns>
         public static string POST(string url, string postdata, string contenttype)
+        {
+            return POST(new Uri(url), postdata, contenttype);
+        }
+
+        /// <summary>
+        /// HTTP POST Request
+        /// </summary>
+        /// <param name="url">the URL as URI</param>
+        /// <param name="postdata">data to post</param>
+        /// <param name="contenttype">content type of data</param>
+        /// <returns>response from server</returns>
+        public static string POST(Uri url, string postdata, string contenttype)
         {
             // declare needed objects
             WebRequest request = null;
@@ -68,7 +103,22 @@ namespace UglyLauncher.Internet
             }
         }
 
+        /// <summary>
+        /// Download to MemoryStream
+        /// </summary>
+        /// <param name="url">the URL as string</param>
+        /// <returns>the MemoryString of downloaded object</returns>
         public static MemoryStream DownloadToStream(string url)
+        {
+            return DownloadToStream(new Uri(url));
+        }
+
+        /// <summary>
+        /// Download to MemoryStream
+        /// </summary>
+        /// <param name="url">the URL as Uri</param>
+        /// <returns>the MemoryString of downloaded object</returns>
+        public static MemoryStream DownloadToStream(Uri url)
         {
             // create needed objects
             WebClient wc;
@@ -87,8 +137,4 @@ namespace UglyLauncher.Internet
             }
         }
     }
-
-    
-
-
 }

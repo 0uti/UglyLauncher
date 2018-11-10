@@ -114,7 +114,7 @@ namespace UglyLauncher
                     MCUserAccount Account = U.GetAccount(U.GetDefault());
 
                     // Validate Account
-                    Authentication A = new Authentication();
+                    AuthHandler A = new AuthHandler();
                     try
                     {
                         Account.accessToken = A.Refresh(Account.accessToken, Account.clientToken);

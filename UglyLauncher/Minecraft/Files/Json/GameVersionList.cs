@@ -3,9 +3,9 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace UglyLauncher.Minecraft.Files.Json.GameVersionList
+namespace UglyLauncher.Minecraft.Files.Json.GameVersionManifest
 {
-    public partial class GameVersionList
+    public partial class GameVersionManifest
     {
         [JsonProperty("latest")]
         public VersionsLatest Latest { get; set; }
@@ -43,9 +43,9 @@ namespace UglyLauncher.Minecraft.Files.Json.GameVersionList
 
     public enum TypeEnum { OldAlpha, OldBeta, Release, Snapshot };
 
-    public partial class GameVersionList
+    public partial class GameVersionManifest
     {
-        public static GameVersionList FromJson(string json) => JsonConvert.DeserializeObject<GameVersionList>(json, Converter.Settings);
+        public static GameVersionManifest FromJson(string json) => JsonConvert.DeserializeObject<GameVersionManifest>(json, Converter.Settings);
     }
 
     internal static class Converter

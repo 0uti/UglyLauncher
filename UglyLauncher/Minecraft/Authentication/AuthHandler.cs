@@ -10,7 +10,7 @@ using UglyLauncher.Minecraft.Authentication.Json.RefreshResponse;
 
 namespace UglyLauncher.Minecraft.Authentication
 {
-    class Authentication
+    class AuthHandler
     {
         private readonly string sAuthServer = "https://authserver.mojang.com";
 

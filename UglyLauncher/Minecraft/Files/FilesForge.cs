@@ -4,24 +4,25 @@ using System.IO;
 using System.Linq;
 using UglyLauncher.Internet;
 using UglyLauncher.Minecraft.Files.Json.GameVersion;
-using UglyLauncher.Minecraft.Forge.Json.ForgeInstaller;
-using UglyLauncher.Minecraft.Forge.Json.ForgeVersion;
+using UglyLauncher.Minecraft.Files.Json.ForgeInstaller;
+using UglyLauncher.Minecraft.Files.Json.ForgeVersion;
 
-namespace UglyLauncher.Minecraft.Forge
+namespace UglyLauncher.Minecraft.Files
 {
-    class Forge
+    class FilesForge
     {
         private DownloadHelper dhelper;
 
-        public readonly string _sForgeTree = "/net/minecraftforge/forge/";
-        public readonly string _sForgeMaven = "https://files.minecraftforge.net/maven";
+        private readonly string _sForgeTree = "/net/minecraftforge/forge/";
+        private readonly string _sForgeMaven = "https://files.minecraftforge.net/maven";
+        public string LibraryDir { get; set; }
+        public bool OfflineMode { get; set; }
 
         private string sForgeVersion;
 
         private bool post_1_13;
 
-
-        public Forge(DownloadHelper dhelper)
+        public FilesForge(DownloadHelper dhelper)
         {
             this.dhelper = dhelper;
         }
@@ -31,11 +32,9 @@ namespace UglyLauncher.Minecraft.Forge
             this.sForgeVersion = sForgeVersion;
 
             Dictionary<string, string> ClassPath = new Dictionary<string, string>(); // Library list for startup
-            string localPath = Launcher._sLibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion;
+            string localPath = LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion;
             string localFile = localPath + @"\forge-" + sForgeVersion + "-installer.jar";
             string remoteFile = _sForgeMaven + _sForgeTree + sForgeVersion + "/forge-" + sForgeVersion + "-installer.jar";
-
-            // https://files.minecraftforge.net/maven/net/minecraftforge/forge/1.12.2-14.23.4.2705/forge-1.12.2-14.23.4.2705-installer.jar
 
             //check if file exists
             if (!File.Exists(localFile))
@@ -53,18 +52,18 @@ namespace UglyLauncher.Minecraft.Forge
             dhelper.ExtractZipFiles(localFile, localPath, extractList);
 
             // post 1.13 files
-            if (File.Exists(Launcher._sLibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\version.json"))
+            if (File.Exists(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\version.json"))
             {
                 post_1_13 = true;
-                ForgeVersion MCForge = ForgeVersion.FromJson(File.ReadAllText(Launcher._sLibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\version.json").Trim());
+                ForgeVersion MCForge = ForgeVersion.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\version.json").Trim());
                 // download Forge libraries
                 ClassPath = DownloadForgeLibraries(MCForge);
             }
             // pre 1.13 files
-            else if (File.Exists(Launcher._sLibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\install_profile.json"))
+            else if (File.Exists(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\install_profile.json"))
             {
                 post_1_13 = false;
-                ForgeInstaller MCForge = ForgeInstaller.FromJson(File.ReadAllText(Launcher._sLibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\install_profile.json").Trim());
+                ForgeInstaller MCForge = ForgeInstaller.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\install_profile.json").Trim());
                 // download Forge libraries
                 ClassPath = DownloadForgeLibraries(MCForge);
             }
@@ -79,38 +78,32 @@ namespace UglyLauncher.Minecraft.Forge
         {
             if (post_1_13 == true)
             {
-                ForgeVersion MCForge = ForgeVersion.FromJson(File.ReadAllText(Launcher._sLibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\version.json").Trim());
+                ForgeVersion MCForge = ForgeVersion.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\version.json").Trim());
                 // replace vanilla values
                 MCMojang.MainClass = MCForge.MainClass;
                 // append forge arguments
                 List<GameElement> itemList = MCMojang.Arguments.Game.ToList();
                 List<GameElement> moreItems = MCForge.Arguments.Game.ToList();
                 itemList.AddRange(moreItems);
-
                 MCMojang.Arguments.Game = itemList.ToArray();
             }
             else
             {
-                ForgeInstaller MCForge = ForgeInstaller.FromJson(File.ReadAllText(Launcher._sLibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\install_profile.json").Trim());
+                ForgeInstaller MCForge = ForgeInstaller.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\install_profile.json").Trim());
                 // replace vanilla settings
                 MCMojang.MainClass = MCForge.VersionInfo.MainClass;
                 MCMojang.MinecraftArguments = MCForge.VersionInfo.MinecraftArguments;
-
             }
-
             return MCMojang;
         }
-
-
-
-
+        
         private Dictionary<string, string> DownloadForgeLibraries(ForgeInstaller Forge)
         {
             Dictionary<string, string> ClassPath = new Dictionary<string, string>(); // Library list for startup
 
             foreach (Json.ForgeInstaller.Library Lib in Forge.VersionInfo.Libraries)
             {
-                string sLocalPath = Launcher._sLibraryDir;
+                string sLocalPath = LibraryDir;
                 string sRemotePath = "https://libraries.minecraft.net/";
                 string sLibPath = null;
                 string[] sLibName = Lib.Name.Split(':');
@@ -141,7 +134,6 @@ namespace UglyLauncher.Minecraft.Forge
                     ClassPath.Add(sLibName[0] + ":" + sLibName[1], sLocalPath);
                 }
             }
-
             return ClassPath;
         }
 
@@ -158,7 +150,7 @@ namespace UglyLauncher.Minecraft.Forge
                 if (sLibName[0].Equals("net.minecraftforge") && sLibName[1].Equals("forge")) continue;
 
                 download = lib.Downloads.Artifact;
-                download.Path = Launcher._sLibraryDir + @"\" + download.Path.Replace("/", @"\");
+                download.Path = LibraryDir + @"\" + download.Path.Replace("/", @"\");
 
                 // fix for typesafe libraries
                 if (sLibName[0].Contains("org.apache.logging.log4j"))
@@ -177,10 +169,7 @@ namespace UglyLauncher.Minecraft.Forge
                 // add to classpath (replace)
                 ClassPath.Add(sLibName[0] + ":" + sLibName[1], download.Path);
             }
-
             return ClassPath;
         }
-
-
     }
 }

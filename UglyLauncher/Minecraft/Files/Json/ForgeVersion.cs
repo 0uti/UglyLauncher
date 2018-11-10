@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using UglyLauncher.Minecraft.Files.Json.GameVersion;
 
-namespace UglyLauncher.Minecraft.Forge.Json.ForgeVersion
+namespace UglyLauncher.Minecraft.Files.Json.ForgeVersion
 {
     public partial class ForgeVersion
     {
