@@ -156,7 +156,7 @@ namespace UglyLauncher.Internet
             }
         }
 
-        public void ExtractZipFiles(string archiveFilenameIn, string outFolder, List<string> filesToExtract)
+        public void ExtractZipFiles(string archiveFilenameIn, string outFolder, List<string> filesToExtract, bool keepPath = true)
         {
             ZipFile zf = null;
             try
@@ -179,6 +179,11 @@ namespace UglyLauncher.Internet
 
                         // Manipulate the output filename here as desired.
                         string fullZipToPath = Path.Combine(outFolder, entryFileName);
+                        if (keepPath == false)
+                        {
+                            fullZipToPath = Path.Combine(outFolder, Path.GetFileName(entryFileName));
+                        }
+
                         string directoryName = Path.GetDirectoryName(fullZipToPath);
                         if (directoryName.Length > 0)
                             Directory.CreateDirectory(directoryName);

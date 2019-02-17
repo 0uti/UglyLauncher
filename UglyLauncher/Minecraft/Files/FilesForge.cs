@@ -6,6 +6,10 @@ using UglyLauncher.Internet;
 using UglyLauncher.Minecraft.Files.Json.GameVersion;
 using UglyLauncher.Minecraft.Files.Json.ForgeInstaller;
 using UglyLauncher.Minecraft.Files.Json.ForgeVersion;
+using UglyLauncher.Minecraft.Files.Json.ForgeProcessor;
+using System.Diagnostics;
+using ICSharpCode.SharpZipLib.Zip;
+using UglyLauncher.Settings;
 
 namespace UglyLauncher.Minecraft.Files
 {
@@ -16,9 +20,13 @@ namespace UglyLauncher.Minecraft.Files
         private readonly string _sForgeTree = "/net/minecraftforge/forge/";
         private readonly string _sForgeMaven = "https://files.minecraftforge.net/maven";
         public string LibraryDir { get; set; }
+        public string VersionDir { get; set; }
         public bool OfflineMode { get; set; }
 
         private string sForgeVersion;
+        private string sForgeTempDir;
+        private string sForgeInstallerFile;
+        private string sForgeVersionDir;
 
         private bool post_1_13;
 
@@ -32,44 +40,70 @@ namespace UglyLauncher.Minecraft.Files
             this.sForgeVersion = sForgeVersion;
 
             Dictionary<string, string> ClassPath = new Dictionary<string, string>(); // Library list for startup
-            string localPath = LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion;
-            string localFile = localPath + @"\forge-" + sForgeVersion + "-installer.jar";
+            sForgeVersionDir = LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion;
+            sForgeInstallerFile = sForgeVersionDir + @"\forge-" + sForgeVersion + "-installer.jar";
             string remoteFile = _sForgeMaven + _sForgeTree + sForgeVersion + "/forge-" + sForgeVersion + "-installer.jar";
 
             //check if file exists
-            if (!File.Exists(localFile))
+            if (!File.Exists(sForgeInstallerFile))
             {
-                dhelper.DownloadFileTo(remoteFile, localFile, true, null);
+                dhelper.DownloadFileTo(remoteFile, sForgeInstallerFile, true, null);
             }
 
             // always extract files
             List<string> extractList = new List<string>
             {
                 "install_profile.json",
-                "version.json",
-                "forge-" + sForgeVersion + "-universal.jar"
+                "version.json"
             };
-            dhelper.ExtractZipFiles(localFile, localPath, extractList);
+            dhelper.ExtractZipFiles(sForgeInstallerFile, sForgeVersionDir, extractList);
 
-            // post 1.13 files
             if (File.Exists(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\version.json"))
+            {
+                post_1_13 = true;
+            }
+            
+            // post 1.13 files
+            if (post_1_13 == true)
             {
                 post_1_13 = true;
                 ForgeVersion MCForge = ForgeVersion.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\version.json").Trim());
                 // download Forge libraries
                 ClassPath = DownloadForgeLibraries(MCForge);
+
+                // extract Forge Jar
+                extractList = new List<string>
+                {
+                    "maven/net/minecraftforge/forge/"+ sForgeVersion +"/forge-" + sForgeVersion + ".jar"
+                };
+                dhelper.ExtractZipFiles(sForgeInstallerFile, sForgeVersionDir, extractList, false);
+
+
+                // build client.jar
+                BuildForgeClientJar();
+
+                // append Forge to classpath
+                ClassPath.Add("net.minecraftforge:forge", sForgeVersionDir + @"\forge-" + sForgeVersion + ".jar");
             }
+
             // pre 1.13 files
-            else if (File.Exists(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\install_profile.json"))
+            else if (post_1_13 == false)
             {
                 post_1_13 = false;
                 ForgeInstaller MCForge = ForgeInstaller.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\install_profile.json").Trim());
                 // download Forge libraries
                 ClassPath = DownloadForgeLibraries(MCForge);
-            }
 
-            // append Forge to classpath
-            ClassPath.Add("net.minecraftforge:forge", localPath + @"\forge-" + sForgeVersion + "-universal.jar");
+                // Extract Universal Jar
+                extractList = new List<string>
+                {
+                    "forge-" + sForgeVersion + "-universal.jar"
+                };
+                dhelper.ExtractZipFiles(sForgeInstallerFile, sForgeVersionDir, extractList);
+
+                // append Forge to classpath
+                ClassPath.Add("net.minecraftforge:forge", sForgeVersionDir + @"\forge-" + sForgeVersion + "-universal.jar");
+            }
 
             return ClassPath;
         }
@@ -95,6 +129,36 @@ namespace UglyLauncher.Minecraft.Files
                 MCMojang.MinecraftArguments = MCForge.VersionInfo.MinecraftArguments;
             }
             return MCMojang;
+        }
+
+        private void DownloadForgeProcessorLibraries(ForgeProcessor Forge)
+        {
+            foreach (Json.GameVersion.Library lib in Forge.Libraries)
+            {
+                string[] sLibName = lib.Name.Split(':');
+                VersionJsonDownload download;
+
+                // dont download Forge itself
+                if (sLibName[0].Equals("net.minecraftforge") && sLibName[1].Equals("forge"))
+                {
+                    List<string> extractList = new List<string>
+                    {
+                        "maven/"+lib.Downloads.Artifact.Path
+                    };
+                    dhelper.ExtractZipFiles(sForgeInstallerFile, sForgeVersionDir, extractList,false);
+                    continue;
+                }
+                
+                download = lib.Downloads.Artifact;
+                download.Path = LibraryDir + @"\" + download.Path.Replace("/", @"\");
+
+                // fix for typesafe libraries
+                if (sLibName[0].Contains("org.apache.logging.log4j"))
+                {
+                    download.Url = new Uri("http://central.maven.org/maven2/" + sLibName[0].Replace('.', '/') + "/" + sLibName[1] + "/" + sLibName[2] + "/" + sLibName[1] + "-" + sLibName[2] + ".jar");
+                }
+                dhelper.DownloadFileTo(download.Url, download.Path);
+            }
         }
         
         private Dictionary<string, string> DownloadForgeLibraries(ForgeInstaller Forge)
@@ -141,7 +205,7 @@ namespace UglyLauncher.Minecraft.Files
         {
             Dictionary<string, string> ClassPath = new Dictionary<string, string>(); // Library list for startup
 
-            foreach (Files.Json.GameVersion.Library lib in forge.Libraries)
+            foreach (Json.GameVersion.Library lib in forge.Libraries)
             {
                 string[] sLibName = lib.Name.Split(':');
                 VersionJsonDownload download;
@@ -170,6 +234,211 @@ namespace UglyLauncher.Minecraft.Files
                 ClassPath.Add(sLibName[0] + ":" + sLibName[1], download.Path);
             }
             return ClassPath;
+        }
+
+        private void BuildForgeClientJar()
+        {
+            ForgeProcessor MCForge = ForgeProcessor.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\install_profile.json").Trim());
+            // download needes Libraries
+            DownloadForgeProcessorLibraries(MCForge);
+
+            // (re-)create Temp-Dir
+            sForgeTempDir = LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\temp";
+            if (!Directory.Exists(sForgeTempDir)) Directory.CreateDirectory(sForgeTempDir);
+
+            // extract data/client.lzma
+            List<string> extractList = new List<string>
+            {
+                "data/client.lzma"
+            };
+            dhelper.ExtractZipFiles(sForgeInstallerFile, sForgeTempDir, extractList, true);
+
+            if (!File.Exists(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\forge-" + sForgeVersion + "-client.jar"))
+            {
+                // Processors
+                foreach (Processor processor in MCForge.Processors)
+                {
+                    RunProccessor(MCForge, processor);
+                }
+            }
+        }
+
+        private void RunProccessor(ForgeProcessor Forge, Processor processor)
+        {
+            Debug.WriteLine("******************************************************");
+            Configuration C = new Configuration();
+            
+            // get path to jar file
+            string jarFile = MavenStringToFilePath(processor.Jar);
+
+            // file exists
+            if(!File.Exists(LibraryDir + "/" + jarFile))
+            {
+                Debug.WriteLine("file: " + jarFile + " not exists");
+                return;
+            }
+
+            // get main class of Jar file
+            string mainClass = GetMainClass(jarFile);
+            if(mainClass == null)
+            {
+                Debug.WriteLine("file: " + jarFile + " has no main class");
+                return;
+            }
+            Debug.WriteLine("MainClass: " + mainClass);
+
+            string args = "-cp " + BuildProcessClassPath(processor);
+            args += " " + mainClass +" ";
+            args += BuildProcArgs(Forge, processor);
+
+            Process proc = new Process();
+            proc.StartInfo.FileName = C.GetJavaPath();
+            proc.StartInfo.WorkingDirectory = sForgeTempDir;
+            proc.StartInfo.Arguments = args;
+            proc.StartInfo.RedirectStandardOutput = true;
+            proc.StartInfo.RedirectStandardError = true;
+            proc.StartInfo.UseShellExecute = false;
+            proc.StartInfo.CreateNoWindow = true;
+            proc.OutputDataReceived += new DataReceivedEventHandler(Proc_OutputDataReceived);
+            proc.ErrorDataReceived += new DataReceivedEventHandler(Proc_OutputDataReceived);
+            proc.EnableRaisingEvents = true;
+            proc.Start();
+            proc.BeginOutputReadLine();
+            proc.BeginErrorReadLine();
+            proc.WaitForExit();
+            proc.Close();
+            proc.Dispose();
+        }
+        
+        private string BuildProcArgs(ForgeProcessor Forge, Processor processor)
+        {
+            string args = null;
+            foreach (string arg in processor.Args)
+            {
+                string newarg = arg;
+
+                if(arg.Equals("{MINECRAFT_JAR}"))
+                {
+                    args += " " + VersionDir + @"\" + Forge.Minecraft + @"\" + Forge.Minecraft + ".jar";
+                    continue;
+                }
+
+                // contains var?
+                if (newarg.StartsWith("{") && newarg.EndsWith("}"))
+                {
+                    // remove chars
+                    newarg = newarg.Replace("{", "").Replace("}", "");
+                    newarg = Forge.Data[newarg].Client;
+                }
+                
+                // remove leading slash
+                if(newarg.StartsWith("/"))
+                {
+                    newarg = newarg.Remove(0, 1);
+                }
+                
+                // contains maven string?
+                if (newarg.StartsWith("[") && newarg.EndsWith("]"))
+                {
+                    newarg = LibraryDir + @"\" + MavenStringToFilePath(newarg.Replace("[", "").Replace("]", "")).Replace('/', '\\');
+                }
+                args += " " + newarg;
+            }
+            
+            Debug.WriteLine("Args: " + args);
+            return args;
+        }
+        
+        private string BuildProcessClassPath(Processor processor)
+        {
+            string classPath = null;
+            foreach (string jarfile in processor.Classpath)
+            {
+                if(classPath != null)
+                {
+                    classPath += ";";
+                }
+                classPath += "\"" + LibraryDir + @"\" + MavenStringToFilePath(jarfile).Replace('/', '\\') + "\"";
+                Debug.WriteLine("   " + LibraryDir + @"\" + MavenStringToFilePath(jarfile).Replace('/', '\\'));
+            }
+
+            classPath += ";\"" + LibraryDir + @"\" + MavenStringToFilePath(processor.Jar).Replace('/', '\\') + "\"";
+            Debug.WriteLine("   " + LibraryDir + @"\" + MavenStringToFilePath(processor.Jar).Replace('/', '\\'));
+            return classPath;
+        }
+        
+        private string GetMainClass(string jarFile)
+        {
+            string[] manifest = GetJarManifest(LibraryDir + "/" + jarFile).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+
+            foreach (string line in manifest)
+            {
+                if (line.StartsWith("Main-Class: "))
+                {
+                    return line.Replace("Main-Class: ", "").Trim();
+                }
+            }
+            return null;
+        }
+
+        public string GetJarManifest(string sFileName)
+        {
+            FileStream fs = new FileStream(sFileName, FileMode.Open, FileAccess.Read);
+            ZipFile zf = new ZipFile(fs);
+            ZipEntry ze = zf.GetEntry("META-INF/MANIFEST.MF");
+            string result = null;
+            byte[] ret = null;
+            if (ze != null)
+            {
+                Stream s = zf.GetInputStream(ze);
+                ret = new byte[ze.Size];
+                s.Read(ret, 0, ret.Length);
+                result = System.Text.Encoding.UTF8.GetString(ret).Trim();
+            }
+            zf.Close();
+            fs.Close();
+
+            return result;
+        }
+
+        private string MavenStringToFilePath(string mavenString)
+        {
+            string output;
+            // file extension
+            string extension = ".jar";
+            if(mavenString.Contains("@"))
+            {
+                string[] ex = mavenString.Split('@');
+                extension = "." + ex[1];
+                mavenString = ex[0];
+            }
+
+            string[] sFile = mavenString.Split(':');
+
+            // path
+            output = sFile[0].Replace('.', '/') + "/" + sFile[1] + "/" + sFile[2] + "/";
+
+            // File
+            output += sFile[1] + "-" + sFile[2];
+
+            // append ?thing?
+            if(sFile.Count() == 4)
+            {
+                output += "-" + sFile[3];
+            }
+
+            // File extension
+            output += extension;
+            
+            return output;
+        }
+
+        private void Proc_OutputDataReceived(object sendingProcess, DataReceivedEventArgs outLine)
+        {
+            if (!string.IsNullOrEmpty(outLine.Data))
+            {
+                Debug.WriteLine(outLine.Data);
+            }
         }
     }
 }

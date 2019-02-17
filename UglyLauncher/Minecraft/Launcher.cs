@@ -295,6 +295,7 @@ namespace UglyLauncher.Minecraft
                 FilesForge MCForgeFiles = new FilesForge(dhelper)
                 {
                     LibraryDir = _sLibraryDir,
+                    VersionDir = _sVersionDir,
                     OfflineMode = Offline
                 };
 

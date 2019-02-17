@@ -44,7 +44,6 @@
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.0.999, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.1.0.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -122,6 +121,7 @@
     <Compile Include="Minecraft\Authentication\Json\AuthenticateError.cs" />
     <Compile Include="Minecraft\Authentication\Json\AuthenticateRequest.cs" />
     <Compile Include="Minecraft\Authentication\Json\AuthenticateResponse.cs" />
+    <Compile Include="Minecraft\Files\Json\ForgeProcessor.cs" />
     <Compile Include="Minecraft\Json\MCAvailablePacks.cs" />
     <Compile Include="Minecraft\Files\Json\ForgeInstaller.cs" />
     <Compile Include="Minecraft\Files\Json\ForgeVersion.cs" />
