@@ -1,8 +1,8 @@
-﻿using ICSharpCode.SharpZipLib.Core;
-using ICSharpCode.SharpZipLib.Zip;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Security.Cryptography;
 using System.Windows.Forms;
@@ -106,111 +106,80 @@ namespace UglyLauncher.Internet
 
         public void ExtractZipFiles(string archiveFilenameIn, string outFolder)
         {
-            ZipFile zf = null;
             try
             {
-                FileStream fs = File.OpenRead(archiveFilenameIn);
-                zf = new ZipFile(fs);
-                foreach (ZipEntry zipEntry in zf)
+                using (ZipArchive zip = ZipFile.OpenRead(archiveFilenameIn))
                 {
-                    // ignore the META-INF folder
-                    if (zipEntry.Name.Contains("META-INF")) continue;
-
-                    if (!zipEntry.IsFile)
+                    foreach (ZipArchiveEntry zipEntry in zip.Entries)
                     {
-                        continue;           // Ignore directories
-                    }
-                    string entryFileName = zipEntry.Name;
-                    // to remove the folder from the entry:- entryFileName = Path.GetFileName(entryFileName);
-                    // Optionally match entrynames against a selection list here to skip as desired.
-                    // The unpacked length is available in the zipEntry.Size property.
+                        // ignore directories
+                        if (zipEntry.Length == 0) continue;
 
-                    byte[] buffer = new byte[4096];     // 4K is optimum
-                    Stream zipStream = zf.GetInputStream(zipEntry);
+                        // ignore the META-INF folder
+                        if (zipEntry.FullName.Contains("META-INF")) continue;
 
-                    // Manipulate the output filename here as desired.
-                    string fullZipToPath = Path.Combine(outFolder, entryFileName);
-                    string directoryName = Path.GetDirectoryName(fullZipToPath);
-                    if (directoryName.Length > 0)
-                        Directory.CreateDirectory(directoryName);
+                        // Gets the full path to ensure that relative segments are removed.
+                        string destinationPath = Path.GetFullPath(Path.Combine(outFolder, zipEntry.FullName));
 
-                    if (!zipEntry.IsDirectory)
-                    {
-                        // Unzip file in buffered chunks. This is just as fast as unpacking to a buffer the full size
-                        // of the file, but does not waste memory.
-                        // The "using" will close the stream even if an exception occurs.
-                        using (FileStream streamWriter = File.Create(fullZipToPath))
+                        // create directory
+                        if (!Directory.Exists(Path.GetDirectoryName(destinationPath))) Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
+
+                        // Ordinal match is safest, case-sensitive volumes can be mounted within volumes that
+                        // are case-insensitive.
+                        if (destinationPath.StartsWith(outFolder, StringComparison.Ordinal))
                         {
-                            StreamUtils.Copy(zipStream, streamWriter, buffer);
+                            zipEntry.ExtractToFile(destinationPath,true);
                         }
                     }
                 }
             }
-            finally
+            catch (Exception e)
             {
-                if (zf != null)
-                {
-                    zf.IsStreamOwner = true; // Makes close also shut the underlying stream
-                    zf.Close(); // Ensure we release resources
-                }
+                Debug.WriteLine(e.Message);
             }
         }
 
         public void ExtractZipFiles(string archiveFilenameIn, string outFolder, List<string> filesToExtract, bool keepPath = true)
         {
-            ZipFile zf = null;
             try
             {
-                FileStream fs = File.OpenRead(archiveFilenameIn);
-                zf = new ZipFile(fs);
-                foreach (ZipEntry zipEntry in zf)
+                using (ZipArchive zip = ZipFile.OpenRead(archiveFilenameIn))
                 {
-                    if (!zipEntry.IsFile)
+                    foreach (ZipArchiveEntry zipEntry in zip.Entries)
                     {
-                        continue;           // Ignore directories
-                    }
+                        // ignore directories
+                        if (zipEntry.Length == 0) continue;
 
-                    string entryFileName = zipEntry.Name;
-                    if (filesToExtract.Contains(entryFileName))
-                    {
+                        // ignore the META-INF folder
+                        if (zipEntry.FullName.Contains("META-INF")) continue;
 
-                        byte[] buffer = new byte[4096];     // 4K is optimum
-                        Stream zipStream = zf.GetInputStream(zipEntry);
-
-                        // Manipulate the output filename here as desired.
-                        string fullZipToPath = Path.Combine(outFolder, entryFileName);
-                        if (keepPath == false)
+                        if (filesToExtract.Contains(zipEntry.FullName))
                         {
-                            fullZipToPath = Path.Combine(outFolder, Path.GetFileName(entryFileName));
-                        }
-
-                        string directoryName = Path.GetDirectoryName(fullZipToPath);
-                        if (directoryName.Length > 0)
-                            Directory.CreateDirectory(directoryName);
-
-                        if (!zipEntry.IsDirectory)
-                        {
-                            // Unzip file in buffered chunks. This is just as fast as unpacking to a buffer the full size
-                            // of the file, but does not waste memory.
-                            // The "using" will close the stream even if an exception occurs.
-                            using (FileStream streamWriter = File.Create(fullZipToPath))
+                        
+                            // Gets the full path to ensure that relative segments are removed.
+                            string destinationPath = Path.GetFullPath(Path.Combine(outFolder, zipEntry.FullName));
+                            if (keepPath == false)
                             {
-                                StreamUtils.Copy(zipStream, streamWriter, buffer);
+                                destinationPath = Path.GetFullPath(Path.Combine(outFolder, zipEntry.Name));
+                            }
+
+                            // create directory
+                            if (!Directory.Exists(Path.GetDirectoryName(destinationPath))) Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
+
+                            // Ordinal match is safest, case-sensitive volumes can be mounted within volumes that
+                            // are case-insensitive.
+                            if (destinationPath.StartsWith(outFolder, StringComparison.Ordinal))
+                            {
+                                zipEntry.ExtractToFile(destinationPath,true);
                             }
                         }
                     }
                 }
             }
-            finally
+            catch (Exception e)
             {
-                if (zf != null)
-                {
-                    zf.IsStreamOwner = true; // Makes close also shut the underlying stream
-                    zf.Close(); // Ensure we release resources
-                }
+                Debug.WriteLine(e.Message);
             }
         }
-
-
     }
 }

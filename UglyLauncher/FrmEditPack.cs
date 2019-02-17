@@ -41,7 +41,6 @@ namespace UglyLauncher
                 }
                 ListBoxItem mItem = new ListBoxItem(sModName, sModDescription, mod);
                 LstEnabledMods.Items.Add(mItem);
-
             }
         }
 
@@ -61,8 +60,6 @@ namespace UglyLauncher
                     sModDescription = GetModDescription(sJsonMcModInfo);
                     string sModVersion = GetModVersion(sJsonMcModInfo);
                     if (sModVersion != null) sModName = sModName + " (" + sModVersion + ")";
-
-                    
                 }
                 else
                 {
@@ -72,7 +69,6 @@ namespace UglyLauncher
                 ListBoxItem mItem = new ListBoxItem(sModName, sModDescription, mod);
                 LstAvailbleMods.Items.Add(mItem);
             }
-            
         }
 
         private string GetModName(string sJson)
@@ -170,7 +166,6 @@ namespace UglyLauncher
             }
 
             Init();
-
         }
 
         private void BtnEnableAll_Click(object sender, EventArgs e)

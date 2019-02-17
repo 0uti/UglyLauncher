@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using ICSharpCode.SharpZipLib.Zip;
 using UglyLauncher.AccountManager;
 using UglyLauncher.Internet;
 using UglyLauncher.Minecraft.Files;
@@ -35,8 +35,10 @@ namespace UglyLauncher.Minecraft
         public readonly string _sLibraryDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.minecraft\libraries";
         public readonly string _sVersionDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.minecraft\versions";
         public readonly string _sNativesDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.UglyLauncher\natives";
+        private string forgeVersion;
         // bool
         private readonly bool Offline = false;
+        private bool isForge = false;
         // Lists
         
 
@@ -210,24 +212,25 @@ namespace UglyLauncher.Minecraft
         // Get mcmod.info file as string
         public string GetMcModInfo(string sFileName)
         {
-            FileStream fs = new FileStream(sFileName, FileMode.Open, FileAccess.Read);
-            ZipFile zf = new ZipFile(fs);
-            ZipEntry ze = zf.GetEntry("mcmod.info");
-            string result = null;
-            byte[] ret = null;
-            if (ze != null)
+            try
             {
-                Stream s = zf.GetInputStream(ze);
-                ret = new byte[ze.Size];
-                s.Read(ret, 0, ret.Length);
-                result = System.Text.Encoding.UTF8.GetString(ret).Trim();
+                using (ZipArchive zip = ZipFile.OpenRead(sFileName))
+                {
+                    ZipArchiveEntry entry = zip.GetEntry("META-INF/MANIFEST.MF");
+                    string text;
+                    using (StreamReader reader = new StreamReader(entry.Open()))
+                    {
+                        text = reader.ReadToEnd();
+                    }
+                    return text;
+                }
             }
-            zf.Close();
-            fs.Close();
-
-            return result;
+            catch (Exception)
+            {
+                return null;
+            }
         }
-
+        
         public string GetRecommendedVersion(string sPackName)
         {
             if (Offline == false)
@@ -291,6 +294,8 @@ namespace UglyLauncher.Minecraft
             // additional things for forge
             if (pack.Type.Equals("forge"))
             {
+                isForge = true;
+                forgeVersion = pack.ForgeVersion;
                 Dictionary<string, string> ForgeClassPath = new Dictionary<string, string>(); // Library list for startup
                 FilesForge MCForgeFiles = new FilesForge(dhelper)
                 {
@@ -576,7 +581,15 @@ namespace UglyLauncher.Minecraft
 
             // fill placeholders
             args = args.Replace("${auth_player_name}", Profile.name);
-            args = args.Replace("${version_name}", MC.Id);
+
+            if(isForge)
+            {
+                args = args.Replace("${version_name}", MC.Id+ "-forge" + forgeVersion.Replace(MC.Id,""));
+            }
+            else
+            {
+                args = args.Replace("${version_name}", MC.Id);
+            }
             args = args.Replace("${game_directory}", string.Format("\"{0}\\{1}\\minecraft\"", _sPacksDir, sPackName));
             args = args.Replace("${assets_root}", string.Format("\"{0}\"", _sAssetsDir));
             args = args.Replace("${game_assets}", string.Format("\"{0}\\virtual\\legacy\"", _sAssetsDir));

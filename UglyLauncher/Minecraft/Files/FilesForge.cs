@@ -8,8 +8,8 @@ using UglyLauncher.Minecraft.Files.Json.ForgeInstaller;
 using UglyLauncher.Minecraft.Files.Json.ForgeVersion;
 using UglyLauncher.Minecraft.Files.Json.ForgeProcessor;
 using System.Diagnostics;
-using ICSharpCode.SharpZipLib.Zip;
 using UglyLauncher.Settings;
+using System.IO.Compression;
 
 namespace UglyLauncher.Minecraft.Files
 {
@@ -279,7 +279,7 @@ namespace UglyLauncher.Minecraft.Files
             }
 
             // get main class of Jar file
-            string mainClass = GetMainClass(jarFile);
+            string mainClass = GetMainClass(LibraryDir + "/" + jarFile);
             if(mainClass == null)
             {
                 Debug.WriteLine("file: " + jarFile + " has no main class");
@@ -369,36 +369,30 @@ namespace UglyLauncher.Minecraft.Files
         
         private string GetMainClass(string jarFile)
         {
-            string[] manifest = GetJarManifest(LibraryDir + "/" + jarFile).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-
-            foreach (string line in manifest)
+            try
             {
-                if (line.StartsWith("Main-Class: "))
+                using (ZipArchive zip = ZipFile.OpenRead(jarFile))
                 {
-                    return line.Replace("Main-Class: ", "").Trim();
+                    ZipArchiveEntry entry = zip.GetEntry("META-INF/MANIFEST.MF");
+                    using (StreamReader reader = new StreamReader(entry.Open()))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            if (line.StartsWith("Main-Class: "))
+                            {
+                                return line.Replace("Main-Class: ", "").Trim();
+                            }
+                        }
+                    }
                 }
+                return null;
             }
-            return null;
-        }
-
-        public string GetJarManifest(string sFileName)
-        {
-            FileStream fs = new FileStream(sFileName, FileMode.Open, FileAccess.Read);
-            ZipFile zf = new ZipFile(fs);
-            ZipEntry ze = zf.GetEntry("META-INF/MANIFEST.MF");
-            string result = null;
-            byte[] ret = null;
-            if (ze != null)
+            catch (Exception e)
             {
-                Stream s = zf.GetInputStream(ze);
-                ret = new byte[ze.Size];
-                s.Read(ret, 0, ret.Length);
-                result = System.Text.Encoding.UTF8.GetString(ret).Trim();
+                Debug.WriteLine(e.Message);
+                return null;
             }
-            zf.Close();
-            fs.Close();
-
-            return result;
         }
 
         private string MavenStringToFilePath(string mavenString)
