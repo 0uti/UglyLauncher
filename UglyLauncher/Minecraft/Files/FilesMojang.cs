@@ -106,6 +106,34 @@ namespace UglyLauncher.Minecraft.Files
             }
         }
 
+        public GameVersion GetGameVersion(string mcversion)
+        {
+            VersionsVersion oVersion = null;
+
+            try
+            {
+                if (_versions == null) GetVersionManifest();
+
+                foreach (VersionsVersion version in _versions.Versions)
+                {
+                    if (version.Id.Equals(mcversion))
+                    {
+                        oVersion = version;
+                        break;
+                    }
+                }
+                // throw execption when version not found
+                if (oVersion == null) throw new Exception("Minecraft version not found.");
+
+                string sVersion = Http.GET(oVersion.Url);
+                return GameVersion.FromJson(sVersion);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public void DownloadVersionJson(string mcversion)
         {
             try
@@ -219,24 +247,25 @@ namespace UglyLauncher.Minecraft.Files
             bool download = false;
             long filesize;
             string fileSHA;
+            string localFilePath = VersionDir + @"\" + MC.Id + @"\" + MC.Id + ".jar";
 
             try
             {
-                if (File.Exists(VersionDir + @"\" + MC.Id + @"\" + MC.Id + ".jar"))
+                if (File.Exists(localFilePath))
                 {
                     // check filesize
-                    filesize = new FileInfo(VersionDir + @"\" + MC.Id + @"\" + MC.Id + ".jar").Length;
+                    filesize = new FileInfo(localFilePath).Length;
                     if (MC.Downloads.Client.Size != filesize)
                     {
-                        File.Delete(VersionDir + @"\" + MC.Id + @"\" + MC.Id + ".jar");
+                        File.Delete(localFilePath);
                         download = true;
                     }
 
                     // check SHA
-                    fileSHA = dhelper.ComputeHashSHA(VersionDir + @"\" + MC.Id + @"\" + MC.Id + ".jar");
+                    fileSHA = dhelper.ComputeHashSHA(localFilePath);
                     if (!MC.Downloads.Client.Sha1.Equals(fileSHA))
                     {
-                        File.Delete(VersionDir + @"\" + MC.Id + @"\" + MC.Id + ".jar");
+                        File.Delete(localFilePath);
                         download = true;
                     }
                 }
@@ -245,19 +274,19 @@ namespace UglyLauncher.Minecraft.Files
                 // download jar
                 if (download == true)
                 {
-                    dhelper.DownloadFileTo(MC.Downloads.Client.Url, VersionDir + @"\" + MC.Id + @"\" + MC.Id + ".jar");
+                    dhelper.DownloadFileTo(MC.Downloads.Client.Url, localFilePath);
                 }
 
                 // post download check
                 // check filesize
-                filesize = new FileInfo(VersionDir + @"\" + MC.Id + @"\" + MC.Id + ".jar").Length;
+                filesize = new FileInfo(localFilePath).Length;
                 if (MC.Downloads.Client.Size != filesize)
                 {
                     throw new Exception("Error downloading file: " + MC.Id + ".jar (filesize mismatch)");
                 }
 
                 // check SHA
-                fileSHA = dhelper.ComputeHashSHA(VersionDir + @"\" + MC.Id + @"\" + MC.Id + ".jar");
+                fileSHA = dhelper.ComputeHashSHA(localFilePath);
                 if (!MC.Downloads.Client.Sha1.Equals(fileSHA))
                 {
                     throw new Exception("Error downloading file: " + MC.Id + ".jar (SHA1 mismatch)");
@@ -274,31 +303,31 @@ namespace UglyLauncher.Minecraft.Files
             bool download = false;
             long filesize;
             string fileSHA;
-            string localFilePath = VersionDir + @"\" + MC.Id;
+            string localFilePath = VersionDir + @"\" + MC.Id + @"\minecraft_server." + MC.Id + ".jar";
 
             // overwrite download Path
             if (localPath != null)
             {
-                localFilePath = localPath;
+                localFilePath = localPath + @"\minecraft_server." + MC.Id + ".jar";
             }
 
             try
             {
-                if (File.Exists(localFilePath + @"\" + MC.Id + ".jar"))
+                if (File.Exists(localFilePath))
                 {
                     // check filesize
-                    filesize = new FileInfo(localFilePath + @"\" + MC.Id + ".jar").Length;
+                    filesize = new FileInfo(localFilePath).Length;
                     if (MC.Downloads.Server.Size != filesize)
                     {
-                        File.Delete(localFilePath + @"\" + MC.Id + ".jar");
+                        File.Delete(localFilePath);
                         download = true;
                     }
 
                     // check SHA
-                    fileSHA = dhelper.ComputeHashSHA(localFilePath + @"\" + MC.Id + ".jar");
+                    fileSHA = dhelper.ComputeHashSHA(localFilePath);
                     if (!MC.Downloads.Server.Sha1.Equals(fileSHA))
                     {
-                        File.Delete(localFilePath + @"\" + MC.Id + ".jar");
+                        File.Delete(localFilePath);
                         download = true;
                     }
                 }
@@ -307,22 +336,22 @@ namespace UglyLauncher.Minecraft.Files
                 // download jar
                 if (download == true)
                 {
-                    dhelper.DownloadFileTo(MC.Downloads.Server.Url, localFilePath + @"\" + MC.Id + ".jar");
+                    dhelper.DownloadFileTo(MC.Downloads.Server.Url, localFilePath);
                 }
 
                 // post download check
                 // check filesize
-                filesize = new FileInfo(localFilePath + @"\" + MC.Id + ".jar").Length;
+                filesize = new FileInfo(localFilePath).Length;
                 if (MC.Downloads.Server.Size != filesize)
                 {
-                    throw new Exception("Error downloading file: " + MC.Id + ".jar (filesize mismatch)");
+                    throw new Exception("Error downloading file: minecraft_server." + MC.Id + ".jar (filesize mismatch)");
                 }
 
                 // check SHA
-                fileSHA = dhelper.ComputeHashSHA(localFilePath + @"\" + MC.Id + ".jar");
+                fileSHA = dhelper.ComputeHashSHA(localFilePath);
                 if (!MC.Downloads.Server.Sha1.Equals(fileSHA))
                 {
-                    throw new Exception("Error downloading file: " + MC.Id + ".jar (SHA1 mismatch)");
+                    throw new Exception("Error downloading file: minecraft_server" + MC.Id + ".jar (SHA1 mismatch)");
                 }
             }
             catch (Exception ex)
