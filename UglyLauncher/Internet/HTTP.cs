@@ -24,19 +24,17 @@ namespace UglyLauncher.Internet
         /// <returns>respronse from server</returns>
         public static string GET(Uri url)
         {
-            // declare needed objects
-            WebRequest request = null;
-            WebResponse response = null;
-            StreamReader stringResponse = null;
-
             try
             {
-                request = WebRequest.CreateHttp(url);
+                // declare needed objects
+                WebRequest request = WebRequest.CreateHttp(url);
                 request.Credentials = CredentialCache.DefaultCredentials;
                 request.Timeout = 5000;
-                response = request.GetResponse();
-                stringResponse = new StreamReader(response.GetResponseStream());
-                return stringResponse.ReadToEnd().Trim();
+                WebResponse response = request.GetResponse();
+                using (StreamReader stringResponse = new StreamReader(response.GetResponseStream()))
+                {
+                    return stringResponse.ReadToEnd().Trim();
+                }
             }
             catch (WebException ex)
             {
@@ -65,16 +63,15 @@ namespace UglyLauncher.Internet
         /// <returns>response from server</returns>
         public static string POST(Uri url, string postdata, string contenttype)
         {
-            // declare needed objects
-            WebRequest request = null;
             WebResponse response = null;
             StreamReader stringResponse = null;
             Stream dataStream = null;
 
             try
             {
+                // declare needed objects
                 // Create request
-                request = WebRequest.Create(url);
+                WebRequest request = WebRequest.Create(url);
                 // set Method
                 request.Method = "POST";
                 // append POST data
@@ -120,16 +117,14 @@ namespace UglyLauncher.Internet
         /// <returns>the MemoryString of downloaded object</returns>
         public static MemoryStream DownloadToStream(Uri url)
         {
-            // create needed objects
-            WebClient wc;
-            MemoryStream ms;
-
             try
             {
-                wc = new WebClient();
-                byte[] bytes = wc.DownloadData(url);
-                ms = new MemoryStream(bytes);
-                return ms;
+                using (WebClient wc = new WebClient())
+                {
+                    byte[] bytes = wc.DownloadData(url);
+                    MemoryStream ms = new MemoryStream(bytes);
+                    return ms;
+                }
             }
             catch (WebException ex)
             {

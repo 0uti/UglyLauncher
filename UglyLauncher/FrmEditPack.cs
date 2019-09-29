@@ -7,8 +7,8 @@ namespace UglyLauncher
 {
     public partial class FrmEditPack : Form
     {
-        private string sPackName;
-        private Minecraft.Launcher L = new Minecraft.Launcher(false);
+        private readonly string sPackName;
+        private readonly Minecraft.Launcher L = new Minecraft.Launcher(false);
 
         public FrmEditPack(string sPackName)
         {
@@ -18,7 +18,7 @@ namespace UglyLauncher
             InitializeComponent();
         }
 
-        private void GetActiveMods(string sPackname)
+        private void GetActiveMods(string sPackName)
         {
             List<string> lMods = L.GetModFolderContents(sPackName, new[] { ".jar", ".zip" });
             foreach (string mod in lMods)
@@ -74,13 +74,12 @@ namespace UglyLauncher
         private string GetModName(string sJson)
         {
             string[] sLines = sJson.Replace("\r", "").Split('\n');
-            string sModName = null;
             foreach (string sLine in sLines)
             {
                 if (sLine.Contains("\"name\""))
                 {
                     string[] Line = sLine.Split(':');
-                    sModName = Line[1].Trim().Replace("\"", "").Trim();
+                    string sModName = Line[1].Trim().Replace("\"", "").Trim();
                     sModName = sModName.Remove(sModName.Length - 1).Trim();
                     return sModName;
                 }
@@ -92,13 +91,12 @@ namespace UglyLauncher
         private string GetModDescription(string sJson)
         {
             string[] sLines = sJson.Replace("\r", "").Split('\n');
-            string sModDescription = null;
             foreach (string sLine in sLines)
             {
                 if (sLine.Contains("\"description\""))
                 {
                     string[] Line = sLine.Split(':');
-                    sModDescription = Line[1].Trim().Replace("\"", "").Trim();
+                    string sModDescription = Line[1].Trim().Replace("\"", "").Trim();
                     sModDescription = sModDescription.Remove(sModDescription.Length - 1).Trim();
                     return sModDescription;
                 }
@@ -110,13 +108,12 @@ namespace UglyLauncher
         private string GetModVersion(string sJson)
         {
             string[] sLines = sJson.Replace("\r", "").Split('\n');
-            string sModVersion = null;
             foreach (string sLine in sLines)
             {
                 if (sLine.Contains("\"version\""))
                 {
                     string[] Line = sLine.Split(':');
-                    sModVersion = Line[1].Trim().Replace("\"", "").Trim();
+                    string sModVersion = Line[1].Trim().Replace("\"", "").Trim();
                     sModVersion = sModVersion.Remove(sModVersion.Length - 1).Trim();
                     return sModVersion;
                 }

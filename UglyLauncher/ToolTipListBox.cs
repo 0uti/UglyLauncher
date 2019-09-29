@@ -16,10 +16,10 @@ namespace UglyLauncher
         private bool _toolTipDisplayed;
 
         // Timer that is used to wait for the mouse to hover over an item
-        private Timer _toolTipDisplayTimer;
+        private readonly Timer _toolTipDisplayTimer;
 
         // Tooltip control
-        private ToolTip _toolTip;
+        private readonly ToolTip _toolTip;
 
         public ToolTipListBox()
         {
@@ -35,7 +35,7 @@ namespace UglyLauncher
 
             // Set the timer interval to the system time that it takes for a tooltip to appear
             _toolTipDisplayTimer.Interval = SystemInformation.MouseHoverTime;
-            _toolTipDisplayTimer.Tick += _toolTipDisplayTimer_Tick;
+            _toolTipDisplayTimer.Tick += ToolTipDisplayTimer_Tick;
         }
 
         private void ListBox_MouseMove(object sender, MouseEventArgs e)
@@ -80,7 +80,7 @@ namespace UglyLauncher
             _toolTipDisplayTimer.Stop();
         }
 
-        void _toolTipDisplayTimer_Tick(object sender, EventArgs e)
+        void ToolTipDisplayTimer_Tick(object sender, EventArgs e)
         {
             // Display tooltip text since the mouse has hovered over an item
             if (!_toolTipDisplayed && _currentItem != ListBox.NoMatches &&

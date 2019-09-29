@@ -42,7 +42,7 @@ namespace UglyLauncher.Minecraft
         // Lists
         
 
-        private DownloadHelper dhelper;
+        private readonly DownloadHelper dhelper;
 
 
         // constructor
@@ -108,8 +108,7 @@ namespace UglyLauncher.Minecraft
         // get pack icon
         public Image GetPackIcon(MCAvailablePack Pack)
         {
-            MemoryStream ms = new MemoryStream();
-            ms = Http.DownloadToStream(_sPackServer + @"/packs/" + Pack.Name + @"/" + Pack.Name + @".png");
+            MemoryStream ms = Http.DownloadToStream(_sPackServer + @"/packs/" + Pack.Name + @"/" + Pack.Name + @".png");
 
             if(Directory.Exists(_sPacksDir + @"\" + Pack.Name))
             {
@@ -127,11 +126,12 @@ namespace UglyLauncher.Minecraft
 
             MemoryStream ms = new MemoryStream();
 
-            FileStream fileStream = File.OpenRead(_sPacksDir + @"\" + Pack.Name + @"\" + Pack.Name + ".png");
-            ms.SetLength(fileStream.Length);
-            //read file to MemoryStream
-            fileStream.Read(ms.GetBuffer(), 0, (int)fileStream.Length);
-            
+            using (FileStream fileStream = File.OpenRead(_sPacksDir + @"\" + Pack.Name + @"\" + Pack.Name + ".png"))
+            {
+                ms.SetLength(fileStream.Length);
+                //read file to MemoryStream
+                fileStream.Read(ms.GetBuffer(), 0, (int)fileStream.Length);
+            }
             return Image.FromStream(ms);
         }
 
@@ -140,7 +140,7 @@ namespace UglyLauncher.Minecraft
         {
             List<string> dirs = new List<string>(Directory.EnumerateDirectories(_sPacksDir));
             PacksInstalled = new MCPacksInstalled();
-            foreach (var dir in dirs)
+            foreach (string dir in dirs)
             {
                 if (File.Exists(dir + @"\version") && File.Exists(dir + @"\pack.json"))
                 {
@@ -262,8 +262,6 @@ namespace UglyLauncher.Minecraft
 
         public void StartPack(string sPackName, string sPackVersion)
         {
-            Dictionary<string, string> ClassPath = new Dictionary<string, string>(); // Library list for startup
-
             FilesMojang MCMojangFiles = new FilesMojang(dhelper)
             {
                 LibraryDir = _sLibraryDir,
@@ -287,7 +285,7 @@ namespace UglyLauncher.Minecraft
             // download game jar
             MCMojangFiles.DownloadClientJar(MCMojang);
             // download libraries if needed
-            ClassPath = MCMojangFiles.DownloadClientLibraries(MCMojang);
+            Dictionary<string, string> ClassPath = MCMojangFiles.DownloadClientLibraries(MCMojang);
             // download assets if needed
             MCMojangFiles.DownloadClientAssets(MCMojang);
             
@@ -296,7 +294,6 @@ namespace UglyLauncher.Minecraft
             {
                 isForge = true;
                 forgeVersion = pack.ForgeVersion;
-                Dictionary<string, string> ForgeClassPath = new Dictionary<string, string>(); // Library list for startup
                 FilesForge MCForgeFiles = new FilesForge(dhelper)
                 {
                     LibraryDir = _sLibraryDir,
@@ -305,7 +302,7 @@ namespace UglyLauncher.Minecraft
                 };
 
                 // Install Forge
-                ForgeClassPath = MCForgeFiles.InstallForge(pack.ForgeVersion);
+                Dictionary<string, string> ForgeClassPath = MCForgeFiles.InstallForge(pack.ForgeVersion);
 
                 //Merge Classpath
                 foreach (KeyValuePair<string, string> entry in ForgeClassPath)
@@ -332,11 +329,11 @@ namespace UglyLauncher.Minecraft
         
         private void Start(string args,string sPackName)
         {
-            
             Configuration C = new Configuration();
+#pragma warning disable IDE0067 // Objekte verwerfen, bevor Bereich verloren geht
             Process minecraft = new Process();
-
-            // check for "minecraft" folder
+#pragma warning restore IDE0067 // Objekte verwerfen, bevor Bereich verloren geht
+                               // check for "minecraft" folder
             if (!Directory.Exists(_sPacksDir + @"\" + sPackName + @"\minecraft")) Directory.CreateDirectory(_sPacksDir + @"\" + sPackName + @"\minecraft");
 
             minecraft.StartInfo.FileName = C.GetJavaPath();
@@ -358,8 +355,8 @@ namespace UglyLauncher.Minecraft
                 _console = new FrmConsole();
                 _console.Show();
                 _console.Clear();
-                _console.AddLine(String.Format("UglyLauncher-Version: {0}", Application.ProductVersion),Color.Blue);
-                _console.AddLine("Using Java-Version: " + C.GetJavaPath() + " (" + C.GetJavaArch()+ "bit)", Color.Blue);
+                _console.AddLine(String.Format("UglyLauncher-Version: {0}", Application.ProductVersion), Color.Blue);
+                _console.AddLine("Using Java-Version: " + C.GetJavaPath() + " (" + C.GetJavaArch() + "bit)", Color.Blue);
                 _console.AddLine("Startparameter:" + args, Color.Blue);
             }
 
@@ -367,7 +364,6 @@ namespace UglyLauncher.Minecraft
             minecraft.Start();
             minecraft.BeginOutputReadLine();
             minecraft.BeginErrorReadLine();
-            
             // raise event
             EventHandler<FormWindowStateEventArgs> handler = RestoreWindow;
             FormWindowStateEventArgs args2 = new FormWindowStateEventArgs

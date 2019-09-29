@@ -155,8 +155,8 @@ namespace UglyLauncher.Settings
             List<string> lVersions = new List<string>();
             string[] lSubkeys;
             RegistryKey key;
-            var hklm64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
-            var hklm32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+            RegistryKey hklm64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+            RegistryKey hklm32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
 
             // get 64bit vrsions
             key = hklm64.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
@@ -211,7 +211,7 @@ namespace UglyLauncher.Settings
         private void GetJavaPath64(string sVersion)
         {
             RegistryKey key ;
-            var hklm64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+            RegistryKey hklm64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
 
             if (sVersion == "auto")
             {
@@ -231,7 +231,7 @@ namespace UglyLauncher.Settings
         private void GetJavaPath32(string sVersion)
         {
             RegistryKey key;
-            var hklm32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+            RegistryKey hklm32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
 
             if (sVersion == "auto")
             {

@@ -24,7 +24,7 @@ namespace UglyLauncher.Minecraft.Files
 
         private GameVersionManifest _versions = null;
 
-        private DownloadHelper dhelper;
+        private readonly DownloadHelper dhelper;
 
         public FilesMojang(DownloadHelper dhelper)
         {

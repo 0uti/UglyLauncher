@@ -15,7 +15,7 @@ namespace UglyLauncher.Minecraft.Files
 {
     class FilesForge
     {
-        private DownloadHelper dhelper;
+        private readonly DownloadHelper dhelper;
 
         private readonly string _sForgeTree = "/net/minecraftforge/forge/";
         private readonly string _sForgeMaven = "https://files.minecraftforge.net/maven";

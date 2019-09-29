@@ -11,7 +11,7 @@ namespace UglyLauncher.Internet
 {
     class DownloadHelper
     {
-        private WebClient _downloader = new WebClient();
+        private readonly WebClient _downloader = new WebClient();
         // bool
         private bool downloadfinished = false;
 

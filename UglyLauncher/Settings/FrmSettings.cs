@@ -6,7 +6,7 @@ namespace UglyLauncher.Settings
 {
     public partial class Settings : Form
     {
-        private Configuration C = new Configuration();
+        private readonly Configuration C = new Configuration();
 
         public Settings()
         {

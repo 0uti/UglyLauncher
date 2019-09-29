@@ -13,7 +13,7 @@ namespace UglyLauncher
     public partial class FrmMain : Form
     {
         public delegate void startup();
-        public FrmProgressbar bar = new FrmProgressbar();
+        public static FrmProgressbar bar = new FrmProgressbar();
         public bool Offline = false;
 
 
@@ -31,8 +31,10 @@ namespace UglyLauncher
         // show useraccounts
         private void MnuAccounts_Click(object sender, EventArgs e)
         {
-            new FrmUserAccounts().ShowDialog();
+            FrmUserAccounts frmUserAccounts = new FrmUserAccounts();
+            frmUserAccounts.ShowDialog();
             DoInit();
+            frmUserAccounts.Dispose();
         }
 
         // form_load event
@@ -73,6 +75,7 @@ namespace UglyLauncher
             while (Worker.IsBusy)
                 Application.DoEvents();
             bar.Hide();
+            Worker.Dispose();
 
             // Check if Users available
             Manager U = new Manager();
@@ -81,8 +84,10 @@ namespace UglyLauncher
                 DialogResult MBres = MessageBox.Show("Es ist noch kein Account vorhanden.\nWollen Sie jetzt einen anlegen?", "Kein Account angelegt", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (MBres == DialogResult.Yes)
                 {
-                    new FrmUserAccounts().ShowDialog();
+                    FrmUserAccounts frmUserAccounts = new FrmUserAccounts();
+                    frmUserAccounts.ShowDialog();
                     DoInit();
+                    frmUserAccounts.Dispose();
                 }
             }
         }
@@ -125,6 +130,7 @@ namespace UglyLauncher
                         FrmRefreshToken fTokRefresh = new FrmRefreshToken(Account);
                         DialogResult res = fTokRefresh.ShowDialog();
                         if (res == DialogResult.Cancel) U.SetDefault(Guid.Empty);
+                        fTokRefresh.Dispose();
                     }
                     catch (Exception)
                     {
@@ -314,7 +320,6 @@ namespace UglyLauncher
             L.StartPack(sSelectedPack, sSelectedVersion);
         }
 
-
         private void Downloadpack()
         {
             if (LblDefaultAccount.Text == "none")
@@ -331,15 +336,13 @@ namespace UglyLauncher
 
             // gather vars from Gui
             string sSelectedPack = LstPacks.SelectedItems[0].Text;
-            string sSelectedVersion = null;
+            string sSelectedVersion;
             if (CmbPackVersions.SelectedIndex == 0) sSelectedVersion = "recommended";
             else sSelectedVersion = CmbPackVersions.Text;
             Launcher L = new Launcher(Offline);
             // download minecraft
             L.StartPack(sSelectedPack, sSelectedVersion);
         }
-
-
 
         void L_restoreWindow(object sender, Launcher.FormWindowStateEventArgs e)
         {
@@ -365,12 +368,16 @@ namespace UglyLauncher
 
         private void MnuSettings_Click(object sender, EventArgs e)
         {
-            new Settings.Settings().ShowDialog();
+            Settings.Settings settings = new Settings.Settings();
+            settings.ShowDialog();
+            settings.Dispose();
         }
 
         private void MnuInfo_Click(object sender, EventArgs e)
         {
-            new FrmAbout().ShowDialog();
+            FrmAbout frmAbout = new FrmAbout();
+            frmAbout.ShowDialog();
+            frmAbout.Dispose();
         }
 
         private void MnuEditPack_Click(object sender, EventArgs e)
@@ -383,7 +390,7 @@ namespace UglyLauncher
 
             // gather vars from Gui
             string sSelectedPack = LstPacks.SelectedItems[0].Text;
-            string sSelectedVersion = null;
+            string sSelectedVersion;
             if (CmbPackVersions.SelectedIndex == 0) sSelectedVersion = "recommended";
             else sSelectedVersion = CmbPackVersions.Text;
             Launcher L = new Launcher(Offline);
@@ -393,7 +400,9 @@ namespace UglyLauncher
                 return;
             }
 
-            new FrmEditPack(sSelectedPack).ShowDialog();
+            FrmEditPack frmEditPack = new FrmEditPack(sSelectedPack);
+            frmEditPack.ShowDialog();
+            frmEditPack.Dispose();
         }
 
         private void LstPacks_MouseDown(object sender, MouseEventArgs e)
@@ -428,6 +437,7 @@ namespace UglyLauncher
         private void MnuDownloadPack_Click(object sender, EventArgs e)
         {
             // ToDo: Download Pack
+            Downloadpack();
         }
     }
 }

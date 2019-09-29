@@ -319,10 +319,10 @@ namespace UglyLauncher.Minecraft.Files.Json.GameVersion
             {
                 case JsonToken.String:
                 case JsonToken.Date:
-                    var stringValue = serializer.Deserialize<string>(reader);
+                    string stringValue = serializer.Deserialize<string>(reader);
                     return new GameElement { String = stringValue };
                 case JsonToken.StartObject:
-                    var objectValue = serializer.Deserialize<GameClass>(reader);
+                    GameClass objectValue = serializer.Deserialize<GameClass>(reader);
                     return new GameElement { GameClass = objectValue };
             }
             throw new Exception("Cannot unmarshal type GameElement");
@@ -330,7 +330,7 @@ namespace UglyLauncher.Minecraft.Files.Json.GameVersion
 
         public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
         {
-            var value = (GameElement)untypedValue;
+            GameElement value = (GameElement)untypedValue;
             if (value.String != null)
             {
                 serializer.Serialize(writer, value.String);
@@ -357,10 +357,10 @@ namespace UglyLauncher.Minecraft.Files.Json.GameVersion
             {
                 case JsonToken.String:
                 case JsonToken.Date:
-                    var stringValue = serializer.Deserialize<string>(reader);
+                    string stringValue = serializer.Deserialize<string>(reader);
                     return new VersionValue { String = stringValue };
                 case JsonToken.StartArray:
-                    var arrayValue = serializer.Deserialize<string[]>(reader);
+                    string[] arrayValue = serializer.Deserialize<string[]>(reader);
                     return new VersionValue { StringArray = arrayValue };
             }
             throw new Exception("Cannot unmarshal type Value");
@@ -368,7 +368,7 @@ namespace UglyLauncher.Minecraft.Files.Json.GameVersion
 
         public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
         {
-            var value = (VersionValue)untypedValue;
+            VersionValue value = (VersionValue)untypedValue;
             if (value.String != null)
             {
                 serializer.Serialize(writer, value.String);
@@ -395,10 +395,10 @@ namespace UglyLauncher.Minecraft.Files.Json.GameVersion
             {
                 case JsonToken.String:
                 case JsonToken.Date:
-                    var stringValue = serializer.Deserialize<string>(reader);
+                    string stringValue = serializer.Deserialize<string>(reader);
                     return new JvmElement { String = stringValue };
                 case JsonToken.StartObject:
-                    var objectValue = serializer.Deserialize<JvmClass>(reader);
+                    JvmClass objectValue = serializer.Deserialize<JvmClass>(reader);
                     return new JvmElement { JvmClass = objectValue };
             }
             throw new Exception("Cannot unmarshal type JvmElement");
@@ -406,7 +406,7 @@ namespace UglyLauncher.Minecraft.Files.Json.GameVersion
 
         public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
         {
-            var value = (JvmElement)untypedValue;
+            JvmElement value = (JvmElement)untypedValue;
             if (value.String != null)
             {
                 serializer.Serialize(writer, value.String);

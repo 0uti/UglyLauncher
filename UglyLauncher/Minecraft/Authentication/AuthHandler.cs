@@ -18,7 +18,6 @@ namespace UglyLauncher.Minecraft.Authentication
         {
             // declare needed objects
             string sJsonResponse = null;
-            WebRequest request = null;
             WebResponse response = null;
             StreamReader stringResponse = null;
             Stream dataStream = null;
@@ -39,7 +38,7 @@ namespace UglyLauncher.Minecraft.Authentication
             try
             {
                 // Create request
-                request = WebRequest.Create(sAuthServer + "/authenticate");
+                WebRequest request = WebRequest.Create(sAuthServer + "/authenticate");
                 // set Method
                 request.Method = "POST";
                 // set TimeOut
@@ -101,7 +100,6 @@ namespace UglyLauncher.Minecraft.Authentication
         {
             // declare needed objects
             string sJsonResponse = null;
-            WebRequest request = null;
             WebResponse response = null;
             StreamReader stringResponse = null;
             Stream dataStream = null;
@@ -122,7 +120,7 @@ namespace UglyLauncher.Minecraft.Authentication
             try
             {
                 // Create request
-                request = WebRequest.Create(sAuthServer + "/refresh");
+                WebRequest request = WebRequest.Create(sAuthServer + "/refresh");
                 // set Method
                 request.Method = "POST";
                 // set TimeOut
