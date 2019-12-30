@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using UglyLauncher.Internet;
-using UglyLauncher.Minecraft.Files.Json.GameVersion;
 using UglyLauncher.Minecraft.Files.Json.ForgeInstaller;
-using UglyLauncher.Minecraft.Files.Json.ForgeVersion;
 using UglyLauncher.Minecraft.Files.Json.ForgeProcessor;
-using System.Diagnostics;
+using UglyLauncher.Minecraft.Files.Json.ForgeVersion;
+using UglyLauncher.Minecraft.Files.Json.GameVersion;
 using UglyLauncher.Settings;
-using System.IO.Compression;
 
 namespace UglyLauncher.Minecraft.Files
 {
@@ -62,7 +62,7 @@ namespace UglyLauncher.Minecraft.Files
             {
                 post_1_13 = true;
             }
-            
+
             // post 1.13 files
             if (post_1_13 == true)
             {
@@ -145,10 +145,10 @@ namespace UglyLauncher.Minecraft.Files
                     {
                         "maven/"+lib.Downloads.Artifact.Path
                     };
-                    dhelper.ExtractZipFiles(sForgeInstallerFile, sForgeVersionDir, extractList,false);
+                    dhelper.ExtractZipFiles(sForgeInstallerFile, sForgeVersionDir, extractList, false);
                     continue;
                 }
-                
+
                 download = lib.Downloads.Artifact;
                 download.Path = LibraryDir + @"\" + download.Path.Replace("/", @"\");
 
@@ -160,7 +160,7 @@ namespace UglyLauncher.Minecraft.Files
                 dhelper.DownloadFileTo(download.Url, download.Path);
             }
         }
-        
+
         private Dictionary<string, string> DownloadForgeLibraries(ForgeInstaller Forge)
         {
             Dictionary<string, string> ClassPath = new Dictionary<string, string>(); // Library list for startup
@@ -267,12 +267,12 @@ namespace UglyLauncher.Minecraft.Files
         {
             Debug.WriteLine("******************************************************");
             Configuration C = new Configuration();
-            
+
             // get path to jar file
             string jarFile = MavenStringToFilePath(processor.Jar);
 
             // file exists
-            if(!File.Exists(LibraryDir + "/" + jarFile))
+            if (!File.Exists(LibraryDir + "/" + jarFile))
             {
                 Debug.WriteLine("file: " + jarFile + " not exists");
                 return;
@@ -280,7 +280,7 @@ namespace UglyLauncher.Minecraft.Files
 
             // get main class of Jar file
             string mainClass = GetMainClass(LibraryDir + "/" + jarFile);
-            if(mainClass == null)
+            if (mainClass == null)
             {
                 Debug.WriteLine("file: " + jarFile + " has no main class");
                 return;
@@ -288,7 +288,7 @@ namespace UglyLauncher.Minecraft.Files
             Debug.WriteLine("MainClass: " + mainClass);
 
             string args = "-cp " + BuildProcessClassPath(processor);
-            args += " " + mainClass +" ";
+            args += " " + mainClass + " ";
             args += BuildProcArgs(Forge, processor);
 
             Process proc = new Process();
@@ -307,9 +307,9 @@ namespace UglyLauncher.Minecraft.Files
             proc.BeginErrorReadLine();
             proc.WaitForExit();
             proc.Close();
-            proc.Dispose();
+            //proc.Dispose();
         }
-        
+
         private string BuildProcArgs(ForgeProcessor Forge, Processor processor)
         {
             string args = null;
@@ -317,7 +317,7 @@ namespace UglyLauncher.Minecraft.Files
             {
                 string newarg = arg;
 
-                if(arg.Equals("{MINECRAFT_JAR}"))
+                if (arg.Equals("{MINECRAFT_JAR}"))
                 {
                     args += " " + VersionDir + @"\" + Forge.Minecraft + @"\" + Forge.Minecraft + ".jar";
                     continue;
@@ -330,13 +330,13 @@ namespace UglyLauncher.Minecraft.Files
                     newarg = newarg.Replace("{", "").Replace("}", "");
                     newarg = Forge.Data[newarg].Client;
                 }
-                
+
                 // remove leading slash
-                if(newarg.StartsWith("/"))
+                if (newarg.StartsWith("/"))
                 {
                     newarg = newarg.Remove(0, 1);
                 }
-                
+
                 // contains maven string?
                 if (newarg.StartsWith("[") && newarg.EndsWith("]"))
                 {
@@ -344,17 +344,17 @@ namespace UglyLauncher.Minecraft.Files
                 }
                 args += " " + newarg;
             }
-            
+
             Debug.WriteLine("Args: " + args);
             return args;
         }
-        
+
         private string BuildProcessClassPath(Processor processor)
         {
             string classPath = null;
             foreach (string jarfile in processor.Classpath)
             {
-                if(classPath != null)
+                if (classPath != null)
                 {
                     classPath += ";";
                 }
@@ -366,7 +366,7 @@ namespace UglyLauncher.Minecraft.Files
             Debug.WriteLine("   " + LibraryDir + @"\" + MavenStringToFilePath(processor.Jar).Replace('/', '\\'));
             return classPath;
         }
-        
+
         private string GetMainClass(string jarFile)
         {
             try
@@ -400,7 +400,7 @@ namespace UglyLauncher.Minecraft.Files
             string output;
             // file extension
             string extension = ".jar";
-            if(mavenString.Contains("@"))
+            if (mavenString.Contains("@"))
             {
                 string[] ex = mavenString.Split('@');
                 extension = "." + ex[1];
@@ -416,14 +416,14 @@ namespace UglyLauncher.Minecraft.Files
             output += sFile[1] + "-" + sFile[2];
 
             // append ?thing?
-            if(sFile.Count() == 4)
+            if (sFile.Count() == 4)
             {
                 output += "-" + sFile[3];
             }
 
             // File extension
             output += extension;
-            
+
             return output;
         }
 

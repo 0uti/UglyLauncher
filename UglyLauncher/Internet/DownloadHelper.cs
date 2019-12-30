@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace UglyLauncher.Internet
 {
-    class DownloadHelper
+    class DownloadHelper : IDisposable
     {
         private readonly WebClient _downloader = new WebClient();
         // bool
@@ -128,7 +128,7 @@ namespace UglyLauncher.Internet
                         // are case-insensitive.
                         if (destinationPath.StartsWith(outFolder, StringComparison.Ordinal))
                         {
-                            zipEntry.ExtractToFile(destinationPath,true);
+                            zipEntry.ExtractToFile(destinationPath, true);
                         }
                     }
                 }
@@ -155,7 +155,7 @@ namespace UglyLauncher.Internet
 
                         if (filesToExtract.Contains(zipEntry.FullName))
                         {
-                        
+
                             // Gets the full path to ensure that relative segments are removed.
                             string destinationPath = Path.GetFullPath(Path.Combine(outFolder, zipEntry.FullName));
                             if (keepPath == false)
@@ -170,7 +170,7 @@ namespace UglyLauncher.Internet
                             // are case-insensitive.
                             if (destinationPath.StartsWith(outFolder, StringComparison.Ordinal))
                             {
-                                zipEntry.ExtractToFile(destinationPath,true);
+                                zipEntry.ExtractToFile(destinationPath, true);
                             }
                         }
                     }
@@ -180,6 +180,12 @@ namespace UglyLauncher.Internet
             {
                 Debug.WriteLine(e.Message);
             }
+        }
+
+        public void Dispose()
+        {
+            _bar.Dispose();
+            _downloader.Dispose();
         }
     }
 }

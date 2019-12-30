@@ -28,7 +28,7 @@ namespace UglyLauncher.Settings
 
             if (C.KeepConsole == 1) ChkKeepConsole.Checked = true;
             else ChkKeepConsole.Checked = false;
-          
+
             if (C.ShowConsole == 1)
             {
                 ChkShowConsole.Checked = true;

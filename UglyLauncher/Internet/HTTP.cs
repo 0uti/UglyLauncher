@@ -36,9 +36,9 @@ namespace UglyLauncher.Internet
                     return stringResponse.ReadToEnd().Trim();
                 }
             }
-            catch (WebException ex)
+            catch (WebException)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -87,9 +87,9 @@ namespace UglyLauncher.Internet
                 return stringResponse.ReadToEnd().Trim();
                 // close open objects
             }
-            catch (WebException ex)
+            catch (WebException)
             {
-                throw ex;
+                throw;
             }
             finally
             {
@@ -126,9 +126,9 @@ namespace UglyLauncher.Internet
                     return ms;
                 }
             }
-            catch (WebException ex)
+            catch (WebException)
             {
-                throw ex;
+                throw;
             }
         }
     }

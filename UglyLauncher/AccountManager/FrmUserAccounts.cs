@@ -69,7 +69,7 @@ namespace UglyLauncher.AccountManager
                     Name = Account.guid.ToString()
                 };
                 // Set Font to bold if default user
-                if (Account.guid == users.activeAccount) AccItem.Font = new Font(LstAccounts.Font,FontStyle.Bold);
+                if (Account.guid == users.activeAccount) AccItem.Font = new Font(LstAccounts.Font, FontStyle.Bold);
                 // Add Item to ListView
                 LstAccounts.Items.Add(AccItem);
             }

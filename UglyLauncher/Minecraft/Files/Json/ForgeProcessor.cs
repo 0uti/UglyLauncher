@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Collections.Generic;
+using System.Globalization;
 using UglyLauncher.Minecraft.Files.Json.GameVersion;
 
 namespace UglyLauncher.Minecraft.Files.Json.ForgeProcessor
@@ -53,7 +53,7 @@ namespace UglyLauncher.Minecraft.Files.Json.ForgeProcessor
         [JsonProperty("server")]
         public string Server { get; set; }
     }
-    
+
     public partial class Processor
     {
         [JsonProperty("jar")]

@@ -38,13 +38,13 @@ namespace UglyLauncher.Minecraft.Files
                 string sVersionManifest = Http.GET(_VersionManifest);
                 _versions = GameVersionManifest.FromJson(sVersionManifest);
             }
-            catch (WebException ex)
+            catch (WebException)
             {
-                throw ex;
+                throw;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -72,9 +72,9 @@ namespace UglyLauncher.Minecraft.Files
                 }
                 return versions;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -100,9 +100,9 @@ namespace UglyLauncher.Minecraft.Files
                 //return verison object
                 return oVersion;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -128,9 +128,9 @@ namespace UglyLauncher.Minecraft.Files
                 string sVersion = Http.GET(oVersion.Url);
                 return GameVersion.FromJson(sVersion);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -140,16 +140,16 @@ namespace UglyLauncher.Minecraft.Files
             {
                 // create directory if not exists
                 if (!Directory.Exists(VersionDir + @"\" + mcversion)) Directory.CreateDirectory(VersionDir + @"\" + mcversion);
-                
+
                 VersionsVersion version = GetVersion(mcversion);
 
                 // delete and download json
                 if (File.Exists(VersionDir + @"\" + mcversion + @"\" + mcversion + ".json")) File.Delete(VersionDir + @"\" + mcversion + @"\" + mcversion + ".json");
                 dhelper.DownloadFileTo(version.Url, VersionDir + @"\" + mcversion + @"\" + mcversion + ".json", false);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -292,9 +292,9 @@ namespace UglyLauncher.Minecraft.Files
                     throw new Exception("Error downloading file: " + MC.Id + ".jar (SHA1 mismatch)");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -354,9 +354,9 @@ namespace UglyLauncher.Minecraft.Files
                     throw new Exception("Error downloading file: minecraft_server" + MC.Id + ".jar (SHA1 mismatch)");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
     }

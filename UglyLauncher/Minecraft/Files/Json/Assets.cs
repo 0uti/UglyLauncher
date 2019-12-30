@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace UglyLauncher.Minecraft.Files.Json.Assets
 {
-   
+
     public partial class Assets
     {
         [JsonProperty("objects")]

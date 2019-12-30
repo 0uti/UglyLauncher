@@ -1,12 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Windows.Forms;
 using System.Drawing;
-using UglyLauncher.Minecraft;
+using System.Windows.Forms;
 using UglyLauncher.AccountManager;
-using UglyLauncher.Settings;
-using UglyLauncher.Minecraft.Json.AvailablePacks;
+using UglyLauncher.Minecraft;
 using UglyLauncher.Minecraft.Authentication;
+using UglyLauncher.Minecraft.Json.AvailablePacks;
+using UglyLauncher.Settings;
 
 namespace UglyLauncher
 {
@@ -27,7 +27,7 @@ namespace UglyLauncher
         {
             Application.Exit();
         }
-        
+
         // show useraccounts
         private void MnuAccounts_Click(object sender, EventArgs e)
         {
@@ -98,12 +98,12 @@ namespace UglyLauncher
 
 
             BackgroundWorker worker = sender as BackgroundWorker;
-            
+
             // Check Environment
             Launcher L = new Launcher(Offline);
             Manager U = new Manager();
             L.CheckDirectories();
-            
+
             // Test User
             string MCPlayerName = null;
             string UserAccount = "none";
@@ -168,7 +168,7 @@ namespace UglyLauncher
             }));
 
             worker.ReportProgress(50);
-            
+
             // Get Packs from Server
             try
             {
@@ -206,7 +206,7 @@ namespace UglyLauncher
                             };
                             Invoke(new Action(() =>
                             {
-                                if(L.GetPackIconOffline(Pack) != null)
+                                if (L.GetPackIconOffline(Pack) != null)
                                 {
                                     lst_packs_images.Images.Add(Pack.Name, L.GetPackIconOffline(Pack));
                                 }
@@ -243,14 +243,14 @@ namespace UglyLauncher
                 if (Offline == false)
                 {
                     MCAvailablePack APack = L.GetAvailablePack(LstPacks.SelectedItems[0].Text);
-                    
+
                     CmbPackVersions.Items.Add("Recommended (" + APack.RecommendedVersion + ")");
                     // Load Versions in Dropdown
                     foreach (MCAvailablePackVersion version in APack.Versions)
                     {
                         CmbPackVersions.Items.Add(version.Version);
                     }
-                        
+
                     // select version in combo depend on if pack is installed and version number
                     if (L.IsPackInstalled(APack.Name) == true)
                     {
@@ -304,7 +304,7 @@ namespace UglyLauncher
                 MessageBox.Show(this, "Kein Pack gewählt.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            
+
             // gather vars from Gui
             string sSelectedPack = LstPacks.SelectedItems[0].Text;
             string sSelectedVersion = null;

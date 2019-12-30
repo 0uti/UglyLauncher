@@ -53,7 +53,7 @@ namespace UglyLauncher.Minecraft.Authentication
                 response = request.GetResponse();
                 stringResponse = new StreamReader(response.GetResponseStream());
                 // return answer
-                sJsonResponse =  stringResponse.ReadToEnd().Trim();
+                sJsonResponse = stringResponse.ReadToEnd().Trim();
                 // close open objects
             }
             catch (WebException ex)

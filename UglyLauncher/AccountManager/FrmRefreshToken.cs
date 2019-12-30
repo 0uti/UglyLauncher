@@ -40,7 +40,7 @@ namespace UglyLauncher.AccountManager
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(this, ex.Message.ToString(),"Fehlermeldung von Minecraft.net",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    MessageBox.Show(this, ex.Message.ToString(), "Fehlermeldung von Minecraft.net", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     TxtPass.Focus();
                     TxtPass.SelectAll();
                     return;
@@ -60,7 +60,7 @@ namespace UglyLauncher.AccountManager
         private void TxtPass_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
-                BtnConfirm_Click(sender,e);
+                BtnConfirm_Click(sender, e);
         }
     }
 }

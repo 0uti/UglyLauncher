@@ -92,6 +92,6 @@ namespace UglyLauncher
                     _toolTipDisplayed = true;
                 }
             }
-        } 
+        }
     }
 }

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using System;
 using System.Windows.Forms;
 
 namespace UglyLauncher
@@ -12,7 +15,7 @@ namespace UglyLauncher
         static void Main()
         {
             System.Diagnostics.Process[] localByName = System.Diagnostics.Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetEntryAssembly().Location));
-            foreach(System.Diagnostics.Process _pr in localByName)
+            foreach (System.Diagnostics.Process _pr in localByName)
             {
                 if (_pr.Id != System.Diagnostics.Process.GetCurrentProcess().Id)
                 {
@@ -20,6 +23,9 @@ namespace UglyLauncher
                     return;
                 }
             }
+            // eae8cecc-253f-4cf3-90a8-f37d31b74252
+
+            AppCenter.Start("eae8cecc-253f-4cf3-90a8-f37d31b74252",typeof(Analytics), typeof(Crashes));
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

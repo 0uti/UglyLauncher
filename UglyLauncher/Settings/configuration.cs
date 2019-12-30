@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
+using System.Collections.Generic;
 
 namespace UglyLauncher.Settings
 {
@@ -136,7 +136,7 @@ namespace UglyLauncher.Settings
                 SetRegInt("close_Launcher", iCloseLauncher);
             }
         }
-        
+
         // Old Shit
 
         public string GetJavaArch()
@@ -210,7 +210,7 @@ namespace UglyLauncher.Settings
 
         private void GetJavaPath64(string sVersion)
         {
-            RegistryKey key ;
+            RegistryKey key;
             RegistryKey hklm64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
 
             if (sVersion == "auto")
@@ -221,7 +221,7 @@ namespace UglyLauncher.Settings
             }
 
             key = hklm64.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment\" + sVersion);
-            if (key == null) return ;  // no java 64 found
+            if (key == null) return;  // no java 64 found
             sJavaPath = key.GetValue("JavaHome", null) as string;
             // append executable
             sJavaPath += sJavaExecutable;

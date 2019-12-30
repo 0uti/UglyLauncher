@@ -11,7 +11,7 @@ namespace UglyLauncher
             InitializeComponent();
         }
 
-        public void AddLine(string line,Color color)
+        public void AddLine(string line, Color color)
         {
             try
             {
@@ -27,7 +27,7 @@ namespace UglyLauncher
             catch (Exception)
             {
             }
-            
+
         }
 
         public void Clear()

@@ -74,7 +74,7 @@ namespace UglyLauncher.AccountManager
         // get all accounts
         public MCUser GetAccounts()
         {
-           return Users;
+            return Users;
         }
 
         // get one account

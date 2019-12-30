@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
 
 namespace UglyLauncher
 {
@@ -36,7 +36,7 @@ namespace UglyLauncher
                 }
                 else
                 {
-                    sModName = mod.Substring(mod.LastIndexOf("\\") + 1 );
+                    sModName = mod.Substring(mod.LastIndexOf("\\") + 1);
                     sModDescription = "";
                 }
                 ListBoxItem mItem = new ListBoxItem(sModName, sModDescription, mod);
@@ -103,7 +103,7 @@ namespace UglyLauncher
             }
             return null;
         }
-      
+
         // Get mod Version
         private string GetModVersion(string sJson)
         {
@@ -129,7 +129,7 @@ namespace UglyLauncher
         private void FrmEditPack_Shown(object sender, EventArgs e)
         {
             Init();
-            
+
         }
 
         private void Init()
@@ -159,7 +159,7 @@ namespace UglyLauncher
 
             if (File.Exists(selected.FileName))
             {
-                File.Move(selected.FileName, selected.FileName.Replace(".disabled",""));
+                File.Move(selected.FileName, selected.FileName.Replace(".disabled", ""));
             }
 
             Init();

@@ -1,9 +1,9 @@
-﻿using System.Globalization;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Globalization;
 
 namespace UglyLauncher.Minecraft.Authentication.Json.RefreshRequest
-{ 
+{
     public partial class RefreshRequest
     {
         [JsonProperty("accessToken")]
