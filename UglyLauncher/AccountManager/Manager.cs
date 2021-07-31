@@ -17,7 +17,7 @@ namespace UglyLauncher.AccountManager
         // contructor
         public Manager()
         {
-            if (!File.Exists(Launcher._sDataDir + xmlfile)) CreateXML();
+            if (!File.Exists(Launcher._DataDir + xmlfile)) CreateXML();
             else LoadXML();
         }
 
@@ -27,7 +27,7 @@ namespace UglyLauncher.AccountManager
             try
             {
                 XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(Launcher._sDataDir + xmlfile);
+                xmlDocument.Load(Launcher._DataDir + xmlfile);
                 using (StringReader read = new StringReader(xmlDocument.OuterXml))
                 {
                     XmlSerializer serializer = new XmlSerializer(typeof(MCUser));
@@ -55,7 +55,7 @@ namespace UglyLauncher.AccountManager
                     serializer.Serialize(stream, Users);
                     stream.Position = 0;
                     xmlDocument.Load(stream);
-                    xmlDocument.Save(Launcher._sDataDir + xmlfile);
+                    xmlDocument.Save(Launcher._DataDir + xmlfile);
                 }
             }
             catch (Exception)

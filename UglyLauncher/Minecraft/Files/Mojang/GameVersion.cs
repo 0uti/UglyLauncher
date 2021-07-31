@@ -23,6 +23,9 @@ namespace UglyLauncher.Minecraft.Files.Mojang.GameVersion
         [JsonProperty("id")]
         public string Id { get; set; }
 
+        [JsonProperty("javaVersion")]
+        public JavaVersion javaVersion { get; set; }
+
         [JsonProperty("libraries")]
         public List<Library> Libraries { get; set; }
 
@@ -46,6 +49,15 @@ namespace UglyLauncher.Minecraft.Files.Mojang.GameVersion
 
         [JsonProperty("type")]
         public string Type { get; set; }
+    }
+
+    public partial class JavaVersion
+    {
+        [JsonProperty("component")]
+        public string Component { get; set; }
+
+        [JsonProperty("majorVersion")]
+        public int MajorVersion { get; set; }
     }
 
     public partial class VersionArguments

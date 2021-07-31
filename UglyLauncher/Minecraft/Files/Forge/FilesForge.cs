@@ -19,6 +19,7 @@ namespace UglyLauncher.Minecraft.Files.Forge
         public string LibraryDir { get; set; }
         public string VersionDir { get; set; }
         public bool OfflineMode { get; set; }
+        public string JavaPath { get; set; }
 
         private string sForgeVersion;
         private string sForgeTempDir;
@@ -117,6 +118,14 @@ namespace UglyLauncher.Minecraft.Files.Forge
                 List<GameElement> moreItems = MCForge.Arguments.Game.ToList();
                 itemList.AddRange(moreItems);
                 MCMojang.Arguments.Game = itemList.ToArray();
+
+                if(MCForge.Arguments.Jvm != null)
+                {
+                    List<JvmElement> JvmItemList = MCMojang.Arguments.Jvm.ToList();
+                    List<JvmElement> JvmMoreItems = MCForge.Arguments.Jvm.ToList();
+                    JvmItemList.AddRange(JvmMoreItems);
+                    MCMojang.Arguments.Jvm = JvmItemList.ToArray();
+                }
             }
             else
             {
@@ -255,6 +264,10 @@ namespace UglyLauncher.Minecraft.Files.Forge
                 // Processors
                 foreach (ForgeProcessor.Processor processor in MCForge.Processors)
                 {
+                    if(processor.Sides != null && processor.Sides.Contains("server"))
+                    {
+                        continue;
+                    }
                     RunProccessor(MCForge, processor);
                 }
             }
@@ -289,7 +302,7 @@ namespace UglyLauncher.Minecraft.Files.Forge
             args += BuildProcArgs(Forge, processor);
 
             Process proc = new Process();
-            proc.StartInfo.FileName = C.GetJavaPath();
+            proc.StartInfo.FileName = JavaPath;
             proc.StartInfo.WorkingDirectory = sForgeTempDir;
             proc.StartInfo.Arguments = args;
             proc.StartInfo.RedirectStandardOutput = true;
@@ -317,6 +330,12 @@ namespace UglyLauncher.Minecraft.Files.Forge
                 if (arg.Equals("{MINECRAFT_JAR}"))
                 {
                     args += " " + VersionDir + @"\" + Forge.Minecraft + @"\" + Forge.Minecraft + ".jar";
+                    continue;
+                }
+
+                if (arg.Equals("{SIDE}"))
+                {
+                    args += " client";
                     continue;
                 }
 
@@ -356,11 +375,11 @@ namespace UglyLauncher.Minecraft.Files.Forge
                     classPath += ";";
                 }
                 classPath += "\"" + LibraryDir + @"\" + MavenStringToFilePath(jarfile).Replace('/', '\\') + "\"";
-                Debug.WriteLine("   " + LibraryDir + @"\" + MavenStringToFilePath(jarfile).Replace('/', '\\'));
+                //Debug.WriteLine("   " + LibraryDir + @"\" + MavenStringToFilePath(jarfile).Replace('/', '\\'));
             }
 
             classPath += ";\"" + LibraryDir + @"\" + MavenStringToFilePath(processor.Jar).Replace('/', '\\') + "\"";
-            Debug.WriteLine("   " + LibraryDir + @"\" + MavenStringToFilePath(processor.Jar).Replace('/', '\\'));
+            //Debug.WriteLine("   " + LibraryDir + @"\" + MavenStringToFilePath(processor.Jar).Replace('/', '\\'));
             return classPath;
         }
 

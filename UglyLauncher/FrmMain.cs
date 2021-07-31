@@ -269,7 +269,7 @@ namespace UglyLauncher
                         CmbPackVersions.SelectedIndex = IPack.SelectedVersion == "recommended" ? 0 : CmbPackVersions.FindStringExact(IPack.CurrentVersion);
                     }
                     else CmbPackVersions.SelectedIndex = 0;
-                    WebPackDetails.Navigate(Launcher._sPackServer + @"/packs/" + APack.Name + @"/" + APack.Name + @".html");
+                    WebPackDetails.Navigate(Launcher._PackServer + @"/packs/" + APack.Name + @"/" + APack.Name + @".html");
                     MnuDownloadPack.Enabled = true;
                 }
                 else

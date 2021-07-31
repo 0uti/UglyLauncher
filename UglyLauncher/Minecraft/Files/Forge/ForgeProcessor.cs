@@ -56,6 +56,9 @@ namespace UglyLauncher.Minecraft.Files.Forge.ForgeProcessor
 
     public partial class Processor
     {
+        [JsonProperty("sides", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Sides { get; set; }
+
         [JsonProperty("jar")]
         public string Jar { get; set; }
 
