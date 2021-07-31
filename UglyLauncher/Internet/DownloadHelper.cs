@@ -21,6 +21,7 @@ namespace UglyLauncher.Internet
         {
             _downloader.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressCallback);
             _downloader.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(Downloader_DownloadFileCompleted);
+            _downloader.Headers["User-Agent"] = "UglyLauncher";
         }
 
         private void Downloader_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)

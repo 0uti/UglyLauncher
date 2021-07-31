@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace UglyLauncher.Minecraft.Files.Json.GameVersion
+namespace UglyLauncher.Minecraft.Files.Mojang.GameVersion
 {
     public partial class GameVersion
     {

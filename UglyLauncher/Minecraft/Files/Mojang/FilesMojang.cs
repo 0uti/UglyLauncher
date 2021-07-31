@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using UglyLauncher.Internet;
-using UglyLauncher.Minecraft.Files.Json.Assets;
-using UglyLauncher.Minecraft.Files.Json.GameVersion;
-using UglyLauncher.Minecraft.Files.Json.GameVersionManifest;
+using UglyLauncher.Minecraft.Files.Mojang.Assets;
+using UglyLauncher.Minecraft.Files.Mojang.GameVersion;
+using UglyLauncher.Minecraft.Files.Mojang.GameVersionManifest;
 using UglyLauncher.Settings;
 
-namespace UglyLauncher.Minecraft.Files
+namespace UglyLauncher.Minecraft.Files.Mojang
 {
     class FilesMojang
     {
@@ -22,7 +22,7 @@ namespace UglyLauncher.Minecraft.Files
         public string AssetsDir { get; set; }
         public bool OfflineMode { get; set; }
 
-        private GameVersionManifest _versions = null;
+        private GameVersionManifest.GameVersionManifest _versions = null;
 
         private readonly DownloadHelper dhelper;
 
@@ -36,7 +36,7 @@ namespace UglyLauncher.Minecraft.Files
             try
             {
                 string sVersionManifest = Http.GET(_VersionManifest);
-                _versions = GameVersionManifest.FromJson(sVersionManifest);
+                _versions = GameVersionManifest.GameVersionManifest.FromJson(sVersionManifest);
             }
             catch (WebException)
             {
@@ -106,7 +106,7 @@ namespace UglyLauncher.Minecraft.Files
             }
         }
 
-        public GameVersion GetGameVersion(string mcversion)
+        public GameVersion.GameVersion GetGameVersion(string mcversion)
         {
             VersionsVersion oVersion = null;
 
@@ -126,7 +126,7 @@ namespace UglyLauncher.Minecraft.Files
                 if (oVersion == null) throw new Exception("Minecraft version not found.");
 
                 string sVersion = Http.GET(oVersion.Url);
-                return GameVersion.FromJson(sVersion);
+                return GameVersion.GameVersion.FromJson(sVersion);
             }
             catch (Exception)
             {
@@ -153,7 +153,7 @@ namespace UglyLauncher.Minecraft.Files
             }
         }
 
-        public Dictionary<string, string> DownloadClientLibraries(GameVersion MC)
+        public Dictionary<string, string> DownloadClientLibraries(GameVersion.GameVersion MC)
         {
             Configuration c = new Configuration();
             string sJavaArch = c.GetJavaArch();
@@ -215,13 +215,13 @@ namespace UglyLauncher.Minecraft.Files
             return ClassPath;
         }
 
-        public void DownloadClientAssets(GameVersion MC)
+        public void DownloadClientAssets(GameVersion.GameVersion MC)
         {
             // get assetIndex Json
             dhelper.DownloadFileTo(MC.AssetIndex.Url, AssetsDir + @"\indexes\" + MC.AssetIndex.Id + ".json", true, null, MC.AssetIndex.Sha1);
 
             // load assetIndex Json File
-            Assets assets = Assets.FromJson(File.ReadAllText(AssetsDir + @"\indexes\" + MC.AssetIndex.Id + ".json").Trim());
+            Assets.Assets assets = Assets.Assets.FromJson(File.ReadAllText(AssetsDir + @"\indexes\" + MC.AssetIndex.Id + ".json").Trim());
 
             foreach (KeyValuePair<string, AssetObject> Asset in assets.Objects)
             {
@@ -242,7 +242,7 @@ namespace UglyLauncher.Minecraft.Files
             }
         }
 
-        public void DownloadClientJar(GameVersion MC)
+        public void DownloadClientJar(GameVersion.GameVersion MC)
         {
             bool download = false;
             long filesize;
@@ -298,7 +298,7 @@ namespace UglyLauncher.Minecraft.Files
             }
         }
 
-        public void DownloadServerJar(GameVersion MC, string localPath = null)
+        public void DownloadServerJar(GameVersion.GameVersion MC, string localPath = null)
         {
             bool download = false;
             long filesize;

@@ -51,6 +51,7 @@
             this.BtnStart = new System.Windows.Forms.Button();
             this.CmbPackVersions = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.MnuReDownloadMods = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu_container.SuspendLayout();
             this.PackListContext.SuspendLayout();
             this.oStatusBar.SuspendLayout();
@@ -58,6 +59,7 @@
             // 
             // mnu_container
             // 
+            this.mnu_container.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.mnu_container.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.mnu_container.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MnuLauncher,
@@ -67,7 +69,6 @@
             this.MnuInfo});
             this.mnu_container.Location = new System.Drawing.Point(0, 0);
             this.mnu_container.Name = "mnu_container";
-            this.mnu_container.Padding = new System.Windows.Forms.Padding(9, 3, 0, 3);
             this.mnu_container.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             this.mnu_container.Size = new System.Drawing.Size(1116, 35);
             this.mnu_container.TabIndex = 0;
@@ -79,20 +80,20 @@
             this.MnuRefreshPacketList,
             this.MnuExitProgram});
             this.MnuLauncher.Name = "MnuLauncher";
-            this.MnuLauncher.Size = new System.Drawing.Size(94, 29);
+            this.MnuLauncher.Size = new System.Drawing.Size(98, 29);
             this.MnuLauncher.Text = "Launcher";
             // 
             // MnuRefreshPacketList
             // 
             this.MnuRefreshPacketList.Name = "MnuRefreshPacketList";
-            this.MnuRefreshPacketList.Size = new System.Drawing.Size(259, 30);
+            this.MnuRefreshPacketList.Size = new System.Drawing.Size(277, 34);
             this.MnuRefreshPacketList.Text = "Packetliste neu laden";
             this.MnuRefreshPacketList.Click += new System.EventHandler(this.MnuRefreshPacketList_Click);
             // 
             // MnuExitProgram
             // 
             this.MnuExitProgram.Name = "MnuExitProgram";
-            this.MnuExitProgram.Size = new System.Drawing.Size(259, 30);
+            this.MnuExitProgram.Size = new System.Drawing.Size(277, 34);
             this.MnuExitProgram.Text = "Beenden";
             this.MnuExitProgram.Click += new System.EventHandler(this.MnuExitProgram_Click);
             // 
@@ -100,28 +101,28 @@
             // 
             this.MnuAccounts.Name = "MnuAccounts";
             this.MnuAccounts.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.MnuAccounts.Size = new System.Drawing.Size(176, 29);
+            this.MnuAccounts.Size = new System.Drawing.Size(180, 29);
             this.MnuAccounts.Text = "Accountverwaltung";
             this.MnuAccounts.Click += new System.EventHandler(this.MnuAccounts_Click);
             // 
             // MnuEditPack
             // 
             this.MnuEditPack.Name = "MnuEditPack";
-            this.MnuEditPack.Size = new System.Drawing.Size(148, 29);
+            this.MnuEditPack.Size = new System.Drawing.Size(152, 29);
             this.MnuEditPack.Text = "Pack bearbeiten";
             this.MnuEditPack.Click += new System.EventHandler(this.MnuEditPack_Click);
             // 
             // MnuSettings
             // 
             this.MnuSettings.Name = "MnuSettings";
-            this.MnuSettings.Size = new System.Drawing.Size(128, 29);
+            this.MnuSettings.Size = new System.Drawing.Size(132, 29);
             this.MnuSettings.Text = "Einstellungen";
             this.MnuSettings.Click += new System.EventHandler(this.MnuSettings_Click);
             // 
             // MnuInfo
             // 
             this.MnuInfo.Name = "MnuInfo";
-            this.MnuInfo.Size = new System.Drawing.Size(56, 29);
+            this.MnuInfo.Size = new System.Drawing.Size(60, 29);
             this.MnuInfo.Text = "Info";
             this.MnuInfo.Click += new System.EventHandler(this.MnuInfo_Click);
             // 
@@ -154,28 +155,29 @@
             this.PackListContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MnuDownloadPack,
             this.MnuStartPack,
-            this.MnuOpenPackFolder});
+            this.MnuOpenPackFolder,
+            this.MnuReDownloadMods});
             this.PackListContext.Name = "contextMenuStrip1";
-            this.PackListContext.Size = new System.Drawing.Size(241, 127);
+            this.PackListContext.Size = new System.Drawing.Size(292, 165);
             // 
             // MnuDownloadPack
             // 
             this.MnuDownloadPack.Name = "MnuDownloadPack";
-            this.MnuDownloadPack.Size = new System.Drawing.Size(240, 30);
+            this.MnuDownloadPack.Size = new System.Drawing.Size(291, 32);
             this.MnuDownloadPack.Text = "Download";
             this.MnuDownloadPack.Click += new System.EventHandler(this.MnuDownloadPack_Click);
             // 
             // MnuStartPack
             // 
             this.MnuStartPack.Name = "MnuStartPack";
-            this.MnuStartPack.Size = new System.Drawing.Size(240, 30);
+            this.MnuStartPack.Size = new System.Drawing.Size(291, 32);
             this.MnuStartPack.Text = "Start";
             this.MnuStartPack.Click += new System.EventHandler(this.MnuStartPack_Click);
             // 
             // MnuOpenPackFolder
             // 
             this.MnuOpenPackFolder.Name = "MnuOpenPackFolder";
-            this.MnuOpenPackFolder.Size = new System.Drawing.Size(240, 30);
+            this.MnuOpenPackFolder.Size = new System.Drawing.Size(291, 32);
             this.MnuOpenPackFolder.Text = "Öffne Verzeichniss";
             this.MnuOpenPackFolder.Click += new System.EventHandler(this.MnuOpenPackFolder_Click);
             // 
@@ -191,10 +193,10 @@
             this.oStatusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.LblDefaultAccount});
-            this.oStatusBar.Location = new System.Drawing.Point(0, 604);
+            this.oStatusBar.Location = new System.Drawing.Point(0, 602);
             this.oStatusBar.Name = "oStatusBar";
             this.oStatusBar.Padding = new System.Windows.Forms.Padding(2, 0, 21, 0);
-            this.oStatusBar.Size = new System.Drawing.Size(1116, 30);
+            this.oStatusBar.Size = new System.Drawing.Size(1116, 32);
             this.oStatusBar.SizingGrip = false;
             this.oStatusBar.TabIndex = 2;
             this.oStatusBar.Text = "statusStrip1";
@@ -256,6 +258,13 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "Version";
             // 
+            // MnuReDownloadMods
+            // 
+            this.MnuReDownloadMods.Name = "MnuReDownloadMods";
+            this.MnuReDownloadMods.Size = new System.Drawing.Size(291, 32);
+            this.MnuReDownloadMods.Text = "Mods erneut Downloaden";
+            this.MnuReDownloadMods.Click += new System.EventHandler(this.MnuReDownloadMods_Click);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -312,6 +321,7 @@
         private System.Windows.Forms.ToolStripMenuItem MnuLauncher;
         private System.Windows.Forms.ToolStripMenuItem MnuRefreshPacketList;
         private System.Windows.Forms.ToolStripMenuItem MnuExitProgram;
+        private System.Windows.Forms.ToolStripMenuItem MnuReDownloadMods;
     }
 }
 

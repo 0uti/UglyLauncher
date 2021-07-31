@@ -3,7 +3,7 @@ using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace UglyLauncher.Minecraft.Files.Json.Assets
+namespace UglyLauncher.Minecraft.Files.Mojang.Assets
 {
 
     public partial class Assets

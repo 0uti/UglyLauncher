@@ -3,7 +3,7 @@ using Newtonsoft.Json.Converters;
 using System;
 using System.Globalization;
 
-namespace UglyLauncher.Minecraft.Files.Json.ForgeInstaller
+namespace UglyLauncher.Minecraft.Files.Forge.ForgeInstaller
 {
     public partial class ForgeInstaller
     {

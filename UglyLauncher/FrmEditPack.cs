@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using UglyLauncher.Minecraft;
 
 namespace UglyLauncher
 {
     public partial class FrmEditPack : Form
     {
         private readonly string sPackName;
-        private readonly Minecraft.Launcher L = new Minecraft.Launcher(false);
+        private readonly Minecraft.Launcher L = new Minecraft.Launcher(StartupSide.Client,false);
 
         public FrmEditPack(string sPackName)
         {
@@ -200,7 +201,7 @@ namespace UglyLauncher
         {
             DisplayText = displayText;
             ToolTipText = toolTipText;
-            this.FileName = sFileName;
+            FileName = sFileName;
         }
 
         // Returns the display text of this item.

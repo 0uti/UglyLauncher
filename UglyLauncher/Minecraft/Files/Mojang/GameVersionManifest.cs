@@ -3,7 +3,7 @@ using Newtonsoft.Json.Converters;
 using System;
 using System.Globalization;
 
-namespace UglyLauncher.Minecraft.Files.Json.GameVersionManifest
+namespace UglyLauncher.Minecraft.Files.Mojang.GameVersionManifest
 {
     public partial class GameVersionManifest
     {

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace UglyLauncher.Minecraft.Json.Pack
@@ -14,6 +15,9 @@ namespace UglyLauncher.Minecraft.Json.Pack
 
         [JsonProperty("forge_version")]
         public string ForgeVersion { get; set; }
+
+        [JsonProperty("curse-files")]
+        public List<MCPackCurseFile> CurseFiles { get; set; }
     }
 
     public partial class MCPack

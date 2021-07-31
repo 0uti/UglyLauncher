@@ -3,9 +3,9 @@ using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using UglyLauncher.Minecraft.Files.Json.GameVersion;
+using UglyLauncher.Minecraft.Files.Mojang.GameVersion;
 
-namespace UglyLauncher.Minecraft.Files.Json.ForgeVersion
+namespace UglyLauncher.Minecraft.Files.Forge.ForgeVersion
 {
     public partial class ForgeVersion
     {

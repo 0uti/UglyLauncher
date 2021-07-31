@@ -2,9 +2,9 @@
 using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 using System.Globalization;
-using UglyLauncher.Minecraft.Files.Json.GameVersion;
+using UglyLauncher.Minecraft.Files.Mojang.GameVersion;
 
-namespace UglyLauncher.Minecraft.Files.Json.ForgeProcessor
+namespace UglyLauncher.Minecraft.Files.Forge.ForgeProcessor
 {
     public partial class ForgeProcessor
     {

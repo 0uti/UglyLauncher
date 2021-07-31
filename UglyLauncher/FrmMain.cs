@@ -71,9 +71,14 @@ namespace UglyLauncher
             Worker.DoWork += new DoWorkEventHandler(Worker_DoWork);
             Worker.ProgressChanged += new ProgressChangedEventHandler(Worker_ProgressChanged);
             bar.Show();
-            Worker.RunWorkerAsync(refreshUser);
+            {
+                Worker.RunWorkerAsync(refreshUser);
+            }
             while (Worker.IsBusy)
+            {
                 Application.DoEvents();
+            }
+
             bar.Hide();
             Worker.Dispose();
 
@@ -100,9 +105,11 @@ namespace UglyLauncher
             BackgroundWorker worker = sender as BackgroundWorker;
 
             // Check Environment
-            Launcher L = new Launcher(Offline);
+            Launcher L = new Launcher(StartupSide.Client,Offline);
             Manager U = new Manager();
-            L.CheckDirectories();
+            {
+                L.CheckDirectories();
+            }
 
             // Test User
             string MCPlayerName = null;
@@ -129,7 +136,11 @@ namespace UglyLauncher
                     {
                         FrmRefreshToken fTokRefresh = new FrmRefreshToken(Account);
                         DialogResult res = fTokRefresh.ShowDialog();
-                        if (res == DialogResult.Cancel) U.SetDefault(Guid.Empty);
+                        if (res == DialogResult.Cancel)
+                        {
+                            U.SetDefault(Guid.Empty);
+                        }
+
                         fTokRefresh.Dispose();
                     }
                     catch (Exception)
@@ -237,7 +248,7 @@ namespace UglyLauncher
         {
             if (LstPacks.SelectedItems.Count == 1)
             {
-                Launcher L = new Launcher(Offline);
+                Launcher L = new Launcher(StartupSide.Client,Offline);
                 // Clear dropdown
                 CmbPackVersions.Items.Clear();
                 if (Offline == false)
@@ -255,8 +266,7 @@ namespace UglyLauncher
                     if (L.IsPackInstalled(APack.Name) == true)
                     {
                         MCPacksInstalledPack IPack = L.GetInstalledPack(APack.Name);
-                        if (IPack.SelectedVersion == "recommended") CmbPackVersions.SelectedIndex = 0;
-                        else CmbPackVersions.SelectedIndex = CmbPackVersions.FindStringExact(IPack.CurrentVersion);
+                        CmbPackVersions.SelectedIndex = IPack.SelectedVersion == "recommended" ? 0 : CmbPackVersions.FindStringExact(IPack.CurrentVersion);
                     }
                     else CmbPackVersions.SelectedIndex = 0;
                     WebPackDetails.Navigate(Launcher._sPackServer + @"/packs/" + APack.Name + @"/" + APack.Name + @".html");
@@ -307,10 +317,8 @@ namespace UglyLauncher
 
             // gather vars from Gui
             string sSelectedPack = LstPacks.SelectedItems[0].Text;
-            string sSelectedVersion = null;
-            if (CmbPackVersions.SelectedIndex == 0) sSelectedVersion = "recommended";
-            else sSelectedVersion = CmbPackVersions.Text;
-            Launcher L = new Launcher(Offline);
+            string sSelectedVersion = CmbPackVersions.SelectedIndex == 0 ? "recommended" : CmbPackVersions.Text;
+            Launcher L = new Launcher(StartupSide.Client,Offline);
             // get event
             L.RestoreWindow += new EventHandler<Launcher.FormWindowStateEventArgs>(L_restoreWindow);
             // disable Startbutton
@@ -336,10 +344,8 @@ namespace UglyLauncher
 
             // gather vars from Gui
             string sSelectedPack = LstPacks.SelectedItems[0].Text;
-            string sSelectedVersion;
-            if (CmbPackVersions.SelectedIndex == 0) sSelectedVersion = "recommended";
-            else sSelectedVersion = CmbPackVersions.Text;
-            Launcher L = new Launcher(Offline);
+            string sSelectedVersion = CmbPackVersions.SelectedIndex == 0 ? "recommended" : CmbPackVersions.Text;
+            Launcher L = new Launcher(StartupSide.Client, Offline);
             // download minecraft
             L.StartPack(sSelectedPack, sSelectedVersion);
         }
@@ -358,8 +364,7 @@ namespace UglyLauncher
             BeginInvoke(new Action(() =>
                 {
                     WindowState = e.WindowState;
-                    if (e.WindowState == FormWindowState.Minimized) ShowInTaskbar = false;
-                    else ShowInTaskbar = true;
+                    ShowInTaskbar = e.WindowState != FormWindowState.Minimized;
                     BtnStart.Enabled = true;
                     LstPacks.Enabled = true;
                 }
@@ -390,10 +395,8 @@ namespace UglyLauncher
 
             // gather vars from Gui
             string sSelectedPack = LstPacks.SelectedItems[0].Text;
-            string sSelectedVersion;
-            if (CmbPackVersions.SelectedIndex == 0) sSelectedVersion = "recommended";
-            else sSelectedVersion = CmbPackVersions.Text;
-            Launcher L = new Launcher(Offline);
+            string sSelectedVersion = CmbPackVersions.SelectedIndex == 0 ? "recommended" : CmbPackVersions.Text;
+            Launcher L = new Launcher(StartupSide.Client,Offline);
             if (L.IsPackInstalled(sSelectedPack, sSelectedVersion) == false)
             {
                 MessageBox.Show(this, "Dieses Pack ist nicht installiert oder liegt in einer anderen Version vor.\r\nBitte dieses Pack starten und danach bearbeiten.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -407,37 +410,25 @@ namespace UglyLauncher
 
         private void LstPacks_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button != System.Windows.Forms.MouseButtons.Left) return;
+            if (e.Button != MouseButtons.Left) return;
             if (e.Clicks == 2) Startpack();
         }
 
-        private void BtnStart_Click(object sender, EventArgs e)
-        {
-            Startpack();
-        }
+        private void BtnStart_Click(object sender, EventArgs e) => Startpack();
 
-        private void MnuStartPack_Click(object sender, EventArgs e)
-        {
-            Startpack();
-        }
+        private void MnuStartPack_Click(object sender, EventArgs e) => Startpack();
 
         private void MnuOpenPackFolder_Click(object sender, EventArgs e)
         {
             string sSelectedPack = LstPacks.SelectedItems[0].Text;
-            Launcher L = new Launcher(Offline);
+            Launcher L = new Launcher(StartupSide.Client,Offline);
             L.OpenPackFolder(sSelectedPack);
-
         }
 
-        private void MnuRefreshPacketList_Click(object sender, EventArgs e)
-        {
-            DoInit(false);
-        }
+        private void MnuRefreshPacketList_Click(object sender, EventArgs e) => DoInit(false);
 
-        private void MnuDownloadPack_Click(object sender, EventArgs e)
-        {
-            // ToDo: Download Pack
-            Downloadpack();
-        }
+        private void MnuDownloadPack_Click(object sender, EventArgs e) => Downloadpack();
+
+        private void MnuReDownloadMods_Click(object sender, EventArgs e) => new Launcher(StartupSide.Client, Offline).ReDownloadMods(LstPacks.SelectedItems[0].Text);
     }
 }

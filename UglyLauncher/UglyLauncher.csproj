@@ -81,7 +81,9 @@
       <DependentUpon>FrmUserAccounts.cs</DependentUpon>
     </Compile>
     <Compile Include="AccountManager\Manager.cs" />
-    <Compile Include="Minecraft\Files\FilesForge.cs" />
+    <Compile Include="Minecraft\Files\CurseForge\CurseModInfo.cs" />
+    <Compile Include="Minecraft\Files\CurseForge\FilesCurseForge.cs" />
+    <Compile Include="Minecraft\Files\Forge\FilesForge.cs" />
     <Compile Include="FrmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -116,21 +118,23 @@
     <Compile Include="Internet\HTTP.cs" />
     <Compile Include="Minecraft\Authentication\AuthHandler.cs" />
     <Compile Include="Minecraft\Authentication\Exceptions.cs" />
-    <Compile Include="Minecraft\Files\FilesMojang.cs" />
-    <Compile Include="Minecraft\Files\Json\Assets.cs" />
+    <Compile Include="Minecraft\Files\Mojang\FilesMojang.cs" />
+    <Compile Include="Minecraft\Files\Mojang\Assets.cs" />
     <Compile Include="Minecraft\Authentication\Json\AuthenticateError.cs" />
     <Compile Include="Minecraft\Authentication\Json\AuthenticateRequest.cs" />
     <Compile Include="Minecraft\Authentication\Json\AuthenticateResponse.cs" />
-    <Compile Include="Minecraft\Files\Json\ForgeProcessor.cs" />
+    <Compile Include="Minecraft\Files\Forge\ForgeProcessor.cs" />
     <Compile Include="Minecraft\Json\MCAvailablePacks.cs" />
-    <Compile Include="Minecraft\Files\Json\ForgeInstaller.cs" />
-    <Compile Include="Minecraft\Files\Json\ForgeVersion.cs" />
+    <Compile Include="Minecraft\Files\Forge\ForgeInstaller.cs" />
+    <Compile Include="Minecraft\Files\Forge\ForgeVersion.cs" />
     <Compile Include="Minecraft\Json\MCPack.cs" />
     <Compile Include="Minecraft\Authentication\Json\RefreshRequest.cs" />
     <Compile Include="Minecraft\Authentication\Json\RefreshResponse.cs" />
-    <Compile Include="Minecraft\Files\Json\GameVersion.cs" />
-    <Compile Include="Minecraft\Files\Json\GameVersionManifest.cs" />
+    <Compile Include="Minecraft\Files\Mojang\GameVersion.cs" />
+    <Compile Include="Minecraft\Files\Mojang\GameVersionManifest.cs" />
+    <Compile Include="Minecraft\Json\MCPackCurseFile.cs" />
     <Compile Include="Minecraft\Launcher.cs" />
+    <Compile Include="Minecraft\StartupSide.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\configuration.cs" />
@@ -233,6 +237,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

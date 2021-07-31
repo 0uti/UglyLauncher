@@ -5,13 +5,10 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using UglyLauncher.Internet;
-using UglyLauncher.Minecraft.Files.Json.ForgeInstaller;
-using UglyLauncher.Minecraft.Files.Json.ForgeProcessor;
-using UglyLauncher.Minecraft.Files.Json.ForgeVersion;
-using UglyLauncher.Minecraft.Files.Json.GameVersion;
+using UglyLauncher.Minecraft.Files.Mojang.GameVersion;
 using UglyLauncher.Settings;
 
-namespace UglyLauncher.Minecraft.Files
+namespace UglyLauncher.Minecraft.Files.Forge
 {
     class FilesForge
     {
@@ -67,7 +64,7 @@ namespace UglyLauncher.Minecraft.Files
             if (post_1_13 == true)
             {
                 post_1_13 = true;
-                ForgeVersion MCForge = ForgeVersion.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\version.json").Trim());
+                ForgeVersion.ForgeVersion MCForge = ForgeVersion.ForgeVersion.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\version.json").Trim());
                 // download Forge libraries
                 ClassPath = DownloadForgeLibraries(MCForge);
 
@@ -90,7 +87,7 @@ namespace UglyLauncher.Minecraft.Files
             else if (post_1_13 == false)
             {
                 post_1_13 = false;
-                ForgeInstaller MCForge = ForgeInstaller.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\install_profile.json").Trim());
+                ForgeInstaller.ForgeInstaller MCForge = ForgeInstaller.ForgeInstaller.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\install_profile.json").Trim());
                 // download Forge libraries
                 ClassPath = DownloadForgeLibraries(MCForge);
 
@@ -112,7 +109,7 @@ namespace UglyLauncher.Minecraft.Files
         {
             if (post_1_13 == true)
             {
-                ForgeVersion MCForge = ForgeVersion.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\version.json").Trim());
+                ForgeVersion.ForgeVersion MCForge = ForgeVersion.ForgeVersion.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\version.json").Trim());
                 // replace vanilla values
                 MCMojang.MainClass = MCForge.MainClass;
                 // append forge arguments
@@ -123,7 +120,7 @@ namespace UglyLauncher.Minecraft.Files
             }
             else
             {
-                ForgeInstaller MCForge = ForgeInstaller.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\install_profile.json").Trim());
+                ForgeInstaller.ForgeInstaller MCForge = ForgeInstaller.ForgeInstaller.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\install_profile.json").Trim());
                 // replace vanilla settings
                 MCMojang.MainClass = MCForge.VersionInfo.MainClass;
                 MCMojang.MinecraftArguments = MCForge.VersionInfo.MinecraftArguments;
@@ -131,9 +128,9 @@ namespace UglyLauncher.Minecraft.Files
             return MCMojang;
         }
 
-        private void DownloadForgeProcessorLibraries(ForgeProcessor Forge)
+        private void DownloadForgeProcessorLibraries(ForgeProcessor.ForgeProcessor Forge)
         {
-            foreach (Json.GameVersion.Library lib in Forge.Libraries)
+            foreach (Mojang.GameVersion.Library lib in Forge.Libraries)
             {
                 string[] sLibName = lib.Name.Split(':');
                 VersionJsonDownload download;
@@ -161,15 +158,15 @@ namespace UglyLauncher.Minecraft.Files
             }
         }
 
-        private Dictionary<string, string> DownloadForgeLibraries(ForgeInstaller Forge)
+        private Dictionary<string, string> DownloadForgeLibraries(ForgeInstaller.ForgeInstaller Forge)
         {
             Dictionary<string, string> ClassPath = new Dictionary<string, string>(); // Library list for startup
 
-            foreach (Json.ForgeInstaller.Library Lib in Forge.VersionInfo.Libraries)
+            foreach (ForgeInstaller.Library Lib in Forge.VersionInfo.Libraries)
             {
                 string sLocalPath = LibraryDir;
                 string sRemotePath = "https://libraries.minecraft.net/";
-                string sLibPath = null;
+                string sLibPath;
                 string[] sLibName = Lib.Name.Split(':');
 
                 // use download url from Forge
@@ -201,11 +198,11 @@ namespace UglyLauncher.Minecraft.Files
             return ClassPath;
         }
 
-        private Dictionary<string, string> DownloadForgeLibraries(ForgeVersion forge)
+        private Dictionary<string, string> DownloadForgeLibraries(ForgeVersion.ForgeVersion forge)
         {
             Dictionary<string, string> ClassPath = new Dictionary<string, string>(); // Library list for startup
 
-            foreach (Json.GameVersion.Library lib in forge.Libraries)
+            foreach (Mojang.GameVersion.Library lib in forge.Libraries)
             {
                 string[] sLibName = lib.Name.Split(':');
                 VersionJsonDownload download;
@@ -238,7 +235,7 @@ namespace UglyLauncher.Minecraft.Files
 
         private void BuildForgeClientJar()
         {
-            ForgeProcessor MCForge = ForgeProcessor.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\install_profile.json").Trim());
+            ForgeProcessor.ForgeProcessor MCForge = ForgeProcessor.ForgeProcessor.FromJson(File.ReadAllText(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\install_profile.json").Trim());
             // download needes Libraries
             DownloadForgeProcessorLibraries(MCForge);
 
@@ -256,14 +253,14 @@ namespace UglyLauncher.Minecraft.Files
             if (!File.Exists(LibraryDir + _sForgeTree.Replace('/', '\\') + sForgeVersion + @"\forge-" + sForgeVersion + "-client.jar"))
             {
                 // Processors
-                foreach (Processor processor in MCForge.Processors)
+                foreach (ForgeProcessor.Processor processor in MCForge.Processors)
                 {
                     RunProccessor(MCForge, processor);
                 }
             }
         }
 
-        private void RunProccessor(ForgeProcessor Forge, Processor processor)
+        private void RunProccessor(ForgeProcessor.ForgeProcessor Forge, ForgeProcessor.Processor processor)
         {
             Debug.WriteLine("******************************************************");
             Configuration C = new Configuration();
@@ -310,7 +307,7 @@ namespace UglyLauncher.Minecraft.Files
             //proc.Dispose();
         }
 
-        private string BuildProcArgs(ForgeProcessor Forge, Processor processor)
+        private string BuildProcArgs(ForgeProcessor.ForgeProcessor Forge, ForgeProcessor.Processor processor)
         {
             string args = null;
             foreach (string arg in processor.Args)
@@ -349,7 +346,7 @@ namespace UglyLauncher.Minecraft.Files
             return args;
         }
 
-        private string BuildProcessClassPath(Processor processor)
+        private string BuildProcessClassPath(ForgeProcessor.Processor processor)
         {
             string classPath = null;
             foreach (string jarfile in processor.Classpath)
