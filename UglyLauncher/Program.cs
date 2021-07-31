@@ -1,7 +1,4 @@
-﻿using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 namespace UglyLauncher
@@ -23,13 +20,6 @@ namespace UglyLauncher
                     return;
                 }
             }
-            // eae8cecc-253f-4cf3-90a8-f37d31b74252
-
-            AppCenter.Start("eae8cecc-253f-4cf3-90a8-f37d31b74252",typeof(Analytics), typeof(Crashes));
-
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmMain());
         }
     }
 }
