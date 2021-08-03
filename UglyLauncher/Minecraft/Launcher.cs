@@ -43,10 +43,8 @@ namespace UglyLauncher.Minecraft
         private string JavaPath;
         private int JavaVersion;
 
-        private string forgeVersion;
         // bool
         private readonly bool Offline = false;
-        private bool isForge = false;
         private readonly StartupSide side;
         
         private readonly DownloadHelper dhelper;
@@ -308,7 +306,6 @@ namespace UglyLauncher.Minecraft
             // additional things for forge
             if (pack.Type.Equals("forge"))
             {
-                isForge = true;
                 FilesForge MCForgeFiles = new FilesForge(dhelper)
                 {
                     LibraryDir = _McLibraryDir,
@@ -350,14 +347,14 @@ namespace UglyLauncher.Minecraft
             if (javaVersion.MajorVersion == 8)
             {
                 // Java 1.8
-                JavaPath = _JavaDir + Path.DirectorySeparatorChar + "8" + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "javaw.exe";
+                JavaPath = _JavaDir + Path.DirectorySeparatorChar + "8" + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "java.exe";
                 return true;
             }
             
             if (javaVersion.MajorVersion == 16)
             {
                 // Java 16
-                JavaPath = _JavaDir + Path.DirectorySeparatorChar + "16" + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "javaw.exe";
+                JavaPath = _JavaDir + Path.DirectorySeparatorChar + "16" + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "java.exe";
                 return true;
             }
 
@@ -367,12 +364,11 @@ namespace UglyLauncher.Minecraft
 
 
 
+
         private void Start(string args, string sPackName)
         {
             Configuration C = new Configuration();
-#pragma warning disable IDE0067 // Objekte verwerfen, bevor Bereich verloren geht
             Process minecraft = new Process();
-#pragma warning restore IDE0067 // Objekte verwerfen, bevor Bereich verloren geht
             // check for "minecraft" folder
             if (!Directory.Exists(_PacksDir + Path.DirectorySeparatorChar + sPackName + + Path.DirectorySeparatorChar + "minecraft")) Directory.CreateDirectory(_PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "minecraft");
 
