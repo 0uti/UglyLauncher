@@ -309,7 +309,6 @@ namespace UglyLauncher.Minecraft
             if (pack.Type.Equals("forge"))
             {
                 isForge = true;
-                forgeVersion = pack.ForgeVersion;
                 FilesForge MCForgeFiles = new FilesForge(dhelper)
                 {
                     LibraryDir = _McLibraryDir,
@@ -618,15 +617,7 @@ namespace UglyLauncher.Minecraft
 
             // fill placeholders
             args = args.Replace("${auth_player_name}", Profile.name);
-
-            if (isForge)
-            {
-                args = args.Replace("${version_name}", MC.Id + "-forge" + forgeVersion.Replace(MC.Id, ""));
-            }
-            else
-            {
-                args = args.Replace("${version_name}", MC.Id);
-            }
+            args = args.Replace("${version_name}", MC.Id);
             args = args.Replace("${game_directory}", string.Format("\"{0}\\{1}\\minecraft\"", _PacksDir, sPackName));
             args = args.Replace("${assets_root}", string.Format("\"{0}\"", _McAssetsDir));
             args = args.Replace("${game_assets}", string.Format("\"{0}\\virtual\\legacy\"", _McAssetsDir));
@@ -650,7 +641,6 @@ namespace UglyLauncher.Minecraft
             {
                 args += " --modListFile=\"" + modListClient + "\"";
             }
-
 
             return args;
         }
