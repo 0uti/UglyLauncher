@@ -6,7 +6,6 @@ using UglyLauncher.Internet;
 using UglyLauncher.Minecraft.Files.Mojang.Assets;
 using UglyLauncher.Minecraft.Files.Mojang.GameVersion;
 using UglyLauncher.Minecraft.Files.Mojang.GameVersionManifest;
-using UglyLauncher.Settings;
 
 namespace UglyLauncher.Minecraft.Files.Mojang
 {
@@ -155,9 +154,6 @@ namespace UglyLauncher.Minecraft.Files.Mojang
 
         public Dictionary<string, string> DownloadClientLibraries(GameVersion.GameVersion MC)
         {
-            Configuration c = new Configuration();
-            string sJavaArch = c.GetJavaArch();
-
             Dictionary<string, string> ClassPath = new Dictionary<string, string>(); // Library list for startup
 
             foreach (Library lib in MC.Libraries)
@@ -183,7 +179,7 @@ namespace UglyLauncher.Minecraft.Files.Mojang
                 // Natives ?
                 if (lib.Natives != null)
                 {
-                    download = lib.Downloads.Classifiers.GetType().GetProperty(lib.Natives.Windows.Replace("${arch}", sJavaArch).Replace("-", "")).GetValue(lib.Downloads.Classifiers, null) as VersionJsonDownload;
+                    download = lib.Downloads.Classifiers.GetType().GetProperty(lib.Natives.Windows.Replace("${arch}", "64").Replace("-", "")).GetValue(lib.Downloads.Classifiers, null) as VersionJsonDownload;
                 }
                 else
                 {

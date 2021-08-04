@@ -30,24 +30,24 @@ namespace UglyLauncher.Minecraft
         private static MCAvailablePacks PacksAvailable = new MCAvailablePacks();
         private static MCPacksInstalled PacksInstalled = new MCPacksInstalled();
         // Strings
-        public const string _sPackServer = "http://uglylauncher.de";
-        public static readonly string _sDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + ".UglyLauncher";
-        public static readonly string _sPacksDir = _sDataDir + Path.DirectorySeparatorChar + "packs";
+        public const string _PackServer = "http://uglylauncher.de";
+        public static readonly string _DataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + ".UglyLauncher";
+        public static readonly string _PacksDir = _DataDir + Path.DirectorySeparatorChar + "packs";
+        public static readonly string _JavaDir = _DataDir + Path.DirectorySeparatorChar + "java";
         public static readonly string _McDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + ".minecraft";
-        public static readonly string _sAssetsDir = _McDir + Path.DirectorySeparatorChar + "assets";
-        public static readonly string _sLibraryDir = _McDir + Path.DirectorySeparatorChar + "libraries";
-        public static readonly string _sVersionDir = _McDir + Path.DirectorySeparatorChar + "versions";
-        public static readonly string _sNativesDir = _McDir + Path.DirectorySeparatorChar + "natives";
-        private string forgeVersion;
+        public static readonly string _McAssetsDir = _McDir + Path.DirectorySeparatorChar + "assets";
+        public static readonly string _McLibraryDir = _McDir + Path.DirectorySeparatorChar + "libraries";
+        public static readonly string _McVersionDir = _McDir + Path.DirectorySeparatorChar + "versions";
+        public static readonly string _McNativesDir = _McDir + Path.DirectorySeparatorChar + "natives";
+
+        private string _JavaPath;
+        private int _JavaVersion;
+
         // bool
         private readonly bool Offline = false;
-        private bool isForge = false;
         private readonly StartupSide side;
-        // Lists
-
-
+        
         private readonly DownloadHelper dhelper;
-
 
         // constructor
         public Launcher(StartupSide side, bool OfflineMode)
@@ -60,21 +60,24 @@ namespace UglyLauncher.Minecraft
         // Open Pack folder
         public void OpenPackFolder(string sSelectedPack)
         {
-            if (Directory.Exists(_sPacksDir + Path.DirectorySeparatorChar + sSelectedPack)) Process.Start(_sPacksDir + Path.DirectorySeparatorChar + sSelectedPack);
+            if (Directory.Exists(_PacksDir + Path.DirectorySeparatorChar + sSelectedPack)) Process.Start(_PacksDir + Path.DirectorySeparatorChar + sSelectedPack);
         }
 
         // Check Directories
         public void CheckDirectories()
         {
-            if (!Directory.Exists(_sDataDir)) Directory.CreateDirectory(_sDataDir);
-            if (!Directory.Exists(_sLibraryDir)) Directory.CreateDirectory(_sLibraryDir);
-            if (!Directory.Exists(_sAssetsDir)) Directory.CreateDirectory(_sAssetsDir);
-            if (!Directory.Exists(_sAssetsDir + Path.DirectorySeparatorChar + "indexes")) Directory.CreateDirectory(_sAssetsDir + Path.DirectorySeparatorChar + "indexes");
-            if (!Directory.Exists(_sAssetsDir + Path.DirectorySeparatorChar + "objects")) Directory.CreateDirectory(_sAssetsDir + Path.DirectorySeparatorChar + "objects");
-            if (!Directory.Exists(_sAssetsDir + Path.DirectorySeparatorChar + "virtual")) Directory.CreateDirectory(_sAssetsDir + Path.DirectorySeparatorChar + "virtual");
-            if (!Directory.Exists(_sVersionDir)) Directory.CreateDirectory(_sVersionDir);
-            if (!Directory.Exists(_sPacksDir)) Directory.CreateDirectory(_sPacksDir);
-            if (!Directory.Exists(_sNativesDir)) Directory.CreateDirectory(_sNativesDir);
+            // .UglyLauncher
+            if (!Directory.Exists(_DataDir)) Directory.CreateDirectory(_DataDir);
+            if (!Directory.Exists(_PacksDir)) Directory.CreateDirectory(_PacksDir);
+            if (!Directory.Exists(_McLibraryDir)) Directory.CreateDirectory(_McLibraryDir);
+            if (!Directory.Exists(_JavaDir)) Directory.CreateDirectory(_JavaDir);
+            // .Minecraft
+            if (!Directory.Exists(_McAssetsDir)) Directory.CreateDirectory(_McAssetsDir);
+            if (!Directory.Exists(_McAssetsDir + Path.DirectorySeparatorChar + "indexes")) Directory.CreateDirectory(_McAssetsDir + Path.DirectorySeparatorChar + "indexes");
+            if (!Directory.Exists(_McAssetsDir + Path.DirectorySeparatorChar + "objects")) Directory.CreateDirectory(_McAssetsDir + Path.DirectorySeparatorChar + "objects");
+            if (!Directory.Exists(_McAssetsDir + Path.DirectorySeparatorChar + "virtual")) Directory.CreateDirectory(_McAssetsDir + Path.DirectorySeparatorChar + "virtual");
+            if (!Directory.Exists(_McVersionDir)) Directory.CreateDirectory(_McVersionDir);
+            if (!Directory.Exists(_McNativesDir)) Directory.CreateDirectory(_McNativesDir);
         }
 
         // load Packlist from server
@@ -82,7 +85,7 @@ namespace UglyLauncher.Minecraft
         {
             try
             {
-                string sPackListJson = Http.GET(_sPackServer + @"/packs.php?player=" + sPlayerName + @"&uid=" + sMCUID);
+                string sPackListJson = Http.GET(_PackServer + @"/packs.php?player=" + sPlayerName + @"&uid=" + sMCUID);
                 PacksAvailable = MCAvailablePacks.FromJson(sPackListJson);
             }
             catch (WebException)
@@ -113,11 +116,11 @@ namespace UglyLauncher.Minecraft
         // get pack icon
         public Image GetPackIcon(MCAvailablePack Pack)
         {
-            MemoryStream ms = Http.DownloadToStream(_sPackServer + "/packs/" + Pack.Name + "/" + Pack.Name + ".png");
+            MemoryStream ms = Http.DownloadToStream(_PackServer + "/packs/" + Pack.Name + "/" + Pack.Name + ".png");
 
-            if (Directory.Exists(_sPacksDir + Path.DirectorySeparatorChar + Pack.Name))
+            if (Directory.Exists(_PacksDir + Path.DirectorySeparatorChar + Pack.Name))
             {
-                FileStream file = new FileStream(_sPacksDir + Path.DirectorySeparatorChar + Pack.Name + Path.DirectorySeparatorChar + Pack.Name + ".png", FileMode.Create, FileAccess.Write);
+                FileStream file = new FileStream(_PacksDir + Path.DirectorySeparatorChar + Pack.Name + Path.DirectorySeparatorChar + Pack.Name + ".png", FileMode.Create, FileAccess.Write);
                 ms.WriteTo(file);
             }
 
@@ -127,11 +130,11 @@ namespace UglyLauncher.Minecraft
         // get pack icon
         public Image GetPackIconOffline(MCPacksInstalledPack Pack)
         {
-            if (!File.Exists(_sPacksDir + @"\" + Pack.Name + @"\" + Pack.Name + ".png")) return null;
+            if (!File.Exists(_PacksDir + Path.DirectorySeparatorChar + Pack.Name + Path.DirectorySeparatorChar + Pack.Name + ".png")) return null;
 
             MemoryStream ms = new MemoryStream();
 
-            using (FileStream fileStream = File.OpenRead(_sPacksDir + @"\" + Pack.Name + @"\" + Pack.Name + ".png"))
+            using (FileStream fileStream = File.OpenRead(_PacksDir + Path.DirectorySeparatorChar + Pack.Name + Path.DirectorySeparatorChar + Pack.Name + ".png"))
             {
                 ms.SetLength(fileStream.Length);
                 //read file to MemoryStream
@@ -143,7 +146,7 @@ namespace UglyLauncher.Minecraft
         // Get installes packages
         public void LoadInstalledPacks()
         {
-            List<string> dirs = new List<string>(Directory.EnumerateDirectories(_sPacksDir));
+            List<string> dirs = new List<string>(Directory.EnumerateDirectories(_PacksDir));
             PacksInstalled = new MCPacksInstalled();
             foreach (string dir in dirs)
             {
@@ -200,7 +203,7 @@ namespace UglyLauncher.Minecraft
             List<string> Mods = new List<string>();
             try
             {
-                string sModsPath = string.Format(@"{0}\{1}\minecraft\mods\", _sPacksDir, sPackname);
+                string sModsPath = string.Format(@"{0}\{1}\minecraft\mods\", _PacksDir, sPackname);
                 Mods = Directory.EnumerateFiles(sModsPath, "*.*")
                     .Where(f => sFileExtensions.Contains(Path.GetExtension(f).ToLower()))
                     .ToList();
@@ -254,7 +257,7 @@ namespace UglyLauncher.Minecraft
 
         public void SetSelectedVersion(string sPackName, string sVersion)
         {
-            File.WriteAllText(_sPacksDir + @"\" + sPackName + @"\selected", sVersion);
+            File.WriteAllText(_PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "selected", sVersion);
             Application.DoEvents(); // wait a little bit :)
             LoadInstalledPacks();
         }
@@ -269,10 +272,10 @@ namespace UglyLauncher.Minecraft
         {
             FilesMojang MCMojangFiles = new FilesMojang(dhelper)
             {
-                LibraryDir = _sLibraryDir,
-                VersionDir = _sVersionDir,
-                NativesDir = _sNativesDir,
-                AssetsDir = _sAssetsDir,
+                LibraryDir = _McLibraryDir,
+                VersionDir = _McVersionDir,
+                NativesDir = _McNativesDir,
+                AssetsDir = _McAssetsDir,
                 OfflineMode = Offline
             };
 
@@ -283,10 +286,10 @@ namespace UglyLauncher.Minecraft
             }
 
             // getting pack json file
-            MCPack pack = MCPack.FromJson(File.ReadAllText(_sPacksDir + @"\" + sPackName + @"\pack.json").Trim());
+            MCPack pack = MCPack.FromJson(File.ReadAllText(_PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar+ "pack.json").Trim());
             // vanilla Minecraft
             MCMojangFiles.DownloadVersionJson(pack.MCVersion);
-            GameVersion MCMojang = GameVersion.FromJson(File.ReadAllText(_sVersionDir + @"\" + pack.MCVersion + @"\" + pack.MCVersion + ".json").Trim());
+            GameVersion MCMojang = GameVersion.FromJson(File.ReadAllText(_McVersionDir + Path.DirectorySeparatorChar + pack.MCVersion + Path.DirectorySeparatorChar + pack.MCVersion + ".json").Trim());
             // download game jar
             MCMojangFiles.DownloadClientJar(MCMojang);
             // download libraries if needed
@@ -294,16 +297,21 @@ namespace UglyLauncher.Minecraft
             // download assets if needed
             MCMojangFiles.DownloadClientAssets(MCMojang);
 
+            // set Java version
+            if (!InstallJava(MCMojang.javaVersion))
+            {
+                return;
+            }
+
             // additional things for forge
             if (pack.Type.Equals("forge"))
             {
-                isForge = true;
-                forgeVersion = pack.ForgeVersion;
                 FilesForge MCForgeFiles = new FilesForge(dhelper)
                 {
-                    LibraryDir = _sLibraryDir,
-                    VersionDir = _sVersionDir,
-                    OfflineMode = Offline
+                    LibraryDir = _McLibraryDir,
+                    VersionDir = _McVersionDir,
+                    OfflineMode = Offline,
+                    JavaPath = _JavaPath
                 };
 
                 // Install Forge
@@ -332,17 +340,54 @@ namespace UglyLauncher.Minecraft
             //if (_bar.Visible == true) _bar.Hide();
         }
 
+        private bool InstallJava(JavaVersion javaVersion)
+        {
+            if (!IsJavaInstalled(javaVersion))
+            {   // version not installed
+                if(!DownloadJava(javaVersion))
+                {
+                    MessageBox.Show("unknown Java version in Mojang JSON file.", "Missing Java");
+                    
+                    return false;
+                }
+            }
+            
+            _JavaPath = _JavaDir + Path.DirectorySeparatorChar + javaVersion.MajorVersion.ToString() + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "java.exe";
+            _JavaVersion = javaVersion.MajorVersion;
+            return true;
+        }
+
+        private bool IsJavaInstalled(JavaVersion javaVersion)
+        {
+            return File.Exists(_JavaDir + Path.DirectorySeparatorChar + javaVersion.MajorVersion.ToString() + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "java.exe");
+        }
+
+        private bool DownloadJava(JavaVersion javaVersion)
+        {
+            // download pack
+            dhelper.DownloadFileTo(_PackServer + "/java/" + javaVersion.MajorVersion.ToString() + ".zip", _JavaDir + Path.DirectorySeparatorChar + javaVersion.MajorVersion.ToString() + ".zip", true, "Downloading Java " + javaVersion.MajorVersion.ToString());
+
+            // Hide Bar
+            dhelper.HideBar();
+
+            // unzip pack
+            dhelper.ExtractZipFiles(_JavaDir + Path.DirectorySeparatorChar + javaVersion.MajorVersion.ToString() + ".zip", _JavaDir);
+
+            // delete zip file
+            File.Delete(_JavaDir + Path.DirectorySeparatorChar + javaVersion.MajorVersion.ToString() + ".zip");
+
+            return IsJavaInstalled(javaVersion);
+        }
+
         private void Start(string args, string sPackName)
         {
             Configuration C = new Configuration();
-#pragma warning disable IDE0067 // Objekte verwerfen, bevor Bereich verloren geht
             Process minecraft = new Process();
-#pragma warning restore IDE0067 // Objekte verwerfen, bevor Bereich verloren geht
             // check for "minecraft" folder
-            if (!Directory.Exists(_sPacksDir + @"\" + sPackName + @"\minecraft")) Directory.CreateDirectory(_sPacksDir + @"\" + sPackName + @"\minecraft");
+            if (!Directory.Exists(_PacksDir + Path.DirectorySeparatorChar + sPackName + + Path.DirectorySeparatorChar + "minecraft")) Directory.CreateDirectory(_PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "minecraft");
 
-            minecraft.StartInfo.FileName = C.GetJavaPath();
-            minecraft.StartInfo.WorkingDirectory = _sPacksDir + @"\" + sPackName + @"\minecraft";
+            minecraft.StartInfo.FileName = _JavaPath;
+            minecraft.StartInfo.WorkingDirectory = _PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "minecraft";
             minecraft.StartInfo.Arguments = args;
             minecraft.StartInfo.RedirectStandardOutput = true;
             minecraft.StartInfo.RedirectStandardError = true;
@@ -361,7 +406,7 @@ namespace UglyLauncher.Minecraft
                 _console.Show();
                 _console.Clear();
                 _console.AddLine(String.Format("UglyLauncher-Version: {0}", Application.ProductVersion), Color.Blue);
-                _console.AddLine("Using Java-Version: " + C.GetJavaPath() + " (" + C.GetJavaArch() + "bit)", Color.Blue);
+                //_console.AddLine("Using Java-Version: " + C.GetJavaPath() + " (64bit)", Color.Blue);
                 _console.AddLine("Startparameter:" + args, Color.Blue);
             }
 
@@ -461,10 +506,10 @@ namespace UglyLauncher.Minecraft
             MCUserAccountProfile Profile = U.GetActiveProfile(Acc);
 
             // Garbage Collector
-            if (C.UseGC == 1) args += " -XX:SurvivorRatio=2 -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+AggressiveOpts";
+            if (C.UseGC == 1 && _JavaVersion == 8) args += " -XX:SurvivorRatio=2 -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+AggressiveOpts";
 
             // force 64bit
-            if (C.GetJavaArch() == "64") args += " -d64";
+            if (_JavaVersion == 8) args += " -d64";
 
             // Java Memory
             args += string.Format(" -Xms{0}m -Xmx{1}m -Xmn128m", C.MinimumMemory, C.MaximumMemory);
@@ -500,7 +545,7 @@ namespace UglyLauncher.Minecraft
                                         //check Arch
                                         if (Rule.Os.Arch != null)
                                         {
-                                            if (Rule.Os.Arch == "x86" && C.GetJavaArch() == "64") bWindows = false;
+                                            if (Rule.Os.Arch == "x86") bWindows = false;
                                         }
                                     }
                                 }
@@ -578,22 +623,14 @@ namespace UglyLauncher.Minecraft
             }
 
             // version .jar
-            classpath += string.Format("\"{0}\\{1}\\{1}.jar\" ", _sVersionDir, MC.Id);
+            classpath += string.Format("\"{0}\\{1}\\{1}.jar\" ", _McVersionDir, MC.Id);
 
             // fill placeholders
             args = args.Replace("${auth_player_name}", Profile.name);
-
-            if (isForge)
-            {
-                args = args.Replace("${version_name}", MC.Id + "-forge" + forgeVersion.Replace(MC.Id, ""));
-            }
-            else
-            {
-                args = args.Replace("${version_name}", MC.Id);
-            }
-            args = args.Replace("${game_directory}", string.Format("\"{0}\\{1}\\minecraft\"", _sPacksDir, sPackName));
-            args = args.Replace("${assets_root}", string.Format("\"{0}\"", _sAssetsDir));
-            args = args.Replace("${game_assets}", string.Format("\"{0}\\virtual\\legacy\"", _sAssetsDir));
+            args = args.Replace("${version_name}", MC.Id);
+            args = args.Replace("${game_directory}", string.Format("\"{0}\\{1}\\minecraft\"", _PacksDir, sPackName));
+            args = args.Replace("${assets_root}", string.Format("\"{0}\"", _McAssetsDir));
+            args = args.Replace("${game_assets}", string.Format("\"{0}\\virtual\\legacy\"", _McAssetsDir));
             args = args.Replace("${assets_index_name}", MC.Assets);
             args = args.Replace("${auth_uuid}", Profile.id);
             args = args.Replace("${auth_access_token}", Acc.accessToken);
@@ -601,19 +638,19 @@ namespace UglyLauncher.Minecraft
             args = args.Replace("${user_properties}", "{}");
             args = args.Replace("${user_type}", "Mojang");
             args = args.Replace("${version_type}", MC.Type);
-            args = args.Replace("${natives_directory}", "\"" + _sNativesDir + @"\" + MC.Id + "\"");
+            args = args.Replace("${natives_directory}", "\"" + _McNativesDir + @"\" + MC.Id + "\"");
             args = args.Replace("${classpath}", classpath);
             args = args.Replace("${launcher_name}", Application.ProductName);
             args = args.Replace("${launcher_version}", Application.ProductVersion);
-
+            args = args.Replace("${library_directory}", _McLibraryDir);
+            args = args.Replace("${classpath_separator}", ";");
 
             // do we have a mod_list_client.json?
-            string modListClient = string.Format("{0}\\{1}\\mod_list_client.json", _sPacksDir, sPackName);
+            string modListClient = string.Format("{0}\\{1}\\mod_list_client.json", _PacksDir, sPackName);
             if (File.Exists(modListClient))
             {
                 args += " --modListFile=\"" + modListClient + "\"";
             }
-
 
             return args;
         }
@@ -648,9 +685,9 @@ namespace UglyLauncher.Minecraft
             }
 
             // delete old download
-            if (File.Exists(_sPacksDir + Path.DirectorySeparatorChar + sPackName + "-" + sPackVersion + ".zip"))
+            if (File.Exists(_PacksDir + Path.DirectorySeparatorChar + sPackName + "-" + sPackVersion + ".zip"))
             {
-                File.Delete(_sPacksDir + Path.DirectorySeparatorChar + sPackName + "-" + sPackVersion + ".zip");
+                File.Delete(_PacksDir + Path.DirectorySeparatorChar + sPackName + "-" + sPackVersion + ".zip");
             }
 
             MCAvailablePackVersion version = GetAvailablePackVersion(sPackName, sPackVersion);
@@ -659,18 +696,18 @@ namespace UglyLauncher.Minecraft
             if (version.DownloadZip == true)
             {
                 // download pack
-                dhelper.DownloadFileTo(_sPackServer + "/packs/" + sPackName + "/" + sPackName + "-" + sPackVersion + ".zip", _sPacksDir + Path.DirectorySeparatorChar + sPackName + "-" + sPackVersion + ".zip", true, "Downloading Pack " + sPackName);
+                dhelper.DownloadFileTo(_PackServer + "/packs/" + sPackName + "/" + sPackName + "-" + sPackVersion + ".zip", _PacksDir + Path.DirectorySeparatorChar + sPackName + "-" + sPackVersion + ".zip", true, "Downloading Pack " + sPackName);
 
                 // Hide Bar
                 dhelper.HideBar();
 
                 // unzip pack
-                dhelper.ExtractZipFiles(_sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip", _sPacksDir);
+                dhelper.ExtractZipFiles(_PacksDir + Path.DirectorySeparatorChar + sPackName + "-" + sPackVersion + ".zip", _PacksDir);
 
                 // delete zip file
-                File.Delete(_sPacksDir + @"\" + sPackName + "-" + sPackVersion + ".zip");
+                File.Delete(_PacksDir + Path.DirectorySeparatorChar + sPackName + "-" + sPackVersion + ".zip");
 
-                pack = MCPack.FromJson(File.ReadAllText(_sPacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "pack.json").Trim());
+                pack = MCPack.FromJson(File.ReadAllText(_PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "pack.json").Trim());
             }
             else
             {
@@ -681,16 +718,21 @@ namespace UglyLauncher.Minecraft
                     MCVersion = version.Version
                 };
 
-                File.WriteAllText(_sPacksDir + @"\" + sPackName + @"\pack.json", pack.ToJson());
+                if(!Directory.Exists(_PacksDir + Path.DirectorySeparatorChar + sPackName))
+                {
+                    Directory.CreateDirectory(_PacksDir + Path.DirectorySeparatorChar + sPackName);
+                }
+
+                File.WriteAllText(_PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "pack.json", pack.ToJson());
 
                 // write version file
-                File.WriteAllText(_sPacksDir + @"\" + sPackName + @"\version", version.Version);
+                File.WriteAllText(_PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "version", version.Version);
             }
 
             // check for "minecraft" folder
-            if (!Directory.Exists(_sPacksDir + @"\" + sPackName + @"\minecraft"))
+            if (!Directory.Exists(_PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "minecraft"))
             {
-                Directory.CreateDirectory(_sPacksDir + @"\" + sPackName + @"\minecraft");
+                Directory.CreateDirectory(_PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "minecraft");
             }
 
             if (pack == null || pack.CurseFiles == null)
@@ -700,20 +742,19 @@ namespace UglyLauncher.Minecraft
             // download cuseFiles
             FilesCurseForge CurseFiles = new FilesCurseForge(side, dhelper)
             {
-                ModsDir = _sPacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "minecraft" + Path.DirectorySeparatorChar + "mods"
+                ModsDir = _PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "minecraft" + Path.DirectorySeparatorChar + "mods"
             };
             CurseFiles.DownloadModFiles(pack.CurseFiles);
         }
 
-
         public void ReDownloadMods(string sPackName)
         {
-            MCPack mcPack = MCPack.FromJson(File.ReadAllText(_sPacksDir + Path.DirectorySeparatorChar.ToString() + sPackName + Path.DirectorySeparatorChar.ToString() + "pack.json").Trim());
+            MCPack mcPack = MCPack.FromJson(File.ReadAllText(_PacksDir + Path.DirectorySeparatorChar.ToString() + sPackName + Path.DirectorySeparatorChar.ToString() + "pack.json").Trim());
             if (mcPack != null && mcPack.CurseFiles != null)
             {
                 new FilesCurseForge(side, dhelper)
                 {
-                    ModsDir = _sPacksDir + Path.DirectorySeparatorChar.ToString() + sPackName + Path.DirectorySeparatorChar.ToString() + "minecraft" + Path.DirectorySeparatorChar.ToString() + "mods"
+                    ModsDir = _PacksDir + Path.DirectorySeparatorChar.ToString() + sPackName + Path.DirectorySeparatorChar.ToString() + "minecraft" + Path.DirectorySeparatorChar.ToString() + "mods"
                 }.DownloadModFiles(mcPack.CurseFiles);
             }
 
@@ -727,29 +768,32 @@ namespace UglyLauncher.Minecraft
 
         private void DeletePack(string sPackName)
         {
-            string PackDir = _sPacksDir + @"\" + sPackName;
+            string PackDir = _PacksDir + Path.DirectorySeparatorChar + sPackName;
 
             if (!Directory.Exists(PackDir)) return; // Pack did not exist
             // Delete Directories
-            if (Directory.Exists(PackDir + @"\minecraft\logs")) Directory.Delete(PackDir + @"\minecraft\logs", true);
-            if (Directory.Exists(PackDir + @"\minecraft\mods")) Directory.Delete(PackDir + @"\minecraft\mods", true);
-            if (Directory.Exists(PackDir + @"\minecraft\modclasses")) Directory.Delete(PackDir + @"\minecraft\\modclasses", true);
-            if (Directory.Exists(PackDir + @"\minecraft\config")) Directory.Delete(PackDir + @"\minecraft\config", true);
-            if (Directory.Exists(PackDir + @"\minecraft\stats")) Directory.Delete(PackDir + @"\minecraft\stats", true);
-            if (Directory.Exists(PackDir + @"\minecraft\crash-reports")) Directory.Delete(PackDir + @"\minecraft\crash-reports", true);
+
+            string McDir = PackDir + Path.DirectorySeparatorChar + "minecraft";
+
+            if (Directory.Exists(McDir + Path.DirectorySeparatorChar + "logs")) Directory.Delete(McDir + Path.DirectorySeparatorChar + "logs", true);
+            if (Directory.Exists(McDir + Path.DirectorySeparatorChar + "mods")) Directory.Delete(McDir + Path.DirectorySeparatorChar + "mods", true);
+            if (Directory.Exists(McDir + Path.DirectorySeparatorChar + "modclasses")) Directory.Delete(McDir + Path.DirectorySeparatorChar + "modclasses", true);
+            if (Directory.Exists(McDir + Path.DirectorySeparatorChar + "config")) Directory.Delete(McDir + Path.DirectorySeparatorChar + "config", true);
+            if (Directory.Exists(McDir + Path.DirectorySeparatorChar + "stats")) Directory.Delete(McDir + Path.DirectorySeparatorChar + "stats", true);
+            if (Directory.Exists(McDir + Path.DirectorySeparatorChar + "crash-reports")) Directory.Delete(McDir + Path.DirectorySeparatorChar + "crash-reports", true);
             // Deleting .log Files
-            foreach (FileInfo f in new DirectoryInfo(PackDir + @"\minecraft").GetFiles("*.log"))
+            foreach (FileInfo f in new DirectoryInfo(McDir).GetFiles("*.log"))
                 f.Delete();
             // Deleting .lck Files
-            foreach (FileInfo f in new DirectoryInfo(PackDir + @"\minecraft").GetFiles("*.lck"))
+            foreach (FileInfo f in new DirectoryInfo(McDir).GetFiles("*.lck"))
                 f.Delete();
             // Deleting .1 Files
-            foreach (FileInfo f in new DirectoryInfo(PackDir + @"\minecraft").GetFiles("*.1"))
+            foreach (FileInfo f in new DirectoryInfo(McDir).GetFiles("*.1"))
                 f.Delete();
             // Deleting pack.json
-            if (File.Exists(PackDir + @"\pack.json")) File.Delete(PackDir + @"\pack.json");
+            if (File.Exists(PackDir + Path.DirectorySeparatorChar + "pack.json")) File.Delete(PackDir + Path.DirectorySeparatorChar + "pack.json");
             // Deleting version
-            if (File.Exists(PackDir + @"\version")) File.Delete(PackDir + @"\version");
+            if (File.Exists(PackDir + Path.DirectorySeparatorChar + "version")) File.Delete(PackDir + Path.DirectorySeparatorChar + "version");
         }
 
         public void Dispose()

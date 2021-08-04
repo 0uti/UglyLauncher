@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace UglyLauncher.Settings
@@ -46,24 +45,6 @@ namespace UglyLauncher.Settings
 
             if (C.CloseLauncher == 1) ChkKeepLauncher.Checked = false;
             else ChkKeepLauncher.Checked = true;
-
-
-            CmbJavaVersion.Items.Clear();
-            CmbJavaVersion.Items.Add("Automatisch");
-
-            List<String> lVersions = C.GetJavaVersions();
-            foreach (string version in lVersions)
-            {
-                CmbJavaVersion.Items.Add(version);
-            }
-            if (C.JavaVersion == "auto")
-            {
-                CmbJavaVersion.SelectedIndex = CmbJavaVersion.FindStringExact("Automatisch");
-            }
-            else
-            {
-                CmbJavaVersion.SelectedIndex = CmbJavaVersion.FindStringExact(C.JavaVersion);
-            }
         }
 
         private void BtnSave_click(object sender, EventArgs e)
@@ -80,9 +61,6 @@ namespace UglyLauncher.Settings
 
             if (ChkKeepLauncher.Checked == false) C.CloseLauncher = 1;
             else C.CloseLauncher = 0;
-
-            if (CmbJavaVersion.SelectedItem.ToString() == "Automatisch") C.JavaVersion = "auto";
-            else C.JavaVersion = CmbJavaVersion.SelectedItem.ToString();
 
             if (ChkUseGC.Checked == true) C.UseGC = 1;
             else C.UseGC = 0;

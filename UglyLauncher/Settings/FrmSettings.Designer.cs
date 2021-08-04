@@ -36,12 +36,10 @@
             this.ChkShowConsole = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.ChkUseGC = new System.Windows.Forms.CheckBox();
-            this.CmbJavaVersion = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.NumJavaMaxMemory = new NumericUpDownEx();
-            this.NumJavaMinMemory = new NumericUpDownEx();
+            this.NumJavaMaxMemory = new UglyLauncher.Settings.NumericUpDownEx();
+            this.NumJavaMinMemory = new UglyLauncher.Settings.NumericUpDownEx();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.ChkKeepLauncher = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
@@ -53,7 +51,7 @@
             // 
             // BtnCancel
             // 
-            this.BtnCancel.Location = new System.Drawing.Point(398, 457);
+            this.BtnCancel.Location = new System.Drawing.Point(398, 380);
             this.BtnCancel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.BtnCancel.Name = "BtnCancel";
             this.BtnCancel.Size = new System.Drawing.Size(112, 35);
@@ -64,7 +62,7 @@
             // 
             // BtnSave
             // 
-            this.BtnSave.Location = new System.Drawing.Point(276, 457);
+            this.BtnSave.Location = new System.Drawing.Point(276, 380);
             this.BtnSave.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.BtnSave.Name = "BtnSave";
             this.BtnSave.Size = new System.Drawing.Size(112, 35);
@@ -112,8 +110,6 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.ChkUseGC);
-            this.groupBox2.Controls.Add(this.CmbJavaVersion);
-            this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.NumJavaMaxMemory);
@@ -122,7 +118,7 @@
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox2.Size = new System.Drawing.Size(492, 237);
+            this.groupBox2.Size = new System.Drawing.Size(492, 159);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Java";
@@ -130,7 +126,7 @@
             // ChkUseGC
             // 
             this.ChkUseGC.AutoSize = true;
-            this.ChkUseGC.Location = new System.Drawing.Point(8, 203);
+            this.ChkUseGC.Location = new System.Drawing.Point(10, 106);
             this.ChkUseGC.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ChkUseGC.Name = "ChkUseGC";
             this.ChkUseGC.Size = new System.Drawing.Size(228, 24);
@@ -138,32 +134,10 @@
             this.ChkUseGC.Text = "Benutze Garbage Collector";
             this.ChkUseGC.UseVisualStyleBackColor = true;
             // 
-            // CmbJavaVersion
-            // 
-            this.CmbJavaVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CmbJavaVersion.FormattingEnabled = true;
-            this.CmbJavaVersion.Items.AddRange(new object[] {
-            "auto"});
-            this.CmbJavaVersion.Location = new System.Drawing.Point(258, 29);
-            this.CmbJavaVersion.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.CmbJavaVersion.Name = "CmbJavaVersion";
-            this.CmbJavaVersion.Size = new System.Drawing.Size(212, 28);
-            this.CmbJavaVersion.TabIndex = 1;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 34);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(63, 20);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "Version";
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 114);
+            this.label2.Location = new System.Drawing.Point(6, 64);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(198, 20);
@@ -173,7 +147,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 74);
+            this.label1.Location = new System.Drawing.Point(6, 24);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(194, 20);
@@ -187,7 +161,7 @@
             0,
             0,
             0});
-            this.NumJavaMaxMemory.Location = new System.Drawing.Point(258, 111);
+            this.NumJavaMaxMemory.Location = new System.Drawing.Point(255, 61);
             this.NumJavaMaxMemory.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.NumJavaMaxMemory.Maximum = new decimal(new int[] {
             16384,
@@ -215,7 +189,7 @@
             0,
             0,
             0});
-            this.NumJavaMinMemory.Location = new System.Drawing.Point(258, 71);
+            this.NumJavaMinMemory.Location = new System.Drawing.Point(255, 21);
             this.NumJavaMinMemory.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.NumJavaMinMemory.Maximum = new decimal(new int[] {
             8192,
@@ -264,7 +238,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(528, 503);
+            this.ClientSize = new System.Drawing.Size(526, 426);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
@@ -304,8 +278,6 @@
         private System.Windows.Forms.CheckBox ChkKeepConsole;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox ChkKeepLauncher;
-        private System.Windows.Forms.ComboBox CmbJavaVersion;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox ChkUseGC;
     }
 }

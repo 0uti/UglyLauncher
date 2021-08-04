@@ -27,7 +27,7 @@ namespace UglyLauncher
                 if (attributes.Length > 0)
                 {
                     AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
-                    if (titleAttribute.Title != "")
+                    if (titleAttribute.Title.Length != 0)
                     {
                         return titleAttribute.Title;
                     }

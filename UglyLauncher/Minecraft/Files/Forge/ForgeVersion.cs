@@ -41,6 +41,8 @@ namespace UglyLauncher.Minecraft.Files.Forge.ForgeVersion
         [JsonProperty("game")]
         public GameElement[] Game { get; set; }
 
+        [JsonProperty("jvm")]
+        public JvmElement[] Jvm { get; set; }
     }
 
     public partial class ForgeVersion

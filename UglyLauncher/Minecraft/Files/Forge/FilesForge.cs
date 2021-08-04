@@ -19,6 +19,7 @@ namespace UglyLauncher.Minecraft.Files.Forge
         public string LibraryDir { get; set; }
         public string VersionDir { get; set; }
         public bool OfflineMode { get; set; }
+        public string JavaPath { get; set; }
 
         private string sForgeVersion;
         private string sForgeTempDir;
@@ -68,19 +69,21 @@ namespace UglyLauncher.Minecraft.Files.Forge
                 // download Forge libraries
                 ClassPath = DownloadForgeLibraries(MCForge);
 
-                // extract Forge Jar
-                extractList = new List<string>
+                //extract forge Jar only for 1.13.x to 1.16.x
+                if (sForgeVersion.StartsWith("1.13") || sForgeVersion.StartsWith("1.14") || sForgeVersion.StartsWith("1.15") || sForgeVersion.StartsWith("1.16"))
                 {
-                    "maven/net/minecraftforge/forge/"+ sForgeVersion +"/forge-" + sForgeVersion + ".jar"
-                };
-                dhelper.ExtractZipFiles(sForgeInstallerFile, sForgeVersionDir, extractList, false);
-
-
+                    // extract Forge Jar
+                    extractList = new List<string>
+                    {
+                        "maven/net/minecraftforge/forge/"+ sForgeVersion +"/forge-" + sForgeVersion + ".jar"
+                    };
+                    dhelper.ExtractZipFiles(sForgeInstallerFile, sForgeVersionDir, extractList, false);
+                    // append Forge to classpath
+                    ClassPath.Add("net.minecraftforge:forge", sForgeVersionDir + @"\forge-" + sForgeVersion + ".jar");
+                }
+                
                 // build client.jar
                 BuildForgeClientJar();
-
-                // append Forge to classpath
-                ClassPath.Add("net.minecraftforge:forge", sForgeVersionDir + @"\forge-" + sForgeVersion + ".jar");
             }
 
             // pre 1.13 files
@@ -117,6 +120,14 @@ namespace UglyLauncher.Minecraft.Files.Forge
                 List<GameElement> moreItems = MCForge.Arguments.Game.ToList();
                 itemList.AddRange(moreItems);
                 MCMojang.Arguments.Game = itemList.ToArray();
+
+                if(MCForge.Arguments.Jvm != null)
+                {
+                    List<JvmElement> JvmItemList = MCMojang.Arguments.Jvm.ToList();
+                    List<JvmElement> JvmMoreItems = MCForge.Arguments.Jvm.ToList();
+                    JvmItemList.AddRange(JvmMoreItems);
+                    MCMojang.Arguments.Jvm = JvmItemList.ToArray();
+                }
             }
             else
             {
@@ -130,23 +141,25 @@ namespace UglyLauncher.Minecraft.Files.Forge
 
         private void DownloadForgeProcessorLibraries(ForgeProcessor.ForgeProcessor Forge)
         {
-            foreach (Mojang.GameVersion.Library lib in Forge.Libraries)
+            foreach (Library lib in Forge.Libraries)
             {
                 string[] sLibName = lib.Name.Split(':');
-                VersionJsonDownload download;
-
-                // dont download Forge itself
+                VersionJsonDownload download = lib.Downloads.Artifact;
+                
+                // dont download Forge itself (only 1.13 to 1.16)
                 if (sLibName[0].Equals("net.minecraftforge") && sLibName[1].Equals("forge"))
                 {
-                    List<string> extractList = new List<string>
-                    {
-                        "maven/"+lib.Downloads.Artifact.Path
-                    };
-                    dhelper.ExtractZipFiles(sForgeInstallerFile, sForgeVersionDir, extractList, false);
-                    continue;
+                    if(download.Url == null)
+                    { // no download, extract file from archive
+                        List<string> extractList = new List<string>
+                        {
+                            "maven/"+lib.Downloads.Artifact.Path
+                        };
+                        dhelper.ExtractZipFiles(sForgeInstallerFile, sForgeVersionDir, extractList, false);
+                        continue;
+                    }
                 }
 
-                download = lib.Downloads.Artifact;
                 download.Path = LibraryDir + @"\" + download.Path.Replace("/", @"\");
 
                 // fix for typesafe libraries
@@ -202,7 +215,7 @@ namespace UglyLauncher.Minecraft.Files.Forge
         {
             Dictionary<string, string> ClassPath = new Dictionary<string, string>(); // Library list for startup
 
-            foreach (Mojang.GameVersion.Library lib in forge.Libraries)
+            foreach (Library lib in forge.Libraries)
             {
                 string[] sLibName = lib.Name.Split(':');
                 VersionJsonDownload download;
@@ -255,6 +268,10 @@ namespace UglyLauncher.Minecraft.Files.Forge
                 // Processors
                 foreach (ForgeProcessor.Processor processor in MCForge.Processors)
                 {
+                    if(processor.Sides != null && processor.Sides.Contains("server"))
+                    {
+                        continue;
+                    }
                     RunProccessor(MCForge, processor);
                 }
             }
@@ -289,7 +306,7 @@ namespace UglyLauncher.Minecraft.Files.Forge
             args += BuildProcArgs(Forge, processor);
 
             Process proc = new Process();
-            proc.StartInfo.FileName = C.GetJavaPath();
+            proc.StartInfo.FileName = JavaPath;
             proc.StartInfo.WorkingDirectory = sForgeTempDir;
             proc.StartInfo.Arguments = args;
             proc.StartInfo.RedirectStandardOutput = true;
@@ -317,6 +334,12 @@ namespace UglyLauncher.Minecraft.Files.Forge
                 if (arg.Equals("{MINECRAFT_JAR}"))
                 {
                     args += " " + VersionDir + @"\" + Forge.Minecraft + @"\" + Forge.Minecraft + ".jar";
+                    continue;
+                }
+
+                if (arg.Equals("{SIDE}"))
+                {
+                    args += " client";
                     continue;
                 }
 
@@ -356,11 +379,11 @@ namespace UglyLauncher.Minecraft.Files.Forge
                     classPath += ";";
                 }
                 classPath += "\"" + LibraryDir + @"\" + MavenStringToFilePath(jarfile).Replace('/', '\\') + "\"";
-                Debug.WriteLine("   " + LibraryDir + @"\" + MavenStringToFilePath(jarfile).Replace('/', '\\'));
+                //Debug.WriteLine("   " + LibraryDir + @"\" + MavenStringToFilePath(jarfile).Replace('/', '\\'));
             }
 
             classPath += ";\"" + LibraryDir + @"\" + MavenStringToFilePath(processor.Jar).Replace('/', '\\') + "\"";
-            Debug.WriteLine("   " + LibraryDir + @"\" + MavenStringToFilePath(processor.Jar).Replace('/', '\\'));
+            //Debug.WriteLine("   " + LibraryDir + @"\" + MavenStringToFilePath(processor.Jar).Replace('/', '\\'));
             return classPath;
         }
 
