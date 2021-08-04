@@ -7,8 +7,7 @@ namespace UglyLauncher.AccountManager
 {
     public partial class FrmRefreshToken : Form
     {
-        private MCUserAccount oUser;
-
+        private readonly MCUserAccount oUser;
 
         public FrmRefreshToken(MCUserAccount user)
         {
@@ -25,7 +24,7 @@ namespace UglyLauncher.AccountManager
 
         private void BtnConfirm_Click(object sender, EventArgs e)
         {
-            if (TxtUser.Text == "" || TxtPass.Text == "")
+            if (TxtUser.Text.Length == 0 || TxtPass.Text.Length == 0)
             {
                 MessageBox.Show(this, "Eines der Felder ist leer.", "Fehlerhafte Eingabe!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -33,7 +32,7 @@ namespace UglyLauncher.AccountManager
             {
                 // Check LoginData
                 AuthHandler Auth = new AuthHandler();
-                AuthenticateResponse AuthData = new AuthenticateResponse();
+                AuthenticateResponse AuthData;
                 try
                 {
                     AuthData = Auth.Authenticate(TxtUser.Text.ToString().Trim(), TxtPass.Text.ToString().Trim());

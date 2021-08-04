@@ -40,8 +40,8 @@ namespace UglyLauncher.Minecraft
         public static readonly string _McVersionDir = _McDir + Path.DirectorySeparatorChar + "versions";
         public static readonly string _McNativesDir = _McDir + Path.DirectorySeparatorChar + "natives";
 
-        private string JavaPath;
-        private int JavaVersion;
+        private string _JavaPath;
+        private int _JavaVersion;
 
         // bool
         private readonly bool Offline = false;
@@ -311,7 +311,7 @@ namespace UglyLauncher.Minecraft
                     LibraryDir = _McLibraryDir,
                     VersionDir = _McVersionDir,
                     OfflineMode = Offline,
-                    JavaPath = JavaPath
+                    JavaPath = _JavaPath
                 };
 
                 // Install Forge
@@ -342,28 +342,42 @@ namespace UglyLauncher.Minecraft
 
         private bool InstallJava(JavaVersion javaVersion)
         {
-            JavaVersion = javaVersion.MajorVersion;
-
-            if (javaVersion.MajorVersion == 8)
-            {
-                // Java 1.8
-                JavaPath = _JavaDir + Path.DirectorySeparatorChar + "8" + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "java.exe";
-                return true;
+            if (!IsJavaInstalled(javaVersion))
+            {   // version not installed
+                if(!DownloadJava(javaVersion))
+                {
+                    MessageBox.Show("unknown Java version in Mojang JSON file.", "Missing Java");
+                    
+                    return false;
+                }
             }
             
-            if (javaVersion.MajorVersion == 16)
-            {
-                // Java 16
-                JavaPath = _JavaDir + Path.DirectorySeparatorChar + "16" + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "java.exe";
-                return true;
-            }
-
-            MessageBox.Show("unknown Java version in Mojang JSON file.", "Missing Java");
-            return false;
+            _JavaPath = _JavaDir + Path.DirectorySeparatorChar + javaVersion.MajorVersion.ToString() + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "java.exe";
+            _JavaVersion = javaVersion.MajorVersion;
+            return true;
         }
 
+        private bool IsJavaInstalled(JavaVersion javaVersion)
+        {
+            return File.Exists(_JavaDir + Path.DirectorySeparatorChar + javaVersion.MajorVersion.ToString() + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "java.exe");
+        }
 
+        private bool DownloadJava(JavaVersion javaVersion)
+        {
+            // download pack
+            dhelper.DownloadFileTo(_PackServer + "/java/" + javaVersion.MajorVersion.ToString() + ".zip", _JavaDir + Path.DirectorySeparatorChar + javaVersion.MajorVersion.ToString() + ".zip", true, "Downloading Java " + javaVersion.MajorVersion.ToString());
 
+            // Hide Bar
+            dhelper.HideBar();
+
+            // unzip pack
+            dhelper.ExtractZipFiles(_JavaDir + Path.DirectorySeparatorChar + javaVersion.MajorVersion.ToString() + ".zip", _JavaDir);
+
+            // delete zip file
+            File.Delete(_JavaDir + Path.DirectorySeparatorChar + javaVersion.MajorVersion.ToString() + ".zip");
+
+            return IsJavaInstalled(javaVersion);
+        }
 
         private void Start(string args, string sPackName)
         {
@@ -372,7 +386,7 @@ namespace UglyLauncher.Minecraft
             // check for "minecraft" folder
             if (!Directory.Exists(_PacksDir + Path.DirectorySeparatorChar + sPackName + + Path.DirectorySeparatorChar + "minecraft")) Directory.CreateDirectory(_PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "minecraft");
 
-            minecraft.StartInfo.FileName = JavaPath;
+            minecraft.StartInfo.FileName = _JavaPath;
             minecraft.StartInfo.WorkingDirectory = _PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "minecraft";
             minecraft.StartInfo.Arguments = args;
             minecraft.StartInfo.RedirectStandardOutput = true;
@@ -492,10 +506,10 @@ namespace UglyLauncher.Minecraft
             MCUserAccountProfile Profile = U.GetActiveProfile(Acc);
 
             // Garbage Collector
-            if (C.UseGC == 1 && JavaVersion == 8) args += " -XX:SurvivorRatio=2 -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+AggressiveOpts";
+            if (C.UseGC == 1 && _JavaVersion == 8) args += " -XX:SurvivorRatio=2 -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+AggressiveOpts";
 
             // force 64bit
-            if (JavaVersion == 8) args += " -d64";
+            if (_JavaVersion == 8) args += " -d64";
 
             // Java Memory
             args += string.Format(" -Xms{0}m -Xmx{1}m -Xmn128m", C.MinimumMemory, C.MaximumMemory);
@@ -732,7 +746,6 @@ namespace UglyLauncher.Minecraft
             };
             CurseFiles.DownloadModFiles(pack.CurseFiles);
         }
-
 
         public void ReDownloadMods(string sPackName)
         {

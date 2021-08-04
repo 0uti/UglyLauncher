@@ -9,7 +9,7 @@ namespace UglyLauncher
     public partial class FrmEditPack : Form
     {
         private readonly string sPackName;
-        private readonly Minecraft.Launcher L = new Minecraft.Launcher(StartupSide.Client,false);
+        private readonly Launcher L = new Launcher(StartupSide.Client,false);
 
         public FrmEditPack(string sPackName)
         {
@@ -24,10 +24,10 @@ namespace UglyLauncher
             List<string> lMods = L.GetModFolderContents(sPackName, new[] { ".jar", ".zip" });
             foreach (string mod in lMods)
             {
-                string sModName = "";
-                string sModDescription = "";
                 //get mcmod.info from File (only Mods has this file)
                 string sJsonMcModInfo = L.GetMcModInfo(mod);
+                string sModName;
+                string sModDescription;
                 if (sJsonMcModInfo != null)
                 {
                     sModName = GetModName(sJsonMcModInfo);
@@ -51,10 +51,10 @@ namespace UglyLauncher
 
             foreach (string mod in lMods)
             {
-                string sModName = "";
-                string sModDescription = "";
                 //get mcmod.info from File (only Mods has this file)
                 string sJsonMcModInfo = L.GetMcModInfo(mod);
+                string sModName;
+                string sModDescription;
                 if (sJsonMcModInfo != null)
                 {
                     sModName = GetModName(sJsonMcModInfo);
