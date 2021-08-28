@@ -81,7 +81,7 @@ namespace UglyLauncher.Minecraft.Files.Forge
                     // append Forge to classpath
                     ClassPath.Add("net.minecraftforge:forge", sForgeVersionDir + @"\forge-" + sForgeVersion + ".jar");
                 }
-                
+
                 // build client.jar
                 BuildForgeClientJar();
             }
@@ -121,7 +121,7 @@ namespace UglyLauncher.Minecraft.Files.Forge
                 itemList.AddRange(moreItems);
                 MCMojang.Arguments.Game = itemList.ToArray();
 
-                if(MCForge.Arguments.Jvm != null)
+                if (MCForge.Arguments.Jvm != null)
                 {
                     List<JvmElement> JvmItemList = MCMojang.Arguments.Jvm.ToList();
                     List<JvmElement> JvmMoreItems = MCForge.Arguments.Jvm.ToList();
@@ -145,11 +145,11 @@ namespace UglyLauncher.Minecraft.Files.Forge
             {
                 string[] sLibName = lib.Name.Split(':');
                 VersionJsonDownload download = lib.Downloads.Artifact;
-                
+
                 // dont download Forge itself (only 1.13 to 1.16)
                 if (sLibName[0].Equals("net.minecraftforge") && sLibName[1].Equals("forge"))
                 {
-                    if(download.Url == null)
+                    if (download.Url == null)
                     { // no download, extract file from archive
                         List<string> extractList = new List<string>
                         {
@@ -268,7 +268,7 @@ namespace UglyLauncher.Minecraft.Files.Forge
                 // Processors
                 foreach (ForgeProcessor.Processor processor in MCForge.Processors)
                 {
-                    if(processor.Sides != null && processor.Sides.Contains("server"))
+                    if (processor.Sides != null && processor.Sides.Contains("server"))
                     {
                         continue;
                     }

@@ -25,7 +25,7 @@ namespace UglyLauncher.Settings
             iUseGC = GetRegInt("use_gc");
         }
 
-      
+
         // Minimum memoryusage
         public int MinimumMemory
         {

@@ -46,7 +46,7 @@ namespace UglyLauncher.Minecraft
         // bool
         private readonly bool Offline = false;
         private readonly StartupSide side;
-        
+
         private readonly DownloadHelper dhelper;
 
         // constructor
@@ -286,7 +286,7 @@ namespace UglyLauncher.Minecraft
             }
 
             // getting pack json file
-            MCPack pack = MCPack.FromJson(File.ReadAllText(_PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar+ "pack.json").Trim());
+            MCPack pack = MCPack.FromJson(File.ReadAllText(_PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "pack.json").Trim());
             // vanilla Minecraft
             MCMojangFiles.DownloadVersionJson(pack.MCVersion);
             GameVersion MCMojang = GameVersion.FromJson(File.ReadAllText(_McVersionDir + Path.DirectorySeparatorChar + pack.MCVersion + Path.DirectorySeparatorChar + pack.MCVersion + ".json").Trim());
@@ -344,14 +344,14 @@ namespace UglyLauncher.Minecraft
         {
             if (!IsJavaInstalled(javaVersion))
             {   // version not installed
-                if(!DownloadJava(javaVersion))
+                if (!DownloadJava(javaVersion))
                 {
                     MessageBox.Show("unknown Java version in Mojang JSON file.", "Missing Java");
-                    
+
                     return false;
                 }
             }
-            
+
             _JavaPath = _JavaDir + Path.DirectorySeparatorChar + javaVersion.MajorVersion.ToString() + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "java.exe";
             _JavaVersion = javaVersion.MajorVersion;
             return true;
@@ -384,7 +384,7 @@ namespace UglyLauncher.Minecraft
             Configuration C = new Configuration();
             Process minecraft = new Process();
             // check for "minecraft" folder
-            if (!Directory.Exists(_PacksDir + Path.DirectorySeparatorChar + sPackName + + Path.DirectorySeparatorChar + "minecraft")) Directory.CreateDirectory(_PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "minecraft");
+            if (!Directory.Exists(_PacksDir + Path.DirectorySeparatorChar + sPackName + +Path.DirectorySeparatorChar + "minecraft")) Directory.CreateDirectory(_PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "minecraft");
 
             minecraft.StartInfo.FileName = _JavaPath;
             minecraft.StartInfo.WorkingDirectory = _PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "minecraft";
@@ -718,7 +718,7 @@ namespace UglyLauncher.Minecraft
                     MCVersion = version.Version
                 };
 
-                if(!Directory.Exists(_PacksDir + Path.DirectorySeparatorChar + sPackName))
+                if (!Directory.Exists(_PacksDir + Path.DirectorySeparatorChar + sPackName))
                 {
                     Directory.CreateDirectory(_PacksDir + Path.DirectorySeparatorChar + sPackName);
                 }

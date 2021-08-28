@@ -16,9 +16,11 @@ namespace UglyLauncher
         public static FrmProgressbar bar = new FrmProgressbar();
         public bool Offline = false;
 
+        private readonly StartupSide Side;
 
-        public FrmMain()
+        public FrmMain(StartupSide startupSide)
         {
+            Side = startupSide;
             InitializeComponent();
         }
 
@@ -105,7 +107,7 @@ namespace UglyLauncher
             BackgroundWorker worker = sender as BackgroundWorker;
 
             // Check Environment
-            Launcher L = new Launcher(StartupSide.Client,Offline);
+            Launcher L = new Launcher(Side, Offline);
             Manager U = new Manager();
             {
                 L.CheckDirectories();
@@ -248,7 +250,7 @@ namespace UglyLauncher
         {
             if (LstPacks.SelectedItems.Count == 1)
             {
-                Launcher L = new Launcher(StartupSide.Client,Offline);
+                Launcher L = new Launcher(Side, Offline);
                 // Clear dropdown
                 CmbPackVersions.Items.Clear();
                 if (Offline == false)
@@ -318,7 +320,7 @@ namespace UglyLauncher
             // gather vars from Gui
             string sSelectedPack = LstPacks.SelectedItems[0].Text;
             string sSelectedVersion = CmbPackVersions.SelectedIndex == 0 ? "recommended" : CmbPackVersions.Text;
-            Launcher L = new Launcher(StartupSide.Client,Offline);
+            Launcher L = new Launcher(Side, Offline);
             // get event
             L.RestoreWindow += new EventHandler<Launcher.FormWindowStateEventArgs>(L_restoreWindow);
             // disable Startbutton
@@ -345,7 +347,7 @@ namespace UglyLauncher
             // gather vars from Gui
             string sSelectedPack = LstPacks.SelectedItems[0].Text;
             string sSelectedVersion = CmbPackVersions.SelectedIndex == 0 ? "recommended" : CmbPackVersions.Text;
-            Launcher L = new Launcher(StartupSide.Client, Offline);
+            Launcher L = new Launcher(Side, Offline);
             // download minecraft
             L.StartPack(sSelectedPack, sSelectedVersion);
         }
@@ -396,7 +398,7 @@ namespace UglyLauncher
             // gather vars from Gui
             string sSelectedPack = LstPacks.SelectedItems[0].Text;
             string sSelectedVersion = CmbPackVersions.SelectedIndex == 0 ? "recommended" : CmbPackVersions.Text;
-            Launcher L = new Launcher(StartupSide.Client,Offline);
+            Launcher L = new Launcher(Side, Offline);
             if (L.IsPackInstalled(sSelectedPack, sSelectedVersion) == false)
             {
                 MessageBox.Show(this, "Dieses Pack ist nicht installiert oder liegt in einer anderen Version vor.\r\nBitte dieses Pack starten und danach bearbeiten.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -421,7 +423,7 @@ namespace UglyLauncher
         private void MnuOpenPackFolder_Click(object sender, EventArgs e)
         {
             string sSelectedPack = LstPacks.SelectedItems[0].Text;
-            Launcher L = new Launcher(StartupSide.Client,Offline);
+            Launcher L = new Launcher(Side, Offline);
             L.OpenPackFolder(sSelectedPack);
         }
 
@@ -429,6 +431,6 @@ namespace UglyLauncher
 
         private void MnuDownloadPack_Click(object sender, EventArgs e) => Downloadpack();
 
-        private void MnuReDownloadMods_Click(object sender, EventArgs e) => new Launcher(StartupSide.Client, Offline).ReDownloadMods(LstPacks.SelectedItems[0].Text);
+        private void MnuReDownloadMods_Click(object sender, EventArgs e) => new Launcher(Side, Offline).ReDownloadMods(LstPacks.SelectedItems[0].Text);
     }
 }

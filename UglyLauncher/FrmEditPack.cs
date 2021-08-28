@@ -9,7 +9,7 @@ namespace UglyLauncher
     public partial class FrmEditPack : Form
     {
         private readonly string sPackName;
-        private readonly Launcher L = new Launcher(StartupSide.Client,false);
+        private readonly Launcher L = new Launcher(StartupSide.Client, false);
 
         public FrmEditPack(string sPackName)
         {

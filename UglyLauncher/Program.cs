@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Windows.Forms;
+using UglyLauncher.Minecraft;
 
 namespace UglyLauncher
 {
     static class Program
     {
+        public static StartupSide Side = StartupSide.Client;
         /// <summary>
         /// Der Haupteinstiegspunkt für die Anwendung.
         /// </summary>
@@ -23,7 +25,7 @@ namespace UglyLauncher
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmMain());
+            Application.Run(new FrmMain(Side));
         }
     }
 }
