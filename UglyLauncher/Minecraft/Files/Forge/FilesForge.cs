@@ -13,7 +13,7 @@ namespace UglyLauncher.Minecraft.Files.Forge
     class FilesForge
     {
         private readonly DownloadHelper dhelper;
-
+        private readonly StartupSide side;
         private readonly string _sForgeTree = "/net/minecraftforge/forge/";
         private readonly string _sForgeMaven = "https://files.minecraftforge.net/maven";
         public string LibraryDir { get; set; }
@@ -28,9 +28,10 @@ namespace UglyLauncher.Minecraft.Files.Forge
 
         private bool post_1_13;
 
-        public FilesForge(DownloadHelper dhelper)
+        public FilesForge(DownloadHelper dhelper, StartupSide side)
         {
             this.dhelper = dhelper;
+            this.side = side;
         }
 
         public Dictionary<string, string> InstallForge(string sForgeVersion)
@@ -268,11 +269,15 @@ namespace UglyLauncher.Minecraft.Files.Forge
                 // Processors
                 foreach (ForgeProcessor.Processor processor in MCForge.Processors)
                 {
-                    if (processor.Sides != null && processor.Sides.Contains("server"))
+                    if (processor.Sides == null || processor.Sides.Contains("client"))
                     {
+                        RunProccessor(MCForge, processor);
+                    }
+
+                    if (processor.Sides != null && processor.Sides.Contains("server"))
+                    {   // Do ServerStuff
                         continue;
                     }
-                    RunProccessor(MCForge, processor);
                 }
             }
         }
@@ -339,7 +344,7 @@ namespace UglyLauncher.Minecraft.Files.Forge
 
                 if (arg.Equals("{SIDE}"))
                 {
-                    args += " client";
+                    args += " " + side.ToString().ToLower();
                     continue;
                 }
 
@@ -348,7 +353,9 @@ namespace UglyLauncher.Minecraft.Files.Forge
                 {
                     // remove chars
                     newarg = newarg.Replace("{", "").Replace("}", "");
-                    newarg = Forge.Data[newarg].Client;
+
+                    if (side == StartupSide.Client) newarg = Forge.Data[newarg].Client;
+                    if (side == StartupSide.Server) newarg = Forge.Data[newarg].Server;
                 }
 
                 // remove leading slash
@@ -379,11 +386,9 @@ namespace UglyLauncher.Minecraft.Files.Forge
                     classPath += ";";
                 }
                 classPath += "\"" + LibraryDir + @"\" + MavenStringToFilePath(jarfile).Replace('/', '\\') + "\"";
-                //Debug.WriteLine("   " + LibraryDir + @"\" + MavenStringToFilePath(jarfile).Replace('/', '\\'));
             }
 
             classPath += ";\"" + LibraryDir + @"\" + MavenStringToFilePath(processor.Jar).Replace('/', '\\') + "\"";
-            //Debug.WriteLine("   " + LibraryDir + @"\" + MavenStringToFilePath(processor.Jar).Replace('/', '\\'));
             return classPath;
         }
 

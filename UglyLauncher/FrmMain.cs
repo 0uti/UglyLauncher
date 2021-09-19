@@ -145,12 +145,17 @@ namespace UglyLauncher
 
                         fTokRefresh.Dispose();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         DialogResult res = DialogResult.No;
                         Invoke(new Action(() =>
                         {
-                            res = MessageBox.Show(this, "In Offlinemodus wechseln?", "Verbindungsfehler zu Mojang!", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+#if DEBUG
+                        res = MessageBox.Show(this, "In Offlinemodus wechseln?", "Verbindungsfehler zu Mojang!" + Environment.NewLine + ex.Message, MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+#else
+                        res = MessageBox.Show(this, "In Offlinemodus wechseln?", "Verbindungsfehler zu Mojang!", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+#endif
+
                         }));
 
                         if (res == DialogResult.Yes)

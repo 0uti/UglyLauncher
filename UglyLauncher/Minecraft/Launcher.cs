@@ -1,4 +1,13 @@
-﻿using System;
+﻿using UglyLauncher.AccountManager;
+using UglyLauncher.Internet;
+using UglyLauncher.Minecraft.Files.CurseForge;
+using UglyLauncher.Minecraft.Files.Forge;
+using UglyLauncher.Minecraft.Files.Mojang;
+using UglyLauncher.Minecraft.Files.Mojang.GameVersion;
+using UglyLauncher.Minecraft.Json.AvailablePacks;
+using UglyLauncher.Minecraft.Json.Pack;
+using UglyLauncher.Settings;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -9,15 +18,6 @@ using System.Net;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using UglyLauncher.AccountManager;
-using UglyLauncher.Internet;
-using UglyLauncher.Minecraft.Files.CurseForge;
-using UglyLauncher.Minecraft.Files.Forge;
-using UglyLauncher.Minecraft.Files.Mojang;
-using UglyLauncher.Minecraft.Files.Mojang.GameVersion;
-using UglyLauncher.Minecraft.Json.AvailablePacks;
-using UglyLauncher.Minecraft.Json.Pack;
-using UglyLauncher.Settings;
 
 namespace UglyLauncher.Minecraft
 {
@@ -25,7 +25,11 @@ namespace UglyLauncher.Minecraft
     {
         // events
         public event EventHandler<FormWindowStateEventArgs> RestoreWindow;
+        public event EventHandler MinecraftStarted;
+        public event EventHandler MinecraftExited;
+        public event DataReceivedEventHandler MinecraftDataReceived;
         // objects
+        private static Process minecraft;
         private FrmConsole _console;
         private static MCAvailablePacks PacksAvailable = new MCAvailablePacks();
         private static MCPacksInstalled PacksInstalled = new MCPacksInstalled();
@@ -33,12 +37,12 @@ namespace UglyLauncher.Minecraft
         public const string _PackServer = "http://uglylauncher.de";
         public static readonly string _DataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + ".UglyLauncher";
         public static readonly string _PacksDir = _DataDir + Path.DirectorySeparatorChar + "packs";
-        public static readonly string _JavaDir = _DataDir + Path.DirectorySeparatorChar + "java";
+        public readonly string _JavaDir = _DataDir + Path.DirectorySeparatorChar + "java";
         public static readonly string _McDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + ".minecraft";
-        public static readonly string _McAssetsDir = _McDir + Path.DirectorySeparatorChar + "assets";
-        public static readonly string _McLibraryDir = _McDir + Path.DirectorySeparatorChar + "libraries";
-        public static readonly string _McVersionDir = _McDir + Path.DirectorySeparatorChar + "versions";
-        public static readonly string _McNativesDir = _McDir + Path.DirectorySeparatorChar + "natives";
+        public readonly string _McAssetsDir = _McDir + Path.DirectorySeparatorChar + "assets";
+        public readonly string _McLibraryDir = _McDir + Path.DirectorySeparatorChar + "libraries";
+        public readonly string _McVersionDir = _McDir + Path.DirectorySeparatorChar + "versions";
+        public readonly string _McNativesDir = _McDir + Path.DirectorySeparatorChar + "natives";
 
         private string _JavaPath;
         private int _JavaVersion;
@@ -291,12 +295,23 @@ namespace UglyLauncher.Minecraft
             MCMojangFiles.DownloadVersionJson(pack.MCVersion);
             GameVersion MCMojang = GameVersion.FromJson(File.ReadAllText(_McVersionDir + Path.DirectorySeparatorChar + pack.MCVersion + Path.DirectorySeparatorChar + pack.MCVersion + ".json").Trim());
             // download game jar
-            MCMojangFiles.DownloadClientJar(MCMojang);
+            if (side == StartupSide.Client)
+            {
+                MCMojangFiles.DownloadClientJar(MCMojang);
+            }
+
+            if (side == StartupSide.Server)
+            {
+                MCMojangFiles.DownloadServerJar(MCMojang);
+            }
             // download libraries if needed
             Dictionary<string, string> ClassPath = MCMojangFiles.DownloadClientLibraries(MCMojang);
             // download assets if needed
-            MCMojangFiles.DownloadClientAssets(MCMojang);
-
+            if (side == StartupSide.Client)
+            {
+                MCMojangFiles.DownloadClientAssets(MCMojang);
+            }
+                
             // set Java version
             if (!InstallJava(MCMojang.javaVersion))
             {
@@ -306,7 +321,7 @@ namespace UglyLauncher.Minecraft
             // additional things for forge
             if (pack.Type.Equals("forge"))
             {
-                FilesForge MCForgeFiles = new FilesForge(dhelper)
+                FilesForge MCForgeFiles = new FilesForge(dhelper, side)
                 {
                     LibraryDir = _McLibraryDir,
                     VersionDir = _McVersionDir,
@@ -382,7 +397,7 @@ namespace UglyLauncher.Minecraft
         private void Start(string args, string sPackName)
         {
             Configuration C = new Configuration();
-            Process minecraft = new Process();
+            minecraft = new Process();
             // check for "minecraft" folder
             if (!Directory.Exists(_PacksDir + Path.DirectorySeparatorChar + sPackName + +Path.DirectorySeparatorChar + "minecraft")) Directory.CreateDirectory(_PacksDir + Path.DirectorySeparatorChar + sPackName + Path.DirectorySeparatorChar + "minecraft");
 
@@ -391,11 +406,12 @@ namespace UglyLauncher.Minecraft
             minecraft.StartInfo.Arguments = args;
             minecraft.StartInfo.RedirectStandardOutput = true;
             minecraft.StartInfo.RedirectStandardError = true;
+            minecraft.StartInfo.RedirectStandardInput = true;
             minecraft.StartInfo.UseShellExecute = false;
             minecraft.StartInfo.CreateNoWindow = true;
-            minecraft.OutputDataReceived += new DataReceivedEventHandler(Minecraft_OutputDataReceived);
-            minecraft.ErrorDataReceived += new DataReceivedEventHandler(Minecraft_ErrorDataReceived);
-            minecraft.Exited += new EventHandler(Minecraft_Exited);
+            minecraft.OutputDataReceived += new DataReceivedEventHandler(Minecraft_Process_OutputDataReceived);
+            minecraft.ErrorDataReceived += new DataReceivedEventHandler(Minecraft_Process_ErrorDataReceived);
+            minecraft.Exited += new EventHandler(Minecraft_Process_Exited);
             minecraft.EnableRaisingEvents = true;
 
             // load console
@@ -422,6 +438,7 @@ namespace UglyLauncher.Minecraft
                 MCExitCode = -1
             };
             handler?.Invoke(this, args2);
+            MinecraftStarted?.Invoke(this, EventArgs.Empty);
         }
 
         private void CloseOldConsole()
@@ -438,7 +455,7 @@ namespace UglyLauncher.Minecraft
             }
         }
 
-        private void Minecraft_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        private void Minecraft_Process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
@@ -452,7 +469,7 @@ namespace UglyLauncher.Minecraft
             }
         }
 
-        private void Minecraft_Exited(object sender, EventArgs e)
+        private void Minecraft_Process_Exited(object sender, EventArgs e)
         {
             Configuration C = new Configuration();
             Process minecraft = sender as Process;
@@ -480,15 +497,17 @@ namespace UglyLauncher.Minecraft
                 MCExitCode = minecraft.ExitCode
             };
             handler?.Invoke(this, args);
+            MinecraftExited?.Invoke(sender, e);
         }
 
-        private void Minecraft_OutputDataReceived(object sendingProcess, DataReceivedEventArgs outLine)
+        private void Minecraft_Process_OutputDataReceived(object sendingProcess, DataReceivedEventArgs outLine)
         {
             if (!string.IsNullOrEmpty(outLine.Data))
             {
                 try
                 {
                     _console.AddLine(outLine.Data, Color.Black);
+                    MinecraftDataReceived?.Invoke(sendingProcess, outLine);
                 }
                 catch (Exception)
                 {
@@ -496,15 +515,31 @@ namespace UglyLauncher.Minecraft
             }
         }
 
+        public static void SendToMinecraft(string command)
+        {
+            if (minecraft != null && !minecraft.HasExited)
+            {
+                StreamWriter myStreamWriter = minecraft.StandardInput;
+                myStreamWriter.WriteLine(command);
+            }
+        }
+
+        public static void RenameWorld(string packName)
+        {
+            int unixtime = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            string worldFolder = _PacksDir + Path.DirectorySeparatorChar + packName + Path.DirectorySeparatorChar + "minecraft" + Path.DirectorySeparatorChar + "world";
+            
+            if (Directory.Exists(worldFolder))
+            {
+                Directory.Move(worldFolder, worldFolder + "-" + unixtime.ToString());
+            }
+        }
+
         private string BuildArgs(GameVersion MC, string sPackName, Dictionary<string, string> ClassPath)
         {
             string args = null;
-            string classpath = null;
             Configuration C = new Configuration();
-            Manager U = new Manager();
-            MCUserAccount Acc = U.GetAccount(U.GetDefault());
-            MCUserAccountProfile Profile = U.GetActiveProfile(Acc);
-
+            
             // Garbage Collector
             if (C.UseGC == 1 && _JavaVersion == 8) args += " -XX:SurvivorRatio=2 -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+AggressiveOpts";
 
@@ -513,6 +548,28 @@ namespace UglyLauncher.Minecraft
 
             // Java Memory
             args += string.Format(" -Xms{0}m -Xmx{1}m -Xmn128m", C.MinimumMemory, C.MaximumMemory);
+
+            if (side == StartupSide.Client)
+            {
+                args += BuildArgsClient(MC,sPackName,ClassPath);
+            }
+
+            if (side == StartupSide.Server)
+            {
+                args += BuildArgsServer(MC,sPackName,ClassPath);
+            }
+
+            return args;
+        }
+
+        private string BuildArgsClient(GameVersion MC, string sPackName, Dictionary<string, string> ClassPath)
+        {
+            Manager U = new Manager();
+            MCUserAccount Acc = U.GetAccount(U.GetDefault());
+            MCUserAccountProfile Profile = U.GetActiveProfile(Acc);
+
+            string args = null;
+            string classpath = null;
 
             if (MC.Arguments != null)
             {
@@ -654,6 +711,23 @@ namespace UglyLauncher.Minecraft
 
             return args;
         }
+
+        private string BuildArgsServer(GameVersion MC, string sPackName, Dictionary<string, string> ClassPath)
+        {
+            string args = null;
+
+            // is server
+            args += " -server";
+
+            // server jar
+            args += " -jar " + string.Format("\"{0}\\{1}\\minecraft_server.{1}.jar\" ", _McVersionDir, MC.Id);
+
+            // no gui
+            args += " nogui";
+
+            return args;
+        }
+
 
         private MCAvailablePackVersion GetAvailablePackVersion(string sPackName, string sPackVersion)
         {

@@ -1,12 +1,13 @@
-﻿using System;
+﻿using UglyLauncher.Minecraft;
+using System;
 using System.Windows.Forms;
-using UglyLauncher.Minecraft;
 
 namespace UglyLauncher
 {
     static class Program
     {
-        public static StartupSide Side = StartupSide.Client;
+        public static StartupSide Side = StartupSide.Server;
+
         /// <summary>
         /// Der Haupteinstiegspunkt für die Anwendung.
         /// </summary>
