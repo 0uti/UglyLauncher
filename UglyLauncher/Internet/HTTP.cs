@@ -29,7 +29,8 @@ namespace UglyLauncher.Internet
                 // declare needed objects
                 WebRequest request = WebRequest.CreateHttp(url);
                 request.Credentials = CredentialCache.DefaultCredentials;
-                request.Timeout = 5000;
+                request.Timeout = 10000;
+                
                 WebResponse response = request.GetResponse();
                 using (StreamReader stringResponse = new StreamReader(response.GetResponseStream()))
                 {

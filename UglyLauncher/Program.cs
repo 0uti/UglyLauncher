@@ -6,7 +6,7 @@ namespace UglyLauncher
 {
     static class Program
     {
-        public static StartupSide Side = StartupSide.Server;
+        public static StartupSide Side = StartupSide.Client;
 
         /// <summary>
         /// Der Haupteinstiegspunkt für die Anwendung.

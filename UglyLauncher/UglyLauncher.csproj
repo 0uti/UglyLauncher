@@ -81,6 +81,9 @@
       <DependentUpon>FrmUserAccounts.cs</DependentUpon>
     </Compile>
     <Compile Include="AccountManager\Manager.cs" />
+    <Compile Include="Internet\MyWebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Minecraft\Files\CurseForge\CurseModInfo.cs" />
     <Compile Include="Minecraft\Files\CurseForge\FilesCurseForge.cs" />
     <Compile Include="Minecraft\Files\Forge\FilesForge.cs" />
@@ -244,7 +247,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" BuildVersion_AssemblyInfoFilename="Properties\AssemblyInfo.cs" />
+      <UserProperties BuildVersion_AssemblyInfoFilename="Properties\AssemblyInfo.cs" BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
     </VisualStudio>
   </ProjectExtensions>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

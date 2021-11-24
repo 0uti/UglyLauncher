@@ -11,7 +11,7 @@ namespace UglyLauncher.Internet
 {
     class DownloadHelper : IDisposable
     {
-        private readonly WebClient _downloader = new WebClient();
+        private readonly MyWebClient _downloader = new MyWebClient();
         // bool
         private bool downloadfinished = false;
 
@@ -22,6 +22,7 @@ namespace UglyLauncher.Internet
             _downloader.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressCallback);
             _downloader.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(Downloader_DownloadFileCompleted);
             _downloader.Headers["User-Agent"] = "UglyLauncher";
+            _downloader.Timeout = 10000;
         }
 
         private void Downloader_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
@@ -65,44 +66,52 @@ namespace UglyLauncher.Internet
         // download file if needed
         public void DownloadFileTo(Uri Url, string sLocalPath, bool bShowBar = true, string sBarDisplayText = null, string sha1 = null)
         {
-            bool _download = false;
-            if (!File.Exists(sLocalPath)) _download = true;
-            else
+            try
             {
-                FileInfo f = new FileInfo(sLocalPath);
-                if (f.Length == 0)
+                bool _download = false;
+                if (!File.Exists(sLocalPath)) _download = true;
+                else
                 {
-                    _download = true;
-                }
-
-                // check SHA1
-                if (sha1 != null)
-                {
-                    string file_sha = ComputeHashSHA(sLocalPath);
-                    if (!file_sha.Equals(sha1))
+                    FileInfo f = new FileInfo(sLocalPath);
+                    if (f.Length == 0)
                     {
                         _download = true;
                     }
+
+                    // check SHA1
+                    if (sha1 != null)
+                    {
+                        string file_sha = ComputeHashSHA(sLocalPath);
+                        if (!file_sha.Equals(sha1))
+                        {
+                            _download = true;
+                        }
+                    }
                 }
-            }
 
-            if (_download)
-            {
-                // Create Directory, if needed
-                if (!Directory.Exists(sLocalPath.Substring(0, sLocalPath.LastIndexOf(@"\")))) Directory.CreateDirectory(sLocalPath.Substring(0, sLocalPath.LastIndexOf(@"\")));
-
-                if (bShowBar == true)
+                if (_download)
                 {
-                    if (_bar.Visible == false) _bar.Show();
-                    if (sBarDisplayText == null) _bar.SetLabel(Path.GetFileName(Url.LocalPath));
-                    else _bar.SetLabel(sBarDisplayText);
-                }
-                downloadfinished = false;
-                _downloader.DownloadFileAsync(Url, sLocalPath);
-                Application.DoEvents();
-                while (downloadfinished == false)
+                    // Create Directory, if needed
+                    if (!Directory.Exists(sLocalPath.Substring(0, sLocalPath.LastIndexOf(@"\")))) Directory.CreateDirectory(sLocalPath.Substring(0, sLocalPath.LastIndexOf(@"\")));
+
+                    if (bShowBar == true)
+                    {
+                        if (_bar.Visible == false) _bar.Show();
+                        if (sBarDisplayText == null) _bar.SetLabel(Path.GetFileName(Url.LocalPath));
+                        else _bar.SetLabel(sBarDisplayText);
+                    }
+                    downloadfinished = false;
+                    _downloader.DownloadFileAsync(Url, sLocalPath);
                     Application.DoEvents();
+                    while (downloadfinished == false)
+                        Application.DoEvents();
+                }
             }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
         }
 
         public void ExtractZipFiles(string archiveFilenameIn, string outFolder)
